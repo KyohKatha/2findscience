@@ -1,0 +1,76 @@
+﻿<html DIR="LTR" xmlns:tool="http://www.microsoft.com/tooltip" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+  <head>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=utf-8" />
+    <META NAME="save" CONTENT="history" />
+    <title>Sparse Columns</title>
+    
+    <link rel="stylesheet" type="text/css" href="../local/Classic.css">
+      
+    </link>
+    
+    <script src="../local/script.js">
+      
+    </script><script src="../local/script_main.js">&amp;nbsp;</script>
+  </head>
+  <body>
+    <!--Topic built:02/21/2010 23:02:28-->
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div id="header">
+      <table width="100%" id="topTable"><tr>
+          <td align="left">
+            <span id="headerBold">Sparse Columns</span>
+          </td>
+          <td align="right">
+            
+          </td>
+        </tr></table>
+      
+      
+      
+    </div>
+    <div id="mainSection">
+      
+        
+        
+    <font color="DarkGray">
+      [This topic is pre-release documentation and is subject to change in future releases. Blank topics are included as placeholders.]
+    </font>
+    <p />
+    
+    <p />
+  
+        <div id="introductionSection" class="section">
+    <p>Sparse columns are ordinary columns that have an optimized storage for null values. Sparse columns reduce the space requirements for null values at the cost of more overhead to retrieve non null values. Consider using sparse columns when the space saved is at least 20 percent to 40 percent.</p>
+    <p>The SQL Server JDBC Driver 3.0 supports sparse columns when you connect to a SQL Server 2008 (or later) server. You can use <a href="f173fa5d-e114-4a37-a5c4-2baad9ff3af1.htm">SQLServerDatabaseMetaData.getColumns</a>, <a href="e2b0e0f7-717c-48e6-bcd2-a325d938a833.htm">SQLServerDatabaseMetaData.getFunctionColumns</a>, or <a href="4f0df8fe-3cd6-46e4-ae3c-dc23c35676b2.htm">SQLServerDatabaseMetaData.getProcedureColumns</a> to determine which column is sparse and which column is the column set column.</p>
+    <p>Column sets are computed columns that return all sparse columns in untyped XML form. You should consider using column sets when the number of columns in a table is large or greater than 1024 or operating on individual sparse columns is cumbersome. A column set can contain up to 30,000 columns.</p>
+  </div><span id="seeAlsoSpan"><h1 class="heading">See Also</h1></span><div id="seeAlsoSection" class="section" name="collapseableSection"><a href="e1592499-b87b-45ee-bab8-beaba8fde841.htm">Improving Performance and Reliability with the JDBC Driver</a><br /><br /></div><!--[if gte IE 5]>
+			<tool:tip element="seeAlsoToolTip" avoidmouse="false"/><tool:tip element="languageFilterToolTip" avoidmouse="false"/><tool:tip element="roleInfoSpan" avoidmouse="false"/>
+		<![endif]-->
+      <div id="footer" class="section">
+        
+		<hr />
+		
+		<span id="fb" class="feedbackcss">
+			
+			
+		</span>
+		
+		<a href="9bad553b-9e70-4696-8499-2e35f772a1e0.htm">
+			
+			© 2010 Microsoft Corporation. All rights reserved.
+		</a>
+ 	
+	
+      </div>
+    </div>
+  </body>
+</html>
