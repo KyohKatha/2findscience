@@ -1,0 +1,448 @@
+/*
+    Document   : style
+    Created on : 13/04/2010, 19:29:17
+    Author     : Welington
+    Description: Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+
+body {
+    background-color: #cccccc;
+    height: 100%;
+    width: 100%;
+
+    left: 50%;
+    right: 50%;
+    position: relative;
+    margin-left:-511px;
+
+    text-align:justify;
+    font-family: arial,verdana,'lucida grande',tahoma,sans-serif;
+    font-size: 10pt;
+}
+
+#headerbg {
+    height: 206px;
+    width: 1023px;
+    background: url(Imagens/Bg_Guest.png);
+    visibility: visible;
+}
+
+#header {
+    height: 106px;
+    width: 1023px;
+    background: url(Imagens/Menu.png);
+    visibility: visible;
+    margin: 0px;
+    z-index: 1;
+}
+
+#header.academic {
+    background: url(Imagens/Menu_Academic.png);
+}
+
+#header.admin {
+    background: url(Imagens/Menu_Admin.png);
+}
+
+#header.user {
+    background: url(Imagens/Menu_User.png);
+}
+
+#header ul {
+    list-style-type: none;
+    list-style: none;
+    color: #ffffff;
+    font-family: Tahoma, Arial, sans-serif;
+    text-align: center;
+    z-index: 2;
+}
+
+#header li{
+    position: relative;
+    top: 73px;
+    padding-top: 5px;
+    height: 28px;
+    width: 74px;
+    float:left;
+    z-index: 2;
+}
+
+#header li.current{
+    background:url("Imagens/itemMenu.png") no-repeat;
+}
+
+#header #login {
+    position: relative;
+    top: 0px;
+    left: 130px;
+    float:left;
+}
+
+#header a:link, a:visited, a:active {
+    text-decoration: none;
+    text-transform: capitalize;
+    color:#ffffff;
+}
+
+#header a:hover {
+    text-decoration: underline;
+    color:#ffffff;
+}
+
+#wrapper {
+    height: auto;
+    width: 1023px;
+    visibility: visible;
+    text-align: center;
+}
+
+#wrapper #welcome {
+    height: 20px;
+    width: 1002px;
+    background: transparent;
+    visibility: visible;
+    margin: 0px;
+    text-align: right;
+    margin-top: 15px;
+}
+
+#wrapper #buttonsbox {
+    position:relative;
+    width:inherit;
+    height:auto;
+    top: 10px;
+    text-align: center;
+    background: transparent;
+}
+
+#wrapper #footer {
+    position:relative;
+    float:left;
+    width:inherit;
+    height:auto;
+    background: transparent;
+    text-align: center;
+}
+
+#wrapper #news {
+    width: 308px;
+    text-align: left;
+    visibility: visible;
+    float: left;
+}
+
+#news.news {
+    height:758px;
+    background: url(Imagens/News.png) no-repeat;
+}
+
+#wrapper #content {
+    position: relative;
+    text-align: center;
+    visibility: visible;
+    float: left;
+
+}
+
+#content.content {
+    width: 715px;
+    height:auto;
+    min-height: 758px;
+    background: url(Imagens/Content.png) no-repeat;
+}
+
+#content.unique {
+    width: 1023px;
+    height:758px;
+    background: url(Imagens/Content_Unique.png) no-repeat;
+    text-align: left;
+}
+
+p.title {
+    height: auto;
+    width: inherit;
+    position:relative;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    left: 10px;
+    font-family: "Trebuchet MS",tahoma,verdana,sans-serif;
+}
+
+p.text{
+    text-align: justify;
+    margin-left:  50px;
+    margin-right: 50px;
+    font-family: "Trebuchet MS",tahoma,verdana,sans-serif;
+}
+
+p.tip {
+    height: auto;
+    width: inherit;
+    position:relative;
+    text-align: center;
+    left: 10px;
+    font-family: tahoma,verdana,sans-serif;
+}
+
+hr {
+    position: relative;
+    text-align: center;
+    visibility: visible;
+    width: 400px;
+    color: silver;
+}
+
+#wrapper table {
+    position: relative;
+    visibility: visible;
+    font-family: tahoma,verdana,sans-serif;
+    width: inherit;
+    float: inherit;
+    max-width: 100%;
+}
+
+table.maintenance td {
+    text-align: left;
+    color: black;
+}
+
+table.maintenance ul{
+    list-style-type: none;
+    list-style: none;
+    color: #000000;
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+table.maintenance td a{
+    color: blue;
+    text-decoration: none;
+    text-transform: lowercase;
+}
+
+table.maintenance td.admin:hover{
+    background: #F0D5D5;
+}
+
+table.maintenance td.academic:hover{
+    background: #E5EFC6;
+}
+
+table.maintenance td.common:hover{
+    background: #FEDCC2;
+}
+
+table.maintenance td.guest:hover{
+    background: #DFE7EB ;
+}
+
+table.maintenance li.title{
+    font-weight: bold;
+}
+
+td.list div{
+    color:#FF0000;
+    width:inherit;
+    overflow:auto;
+}
+
+input {
+    background:#ffffff;
+    border:1px solid #333333;
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+}
+
+input.error {
+    background:#ffffff;
+    border:1px solid #FF0000;
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+}
+
+textarea {
+    background:#ffffff;
+    border:1px solid #333333;
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+}
+
+input.button {
+    width: 94px;
+    height: 28px;
+    background: url("Imagens/Button.png") no-repeat;
+    border: none;
+    color: white;
+    font-family: tahoma,verdana,sans-serif;
+}
+
+form {
+    padding-top: 5px;
+    left: 5px;
+    right: 5px;
+}
+
+.tooltip span {
+    display:none;
+    padding:2px 3px;
+    margin-left:8px;
+    width:auto;
+}
+
+.tooltip:hover span{
+    display:inline;
+    position:absolute;
+    background:#ffffff;
+    border:1px solid #333333;
+    color:#000000;
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+}
+
+#search{
+    margin-left: 712px;
+    margin-top: -37px;
+}
+
+fieldset {
+    font-family: verdana,sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    text-align: justify;
+    visibility: visible;
+    border: 1px solid;
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+    padding: .5em .5em .5em 20px;
+    margin-left: 1.2em;
+    margin-right: 1.2em;
+
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+}
+
+fieldset p {
+    padding-left: 10px;
+}
+
+fieldset legend {
+    font-weight: bold;
+}
+
+fieldset.critical {
+    border: solid 1px;
+    border-color: #CC0000;
+    background-color: #FFCCCC;
+    background-image: URL(Imagens/sign_error.png);
+}
+
+fieldset.information {
+    border: solid 1px;
+    border-color: #003366;
+    background-color: #CCCCFF;
+    background-image: URL(Imagens/sign_info.png);
+}
+
+fieldset.success {
+    border: solid 1px;
+    border-color: #336600;
+    background-color: #CCFF99;
+    background-image: URL(Imagens/sign_tick.png);
+}
+
+fieldset.warning {
+    border: solid 1px;
+    border-color: #FF9900;
+    background-color: #FFE6BF;
+    background-image: URL(Imagens/sign_warning.png);
+}
+
+select.list {
+    width: 97%;
+    border: 1px silver solid;
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    text-align: justify;
+    visibility: visible;
+    margin: 8px 5px 6px 5px;
+    padding: 1px;
+}
+
+#fastsearch {
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+    text-align: left;
+    visibility: visible;
+}
+
+a img {
+    margin-left: 4px;
+    margin-right: 4px;
+    border: none;
+}
+
+#loading {
+    position: absolute;
+    height: 101px;
+    width: 406px;
+    text-align: center;
+    top: 350px;
+    left: 450px;
+    z-index: 2;
+}
+
+#loading.guest {
+    background-image: url(Imagens/Loading_Guest.png);
+}
+
+#loading.user {
+    background-image: url(Imagens/Loading_User.png);
+}
+
+#loading.academic {
+    background-image: url(Imagens/Loading_Academic.png);
+}
+
+#loading.admin {
+    background-image: url(Imagens/Loading_Admin.png);
+}
+
+#scroll {
+    width:auto;
+    background-color:transparent;
+    overflow:auto;
+    /*border: 1px solid #666666;*/
+    margin-left: 9px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+#item {
+    font-family: verdana,sans-serif;
+    font-size: 11px;
+    border-bottom:1px #cccccc dotted;
+    float:left;
+    margin-left: 6px;
+    margin-right: 5px;
+    padding-bottom: 5px;
+    height: auto;
+}
+
+#item #image{
+    float:left;
+    margin-right:8px;
+    padding-top:22px;
+    height: 60px;
+    width: 50px;
+}
