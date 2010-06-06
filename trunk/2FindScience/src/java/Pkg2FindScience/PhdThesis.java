@@ -11,10 +11,22 @@ package Pkg2FindScience;
  */
 public class PhdThesis extends Thesis{
     private String isbn;
-    private int number;
-    private int volume;
+    private String number;
+    private String volume;
     private String month;
     private String ee;
+
+    public PhdThesis(String title, String url, String school, String number, String volume,
+            String month, String ee, String isbn, String strAuthor, double cod){
+        super(title, url, school, "phdthesis", strAuthor, cod);
+
+        this.isbn = isbn;
+        this.number = number;
+        this.volume = volume;
+        this.month = month;
+        this.ee = ee;
+
+    }
 
     /**
      * @return the isbn
@@ -33,28 +45,28 @@ public class PhdThesis extends Thesis{
     /**
      * @return the number
      */
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
     /**
      * @param number the number to set
      */
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
     /**
      * @return the volume
      */
-    public int getVolume() {
+    public String getVolume() {
         return volume;
     }
 
     /**
      * @param volume the volume to set
      */
-    public void setVolume(int volume) {
+    public void setVolume(String volume) {
         this.volume = volume;
     }
 

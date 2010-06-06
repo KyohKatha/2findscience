@@ -22,6 +22,16 @@ public class Publication {
     private double cod;
     private String journal;
     private ArrayList<Post> posts;
+    private String strAuthors;
+
+    public Publication(String title, String url, String type, String strAuthors, double codPublication){
+        this.title = title;
+        this.url = url;
+        this.type = type;
+        this.strAuthors = strAuthors;
+        this.cod = codPublication;
+
+    }
 
     public String getJournal() {
         return journal;
@@ -29,6 +39,14 @@ public class Publication {
 
     public void setJournal(String journal) {
         this.journal = journal;
+    }
+
+    public String getStrAuthors() {
+        return strAuthors;
+    }
+
+    public void setStrAuthors(String strAuthors) {
+        this.strAuthors = strAuthors;
     }
 
     public Publication(){

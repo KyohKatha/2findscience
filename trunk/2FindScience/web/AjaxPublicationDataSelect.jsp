@@ -56,22 +56,20 @@
             <table class="maintenance" align="center" cellspacing="15px">
                 <tr>
                     <td>Select type of new publication </td>
-                    <td> <select id="selectType" onchange="javascript:callServlet('Filter?action=selectTypePublication&type=' + this[selectedIndex].value + '&parameter=a', 'AjaxPublicationDataInsert')" >
-                            <option value="article">Article</option>
+                    <td> <select id="selectType" onchange="javascript:loadContent('PublicationDataInsert.jsp?typePublication=' + this[selectedIndex].value, 'AjaxPublicationDataInsert')">
+                <option value="article">Article</option>
                             <option value="book">Book</option>
                             <option value="incollection">Incollection</option>
-                            <option value="inprocedings">Inprocedings</option>
-                            <option value="mastersThesis">Master Thesis</option>
-                            <option value="phdThesis">Phd Thesis</option>
+                            <option value="inproceedings">Inproceedings</option>
+                            <option value="mastersthesis">Master Thesis</option>
+                            <option value="phdthesis">Phd Thesis</option>
                             <option value="proceedings">Proceedings</option>
                             <option value="www">Www</option>
                         </select>
                     </td>
                 </tr>
             </table>
-
             <div id="AjaxPublicationDataInsert">  </div>
-
             <% }%>
         </div>
     </body>

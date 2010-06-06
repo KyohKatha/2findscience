@@ -43,6 +43,14 @@
                 <td>Period </td>
                 <td><input type="button" name="period" value="Select Period" onclick="loadDate(0)"/></td>
             </tr>
+                       <tr>
+                <td>Start Date </td>
+                <td><input type="text" id="startDate" name="startDate" size="30" maxlength="30"/></td>
+            </tr>
+            <tr>
+                <td>End Date </td>
+                <td><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/></td>
+            </tr>
             <tr>
                 <td colspan="2">
                     <div id="buttonsbox">

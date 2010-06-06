@@ -181,7 +181,8 @@ function callServlet(url,div){
     }
 }
 
-function addOption(listSend, listReceive, hiddenName) {
+function addOption(listSend, listReceive, nameOption) {
+
     var index = listSend.selectedIndex;
     if (index > 0) {
         var subject = trim(listSend.options[index].value);
@@ -192,36 +193,36 @@ function addOption(listSend, listReceive, hiddenName) {
 
         repaintOptions(listSend,0);
 
-        if(hiddenName == 'bookTitle'){
+        if(nameOption == 'BookTitle'){
             listReceive.remove(0);
-            document.getElementById(hiddenName).value = subject + ';';
+            document.getElementById("options").value = subject + ';';
         }else{
-            document.getElementById(hiddenName).value += subject + ';';
+            document.getElementById("options").value += subject + ';';
         }
-        
+
         option.text = subject;
         listReceive.appendChild(option);
         repaintOptions(listReceive,1);
     }
 }
 
-function removeOption(listSend, listReceive, hiddenName) {
+function removeOption(listSend, listReceive, nameOption) {
+
     var index = 0;
     index = listSend.selectedIndex;
     if (index > -1) {
         var subject = trim(listSend.options[index].value);
 
-        var subjects = document.getElementById(hiddenName).value;
+        var subjects = document.getElementById("options").value;
         subjects = subjects.split(';');
-        document.getElementById(hiddenName).value = "";
+        document.getElementById("options").value = "";
 
-        if(hiddenName == 'bookTitle'){
-            document.getElementById(hiddenName).value = '';
-            alert(document.getElementById(hiddenName).value);
+        if(nameOption == 'BookTitle'){
+            document.getElementById("options").value = '';
         }else{
             for (i = 0; i < subjects.length - 1; i++){
                 if(subjects[i] != subject){
-                    document.getElementById(hiddenName).value += subjects[i] + ';';
+                    document.getElementById("options").value += subjects[i] + ';';
                 }
             }
         }
@@ -231,9 +232,10 @@ function removeOption(listSend, listReceive, hiddenName) {
         option.text = subject;
         listReceive.appendChild(option);
         repaintOptions(listReceive,0);
-        
+
         listSend.remove(index);
         repaintOptions(listSend,1);
+
     }
 }
 
@@ -288,99 +290,222 @@ function trim(texto) {
 }
 
 function validateFormPublication(action){
-    
-    var messagePublication = "";
+   var messagePublication = "";
     var formPublication = document.getElementById("formPublication");
 
-    // expressões regulares
+    // expressÃµes regulares
     var expRegNumber=/[0-9]{1,8}/;
-
-    var url;
-    var authorsParameter
-
-    if(action == 'savePublication'){
-        url  = "PublicationMaintenance?action=savePublication";
-        authorsParameter = trim(formPublication.author.value);
-    }else{
-        url = "PublicationMaintenance?action=updatePublication";
-    }
 
     var title = trim(formPublication.title.value);
     if (title == ""){
-        messagePublication += ("<p>- <strong>Title</strong> is required!</p>");
+        messagePublication += ("<p><strong>- Title</strong> is required!</p>");
         formPublication.title.focus();
     }
 
     var typePublication = trim(document.getElementById("typePublication").value);
-    
+    var urlField = trim(formPublication.url.value);
+    var url, school, cdrom, number, volume, journal, note, month, ee, startPage, endPage, isbn, chapter, address;
+    var booktitle, editor, publisher, authors;
+
+    if(action == 'savePublication'){
+        authors = trim(formPublication.author.value);
+        authors = authors.toString().replace(" ", "+");
+        url  = "PublicationMaintenance?action=savePublication";
+         if(typePublication != "phdthesis" && typePublication != "mastersthesis"){
+             booktitle = trim(formPublication.booktitle.value);
+             editor = trim(formPublication.editor.value);
+             publisher = trim(formPublication.publisher.value);
+             booktitle = booktitle.toString().replace(" ", "+");
+             editor = editor.toString().replace(" ", "+");
+             publisher = publisher.toString().replace(" ", "+");
+             url += "&title=" + title + "&url=" + urlField + "&author=" + authors + "&booktitle=" + booktitle +
+            "&editor=" + editor + "&publisher=" + publisher;
+         }else{
+             url += "&title=" + title + "&url=" + urlField + "&author=" + authors;
+         }
+    }else{ /*Update publication*/
+
+        url = "PublicationMaintenance?action=updatePublication&title=" + title + "&url=" + urlField;
+    }
+
     switch (typePublication) {
-        case "phdThesis":
-            break;
-        case "mastersThesis":
-            break;
-        case "inprocedings":
-            break;
-        case "book":
-            break;
-        case "incollection":
-            break;
-        case "www":
-            break;
-        case "article":
-            var startPage = trim(formPublication.startPage.value);
-            if( startPage != "" && startPage.match(expRegNumber) == null){
-                messagePublication += ("<p>- <strong>Start Page</strong> must be a number!</p>");
-                formPublication.startPage.focus();
-            }
+        case "phdthesis":
+            school = trim(formPublication.school.value);
+            number = trim(formPublication.number.value);
+            volume = trim(formPublication.volume.value);
+            month = trim(formPublication.month.value);
+            ee = trim(formPublication.ee.value);
+            isbn = trim(formPublication.isbn.value);
 
-            var endPage = trim(formPublication.endPage.value);
-            if( endPage != "" && endPage.match(expRegNumber) == null){
-                messagePublication += ("<p>- <strong>End Page</strong> must be a number!</p>");
-                formPublication.endPage.focus();
-            }
-
-            var volume = trim(formPublication.volume.value);
             if( volume != "" && volume.match(expRegNumber) == null){
-                messagePublication += ("<p>- <strong>Volume</strong> must be a number!</p>");
+                messagePublication += ("<p><strong>- Volume</strong> must be number!</p>");
                 formPublication.volume.focus();
             }
 
-            var number = trim(formPublication.number.value);
             if( number != "" && number.match(expRegNumber) == null){
-                messagePublication += ("<p>- <strong>Number</strong> must be a number!</p>");
+                messagePublication += ("<p><strong>- Number</strong> must be number!</p>");
+                formPublication.number.focus();
+            }
+            url += "&typePublication=phdthesis&school=" + school + "&number=" + number + "&volume=" + volume + "&month=" +
+                month + "&ee=" + ee + "&isbn=" + isbn;
+
+            break;
+        case "mastersthesis":
+            school = trim(formPublication.school.value);
+            url += "&typePublication=mastersthesis&school=" + school;
+            break;
+        case "inproceedings":
+            ee = trim(formPublication.ee.value);
+            startPage = trim(formPublication.startPage.value);
+            endPage = trim(formPublication.endPage.value);
+            cdrom = trim(formPublication.cdrom.value);
+            note = trim(formPublication.note.value);
+            number = trim(formPublication.number.value);
+            month = trim(formPublication.month.value);
+
+            if( startPage != "" && startPage.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Start Page</strong> must be number!</p>");
+                formPublication.startPage.focus();
+            }
+
+            if( endPage != "" && endPage.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- End Page</strong> must be number!</p>");
+                formPublication.endPage.focus();
+            }
+
+            if( number != "" && number.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Number</strong> must be number!</p>");
                 formPublication.number.focus();
             }
 
-            var cdrom = trim(formPublication.cdrom.value);
-            var journal = trim(formPublication.journal.value);
-            var note = trim(formPublication.note.value);
-            var month = trim(formPublication.month.value);
-            var ee = trim(formPublication.ee.value);
-            var urlField = trim(formPublication.url.value);
-            
-            if(action == 'savePublication'){
-                var bookTitleParameter = trim(formPublication.bookTitle.value);
-                url += "&typePublication=article&title=" + title + "&cdrom=" + cdrom + "&journal=" + journal + "&note=" + note + "&month=" + month +
-                "&ee=" + ee + "&url=" + urlField + "&startPage=" + startPage + "&endPage=" + endPage + "&volume=" + volume +
-                "&number=" + number + "&author=" + authorsParameter + "&bookTitle=" + bookTitleParameter;
-            }else{
-                url += "&typePublication=article&title=" + title + "&cdrom=" + cdrom + "&journal=" + journal + "&note=" + note + "&month=" + month +
-                "&ee=" + ee + "&url=" + urlField + "&startPage=" + startPage + "&endPage=" + endPage + "&volume=" + volume +
-                "&number=" + number + "&index=" + trim(formPublication.indexSelected.value);
+            url += "&typePublication=inprocedings&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage +
+                "&cdrom=" + cdrom + "&note=" + note + "&number=" + number + "&month=" + month;
+
+            break;
+        case "book":
+            ee = trim(formPublication.ee.value);
+            volume = trim(formPublication.volume.value);
+            cdrom = trim(formPublication.cdrom.value);
+            month = trim(formPublication.month.value);
+            isbn = trim(formPublication.isbn.value);
+
+            if( volume != "" && volume.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Volume</strong> must be number!</p>");
+                formPublication.volume.focus();
             }
+
+            url += "&typePublication=book&ee=" + ee + "&volume=" + volume + "&cdrom=" + cdrom +
+                "&month=" + month + "&isbn=" + isbn;
+
+            break;
+        case "incollection":
+            ee = trim(formPublication.ee.value);
+            startPage = trim(formPublication.startPage.value);
+            endPage = trim(formPublication.endPage.value);
+            cdrom = trim(formPublication.cdrom.value);
+            chapter = trim(formPublication.chapter.value);
+            isbn = trim(formPublication.isbn.value);
+
+            if( startPage != "" && startPage.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Start Page</strong> must be number!</p>");
+                formPublication.startPage.focus();
+            }
+
+            if( endPage != "" && endPage.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- End Page</strong> must be number!</p>");
+                formPublication.endPage.focus();
+            }
+
+            if( chapter != "" && chapter.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Chapter</strong> must be number!</p>");
+                formPublication.chapter.focus();
+            }
+
+            url += "&typePublication=incollection&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage +
+                "&cdrom=" + cdrom + "&chapter=" + chapter + "&isbn=" + isbn;
+
+            break;
+        case "www":
+            ee = trim(formPublication.ee.value);
+            note = trim(formPublication.note.value);
+
+            url += "&typePublication=www&ee=" + ee + "&note=" + note;
+            break;
+        case "article":
+            cdrom = trim(formPublication.cdrom.value);
+            journal = trim(formPublication.journal.value);
+            note = trim(formPublication.note.value);
+            month = trim(formPublication.month.value);
+            ee = trim(formPublication.ee.value);
+            startPage = trim(formPublication.startPage.value);
+            endPage = trim(formPublication.endPage.value);
+            volume = trim(formPublication.volume.value);
+            number = trim(formPublication.number.value);
+
+            if( startPage != "" && startPage.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Start Page</strong> must be number!</p>");
+                formPublication.startPage.focus();
+            }
+
+            if( endPage != "" && endPage.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- End Page</strong> must be number!</p>");
+                formPublication.endPage.focus();
+            }
+
+            if( volume != "" && volume.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Volume</strong> must be number!</p>");
+                formPublication.volume.focus();
+            }
+
+            if( number != "" && number.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Number</strong> must be number!</p>");
+                formPublication.number.focus();
+            }
+
+            url += "&typePublication=article&cdrom=" + cdrom + "&journal=" + journal + "&note=" + note + "&month=" + month +
+                "&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage + "&volume=" + volume +
+                "&number=" + number;
             break;
         case "proceedings":
+            ee = trim(formPublication.ee.value);
+            journal = trim(formPublication.journal.value);
+            volume = trim(formPublication.volume.value);
+            number = trim(formPublication.number.value);
+            note = trim(formPublication.note.value);
+            month = trim(formPublication.month.value);
+            address = trim(formPublication.address.value);
+            isbn = trim(formPublication.isbn.value);
+
+
+            if( volume != "" && volume.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Volume</strong> must be number!</p>");
+                formPublication.volume.focus();
+            }
+
+            if( number != "" && number.match(expRegNumber) == null){
+                messagePublication += ("<p><strong>- Number</strong> must be number!</p>");
+                formPublication.number.focus();
+            }
+
+            url += "&typePublication=proceedings&ee=" + ee + "&journal=" + journal +
+                "&volume=" + volume + "&number=" + number + "&note=" + note + "&month=" + month +
+                "&address=" + address + "&isbn=" + isbn;
+
             break;
     }
 
     if(messagePublication != ""){
-        messagePublication += "<p>- Click on the box to close it.</p>";
         showMessage('critical', messagePublication);
         return false;
     }
 
+    if(action != 'savePublication'){
+        url += "&index=" + trim(formPublication.indexSelected.value);
+    }
+    alert(url);
     callServlet(url, "AjaxContent");
     return true;
+  
 }
 
 function deletePublication(){
@@ -644,7 +769,6 @@ function saveDate(){
 }
 
 function loadDate(type){
-
     var form = document.getElementById('formEvent');
     var name = form.name.value;
     var local = form.city.value;
@@ -670,4 +794,85 @@ function loadDate(type){
 
     callServlet('Calendar?cod=' + type + '&name=' + name + '&local=' + local +
         '&sDate=' + sDate + '&eDate=' + eDate, 'events_data');
+}
+
+function setPopUp(mode){
+    HttpMethod = "POST";
+    var req = null;
+    var urlPopUp = "Filter?action=popupInsert&mode=" + mode;
+    req = getXMLHTTPRequest();
+    if (req){
+        req.open(HttpMethod,urlPopUp,false);
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        req.setRequestHeader('Connection', 'close');
+        req.send(null);
+        req.responseText;
+        if (document.getElementById("loading") != null )
+            document.getElementById("loading").innerHTML="";
+    }
+
+}
+
+
+/***************POPUP*********************/
+
+var Nav4 = ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
+
+var dialogWin = new Object()
+
+var optionPopUp;
+
+function openDGDialog(mode, url, width, height, returnFunc, args) {
+    if (document.getElementById("loading") != null ){
+        document.getElementById("loading").innerHTML="<div style=\"position: relative;left: 48px;top: 76px;font-family: tahoma,sans-serif;\">Loading. Please wait...</div>";
+        document.getElementById("loading").style.visibility = 'visible';
+    }
+    setPopUp(mode);
+    optionPopUp = mode;
+    if (!dialogWin.win || (dialogWin.win && dialogWin.win.closed)) {
+        dialogWin.returnFunc = returnFunc
+        dialogWin.returnedValue = ""
+        dialogWin.args = args
+        dialogWin.url = url
+        dialogWin.width = width
+        dialogWin.height = height
+        dialogWin.name = (new Date()).getSeconds().toString()
+        if (Nav4) {
+            dialogWin.left = window.screenX +
+                ((window.outerWidth - dialogWin.width) / 2)
+            dialogWin.top = window.screenY +
+                ((window.outerHeight - dialogWin.height) / 2)
+            var attr = "screenX=" + dialogWin.left +
+                ",screenY=" + dialogWin.top + ",resizable=no,width=" +
+                dialogWin.width + ",height=" + dialogWin.height
+        } else {
+            dialogWin.left = (screen.width - dialogWin.width) / 2
+            dialogWin.top = (screen.height - dialogWin.height) / 2
+            var attr = "left=" + dialogWin.left + ",top=" +
+                dialogWin.top + ",resizable=no,width=" + dialogWin.width +
+                ",height=" + dialogWin.height
+        }
+
+        dialogWin.win=window.open(dialogWin.url, dialogWin.name, attr)
+        dialogWin.win.focus()
+    } else {
+        dialogWin.win.focus()
+    }
+   if (document.getElementById("loading") != null )
+        document.getElementById("loading").style.visibility = 'hidden';
+}
+
+function checkModal() {
+    setTimeout("finishChecking()", 50)
+    return true
+}
+
+function finishChecking() {
+    if (dialogWin.win && !dialogWin.win.closed) {
+        dialogWin.win.focus()
+    }
+}
+
+function setPrefs() {
+    document.getElementById(optionPopUp).value =  dialogWin.returnedValue;
 }

@@ -13,15 +13,35 @@ public class Article extends ResearchReport {
     private String cdrom;
     private String startPage;
     private String endPage;
+    private String publisher;
+    private String editor;
 
-    public Article(String title, String insertion, String url, String ee, String journal, String volume,
-            String note, String number, String month, String cdrom, String startPage, String endPage) {
+    public Article(String title, String url, String ee, String journal, String volume,
+            String note, String number, String month, String cdrom, String startPage, String endPage, String strAuthors,
+            String bookTitle, String publisher, String editor, double cod) {
 
-        super(title, insertion, url, ee, journal, volume, number, note, month, "article");
+        super(title, url, ee, journal, volume, number, note, month, "article", strAuthors, bookTitle, cod);
         this.cdrom = cdrom;
         this.endPage = endPage;
         this.startPage = startPage;
-        
+        this.publisher = publisher;
+        this.editor = editor;
+    }
+
+    public String getEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     /**

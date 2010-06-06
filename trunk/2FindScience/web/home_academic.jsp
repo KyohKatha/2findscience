@@ -66,7 +66,7 @@
             }
         </script>
     </head>
-    <body onload="loadAjaxAcademic('Home')">
+    <body onload="loadAjaxAcademic('Home')" onClick="checkModal()" onFocus="return checkModal()">
         <div id="loading" class="academic" style="visibility: hidden"></div>
         <div id="header" class="academic">
             <input type="hidden" id="currentMenu" value="home"/>

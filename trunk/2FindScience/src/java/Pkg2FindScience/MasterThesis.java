@@ -11,4 +11,7 @@ package Pkg2FindScience;
  */
 public class MasterThesis extends Thesis{
 
+    public MasterThesis(String title, String url, String school, String authors, double cod){
+        super(title, url, school, "mastersthesis", authors, cod );
+    }
 }

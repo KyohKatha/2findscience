@@ -166,7 +166,6 @@ public class BDConnection {
     }
 
     public void registerUser(User newUser, String subjects) throws PublicationDAOException {
-        String[] vectorSubjects = subjects.split(";");
         ResultSet result = null;
         String sQuery = null;
 
@@ -188,19 +187,21 @@ public class BDConnection {
             sQuery = "INSERT INTO integrado.userData VALUES('" + newUser.getLogin() + "','" + newUser.getPassword() + "','" + newUser.getName() + "','" + newUser.getEmail() + "','" + newUser.getPage() + "',2,0,0);";
             stm.execute(sQuery);
 
-            for (int i = 0; i < vectorSubjects.length; i++) {
-                sQuery = "SELECT cod FROM integrado.subject WHERE subject= '" + vectorSubjects[i] + "';";
-                stm.execute(sQuery);
+            if (subjects != null && !subjects.equals("")) {
+                String[] vectorSubjects = subjects.split(";");
 
-                result = stm.getResultSet();
-
-                if (result.next()) {
-                    int cod = result.getInt("cod");
-                    sQuery = "INSERT INTO integrado.userSubject VALUES('" + newUser.getLogin() + "'," + cod + ");";
+                for (int i = 0; i < vectorSubjects.length; i++) {
+                    sQuery = "SELECT cod FROM integrado.subject WHERE subject= '" + vectorSubjects[i] + "';";
                     stm.execute(sQuery);
+                    result = stm.getResultSet();
+
+                    if (result.next()) {
+                        int cod = result.getInt("cod");
+                        sQuery = "INSERT INTO integrado.userSubject VALUES('" + newUser.getLogin() + "'," + cod + ");";
+                        stm.execute(sQuery);
+                    }
                 }
             }
-
 
         } catch (Exception e) {
             throw new PublicationDAOException("<p>- Error <strong>save</strong> data</p> <p>- Please try again</p>");
@@ -286,38 +287,6 @@ public class BDConnection {
         return publications;
     }
 
-    public Article setArticle(Double codPublication) throws PublicationDAOException {
-        Article article = null;
-        ResultSet result = null;
-        String sQuery = "SELECT * FROM view_article WHERE cod =" + codPublication + ";";
-
-        try {
-            stm.execute(sQuery);
-            result = stm.getResultSet();
-
-            if (result.next()) {
-                String title = result.getString("title");
-                String insertion = result.getString("insertion");
-                String url = result.getString("url");
-                String ee = result.getString("ee");
-                String journal = result.getString("journal");
-                String volume = result.getString("volume");
-                String number = result.getString("number");
-                String month = result.getString("month");
-                String cdrom = result.getString("cdrom");
-                String startPage = result.getString("startPage");
-                String endPage = result.getString("endPage");
-                String note = result.getString("note");
-
-                article = new Article(title, insertion, url, ee, journal,
-                        volume, note, number, month, cdrom, startPage, endPage);
-            }
-        } catch (Exception e) {
-            throw new PublicationDAOException();
-        }
-        return article;
-    }
-
     public Vector getAuthors() throws PublicationDAOException {
         Vector authors = new Vector();
         ResultSet rs = null;
@@ -342,7 +311,7 @@ public class BDConnection {
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT TOP 50 name FROM integrado.bookTitle ORDER BY cod;";
+            String sQuery = "SELECT TOP 50 name FROM integrado.bookTitle ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -354,118 +323,6 @@ public class BDConnection {
             throw new PublicationDAOException();
         }
         return bookTitle;
-    }
-
-    public void saveArticle(Article article, String login, String authors, String bookTitle) throws PublicationDAOException {
-        String[] vectorAuthors = authors.split(";");
-
-        try {
-            CallableStatement st = con.prepareCall("{ call sp_insert_article (?,?,?,?,?,?,?,?,?,?,?,?) }");
-            st.setString("title", article.getTitle());
-
-            if (article.getUrl().equals("")) {
-                st.setString("url", null);
-            } else {
-                st.setString("url", article.getUrl());
-            }
-
-            if (article.getEe().equals("")) {
-                st.setString("ee", null);
-            } else {
-                st.setString("ee", article.getEe());
-            }
-
-            if (article.getJournal().equals("")) {
-                st.setString("journal", null);
-            } else {
-                st.setString("journal", article.getJournal());
-            }
-
-            if (article.getVolume().equals("")) {
-                st.setString("volume", null);
-            } else {
-                st.setInt("volume", Integer.parseInt(article.getVolume()));
-            }
-
-            if (article.getNumber().equals("")) {
-                st.setString("number", null);
-            } else {
-                st.setInt("number", Integer.parseInt(article.getNumber()));
-            }
-
-            if (article.getNote().equals("")) {
-                st.setString("note", null);
-            } else {
-                st.setString("note", article.getNote());
-            }
-
-            if (article.getMonth().equals("")) {
-                st.setString("month", null);
-            } else {
-                st.setString("month", article.getMonth());
-            }
-
-            if (article.getCdrom().equals("")) {
-                st.setString("cdrom", null);
-            } else {
-                st.setString("cdrom", article.getCdrom());
-            }
-
-            if (article.getStartPage().equals("")) {
-                st.setString("startPage", null);
-            } else {
-                st.setInt("startPage", Integer.parseInt(article.getStartPage()));
-            }
-            if (article.getEndPage().equals("")) {
-                st.setString("endPage", null);
-            } else {
-                st.setInt("endPage", Integer.parseInt(article.getEndPage()));
-            }
-
-            st.setString("loginUser", login);
-            st.execute();
-            st.close();
-
-            ResultSet result = null;
-            String sQuery = null;
-
-            sQuery = "SELECT cod FROM integrado.publication WHERE title='" + article.getTitle() + "' AND loginUser='" + login + "';";
-            stm.execute(sQuery);
-            result = stm.getResultSet();
-            double codPublication = -1;
-
-            if (result.next()) {
-                codPublication = result.getDouble("cod");
-
-                for (int i = 0; i < vectorAuthors.length; i++) {
-                    sQuery = "SELECT cod FROM integrado.author WHERE name like '" + this.formatField(vectorAuthors[i]) + "';";
-                    stm.execute(sQuery);
-
-                    result = stm.getResultSet();
-
-                    if (result.next()) {
-                        int cod = result.getInt("cod");
-                        sQuery = "INSERT INTO integrado.authorPublication VALUES (" + codPublication + "," + cod + ");";
-                    }
-                }
-            }
-
-            if (!bookTitle.equals("")) {
-                bookTitle = bookTitle.substring(0, bookTitle.length() - 1);
-                sQuery = "SELECT cod FROM integrado.bookTitle WHERE name like '" + this.formatField(bookTitle) + "';";
-                stm.execute(sQuery);
-                ResultSet resultBook = stm.getResultSet();
-
-                if (resultBook.next()) {
-                    int cod = resultBook.getInt("cod");
-
-                    sQuery = "UPDATE integrado.document SET codBookTitle = " + cod + " WHERE codPublication=" + codPublication + ";";
-                    stm.execute(sQuery);
-                }
-            }
-        } catch (SQLException e) {
-            throw new PublicationDAOException();
-        }
     }
 
     private String formatField(String field) {
@@ -483,117 +340,12 @@ public class BDConnection {
         return result;
     }
 
-    public void updateArticle(Article article, String login, String titleAnt) throws PublicationDAOException {
-
-        String sQuery = "SELECT cod FROM integrado.publication WHERE title='" + titleAnt + "' AND loginUser='" + login + "' AND type='article';";
-        ResultSet rs = null;
-
-        try {
-            stm.execute(sQuery);
-            rs = stm.getResultSet();
-
-            if (rs.next()) {
-                double codPublication = rs.getDouble("cod");
-                Article articleAnt = this.setArticle(codPublication);
-
-                sQuery = "UPDATE integrado.publication SET ";
-                boolean update = false;
-
-                if (!article.getTitle().equals(articleAnt.getTitle())) {
-                    sQuery += "title = '" + article.getTitle() + "', ";
-                    update = true;
-                }
-
-                if (!article.getUrl().equals(articleAnt.getUrl())) {
-                    sQuery += "url = '" + article.getUrl() + "', ";
-                    update = true;
-                }
-
-                if (update) {
-
-                    sQuery = sQuery.substring(0, sQuery.length() - 2);
-                    sQuery += " WHERE loginUser='" + login + "' AND cod = " + codPublication + ";";
-                    stm.execute(sQuery);
-                }
-
-                sQuery = "UPDATE integrado.document SET ";
-                update = false;
-
-                if (!article.getEe().equals(articleAnt.getEe())) {
-                    sQuery += "ee = '" + article.getEe() + "', ";
-                    sQuery = sQuery.substring(0, sQuery.length() - 2);
-                    sQuery += " WHERE codpublication = " + codPublication + ";";
-                    stm.execute(sQuery);
-                }
-
-                sQuery = "UPDATE integrado.researchreport SET ";
-                update = false;
-
-                if (!article.getJournal().equals(articleAnt.getJournal())) {
-                    sQuery += "journal = '" + article.getJournal() + "', ";
-                    update = true;
-                }
-
-                if (!article.getVolume().equals(articleAnt.getVolume())) {
-                    sQuery += "volume = '" + article.getVolume() + "', ";
-                    update = true;
-                }
-
-                if (!article.getNumber().equals(articleAnt.getNumber())) {
-                    sQuery += "number = '" + article.getNumber() + "', ";
-                    update = true;
-                }
-                if (!article.getNote().equals(articleAnt.getNote())) {
-                    sQuery += "note = '" + article.getNote() + "', ";
-                    update = true;
-                }
-
-                if (!article.getMonth().equals(articleAnt.getMonth())) {
-                    sQuery += "month = '" + article.getMonth() + "', ";
-                    update = true;
-                }
-
-                if (update) {
-                    sQuery = sQuery.substring(0, sQuery.length() - 2);
-                    sQuery += " WHERE codpublication = " + codPublication + ";";
-                    stm.execute(sQuery);
-                }
-
-                sQuery = "UPDATE integrado.article SET ";
-                update = false;
-
-                if (!article.getCdrom().equals(articleAnt.getCdrom())) {
-                    sQuery += "cdrom = '" + article.getCdrom() + "', ";
-                    update = true;
-                }
-                if (!article.getStartPage().equals(articleAnt.getStartPage())) {
-                    sQuery += "startPage = '" + article.getStartPage() + "', ";
-                    update = true;
-                }
-                if (!article.getEndPage().equals(articleAnt.getEndPage())) {
-                    sQuery += "endPage = '" + article.getEndPage() + "', ";
-                    update = true;
-                }
-
-                if (update) {
-                    sQuery = sQuery.substring(0, sQuery.length() - 2);
-                    sQuery += " WHERE codpublication = " + codPublication + ";";
-                    stm.execute(sQuery);
-                }
-            }
-        } catch (SQLException e) {
-            throw new PublicationDAOException();
-        }
-    }
-
     public void deletePublication(Publication publication, String login) throws PublicationDAOException {
         String sQuery = "DELETE from integrado.publication WHERE title='" + publication.getTitle() + "' AND type='" + publication.getType() + "' ";
-        System.out.println(sQuery);
+
         if (login != null) {
             sQuery += "AND loginUser='" + login + "' ";
         }
-
-        System.out.println(sQuery);
 
         try {
             stm.execute(sQuery);
@@ -676,7 +428,7 @@ public class BDConnection {
                     }
                 }
             }
-            System.out.println("Size: " + publications.size());
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
@@ -1009,4 +761,1343 @@ public Vector getEvents(String sql) throws PublicationDAOException {
         }
     }
 
+    /***************GUSTAVO****************/
+
+    public Vector getEditor() throws PublicationDAOException {
+        Vector editor = new Vector();
+        ResultSet rs = null;
+
+        try {
+            String sQuery = "SELECT TOP 50 name FROM integrado.editor ORDER BY name;";
+            stm.execute(sQuery);
+            rs = stm.getResultSet();
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                editor.addElement(name);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return editor;
+    }
+
+    public Vector getPublisher() throws PublicationDAOException {
+        Vector publisher = new Vector();
+        ResultSet rs = null;
+
+        try {
+            String sQuery = "SELECT name FROM integrado.publisher ORDER BY name;";
+            stm.execute(sQuery);
+            rs = stm.getResultSet();
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                publisher.addElement(name);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return publisher;
+    }
+
+    public void saveMasterThesis(MasterThesis masterThesis, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_masterThesis (?,?,?,?) }");
+
+            st.setString("title", masterThesis.getTitle());
+
+            if (masterThesis.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", masterThesis.getUrl());
+            }
+
+            if (masterThesis.getSchool().equals("")) {
+                st.setString("school", null);
+            } else {
+                st.setString("school", masterThesis.getSchool());
+            }
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            if (!masterThesis.getStrAuthors().equals("")) {
+                String sQuery = "SELECT cod FROM integrado.publication WHERE title='" + masterThesis.getTitle() + "' AND loginUser='" + login + "';";
+                stm.execute(sQuery);
+                ResultSet result = stm.getResultSet();
+                double codPublication = -1;
+
+                if (result.next()) {
+                    codPublication = result.getDouble("cod");
+                    this.saveAuthorPublication(masterThesis.getStrAuthors(), codPublication);
+                }
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void savePhdThesis(PhdThesis phdThesis, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_phdthesis (?,?,?,?,?,?,?,?) }");
+
+            st.setString("title", phdThesis.getTitle());
+
+            if (phdThesis.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", phdThesis.getUrl());
+            }
+
+            if (phdThesis.getSchool().equals("")) {
+                st.setString("school", null);
+            } else {
+                st.setString("school", phdThesis.getSchool());
+            }
+
+            if (phdThesis.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setString("number", phdThesis.getNumber());
+            }
+
+            if (phdThesis.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setString("volume", phdThesis.getVolume());
+            }
+
+            if (phdThesis.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", phdThesis.getMonth());
+            }
+
+            if (phdThesis.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", phdThesis.getEe());
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            sQuery = "SELECT cod FROM integrado.publication WHERE title='" + phdThesis.getTitle() + "' AND loginUser='" + login + "';";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+            double codPublication = -1;
+
+            if (result.next()) {
+                codPublication = result.getDouble("cod");
+                if (!phdThesis.getStrAuthors().equals("")) {
+                    this.saveAuthorPublication(phdThesis.getStrAuthors(), codPublication);
+                }
+                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + phdThesis.getIsbn() + "','book');";
+                stm.execute(sQuery);
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveArticle(Article article, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_article (?,?,?,?,?,?,?,?,?,?,?,?) }");
+            st.setString("title", article.getTitle());
+
+            if (article.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", article.getUrl());
+            }
+
+            if (article.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", article.getEe());
+            }
+
+            if (article.getJournal().equals("")) {
+                st.setString("journal", null);
+            } else {
+                st.setString("journal", article.getJournal());
+            }
+
+            if (article.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setInt("volume", Integer.parseInt(article.getVolume()));
+            }
+
+            if (article.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setInt("number", Integer.parseInt(article.getNumber()));
+            }
+
+            if (article.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", article.getNote());
+            }
+
+            if (article.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", article.getMonth());
+            }
+
+            if (article.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", article.getCdrom());
+            }
+
+            if (article.getStartPage().equals("")) {
+                st.setString("startPage", null);
+            } else {
+                st.setInt("startPage", Integer.parseInt(article.getStartPage()));
+            }
+            if (article.getEndPage().equals("")) {
+                st.setString("endPage", null);
+            } else {
+                st.setInt("endPage", Integer.parseInt(article.getEndPage()));
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            if (!article.getBookTitle().equals("") || !article.getStrAuthors().equals("") || !article.getEditor().equals("") || !article.getPublisher().equals("")) {
+                sQuery = "SELECT cod FROM integrado.publication WHERE title='" + article.getTitle() + "' AND loginUser='" + login + "';";
+                stm.execute(sQuery);
+                result = stm.getResultSet();
+                double codPublication = -1;
+
+                if (result.next()) {
+                    codPublication = result.getDouble("cod");
+                    this.saveAuthorPublication(article.getStrAuthors(), codPublication);
+                    this.saveBookTitleDocument(article.getBookTitle(), codPublication);
+                    this.saveEditorDocument(article.getEditor(), codPublication);
+                    this.savePublisherDocument(article.getPublisher(), codPublication);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveInproceedings(Inproceedings inproceedings, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_inproceedings (?,?,?,?,?,?,?,?,?,?) }");
+            st.setString("title", inproceedings.getTitle());
+
+            if (inproceedings.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", inproceedings.getUrl());
+            }
+
+            if (inproceedings.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", inproceedings.getEe());
+            }
+
+            if (inproceedings.getStartPage().equals("")) {
+                st.setString("startPage", null);
+            } else {
+                st.setInt("startPage", Integer.parseInt(inproceedings.getStartPage()));
+            }
+
+            if (inproceedings.getEndPage().equals("")) {
+                st.setString("endPage", null);
+            } else {
+                st.setInt("endPage", Integer.parseInt(inproceedings.getEndPage()));
+            }
+
+            if (inproceedings.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", inproceedings.getCdrom());
+            }
+
+            if (inproceedings.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", inproceedings.getNote());
+            }
+
+            if (inproceedings.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setInt("number", Integer.parseInt(inproceedings.getNumber()));
+            }
+
+            if (inproceedings.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", inproceedings.getMonth());
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            if (!inproceedings.getBookTitle().equals("") || !inproceedings.getStrAuthors().equals("") || !inproceedings.getEditor().equals("") || !inproceedings.getPublisher().equals("")) {
+                sQuery = "SELECT cod FROM integrado.publication WHERE title='" + inproceedings.getTitle() + "' AND loginUser='" + login + "';";
+                stm.execute(sQuery);
+                result = stm.getResultSet();
+                double codPublication = -1;
+
+                if (result.next()) {
+                    codPublication = result.getDouble("cod");
+                    this.saveAuthorPublication(inproceedings.getStrAuthors(), codPublication);
+                    this.saveBookTitleDocument(inproceedings.getBookTitle(), codPublication);
+                    this.saveEditorDocument(inproceedings.getEditor(), codPublication);
+                    this.savePublisherDocument(inproceedings.getPublisher(), codPublication);
+                }
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveBook(Book book, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_book (?,?,?,?,?,?,?) }");
+            st.setString("title", book.getTitle());
+
+            if (book.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", book.getUrl());
+            }
+
+            if (book.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", book.getEe());
+            }
+
+            if (book.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", book.getCdrom());
+            }
+
+            if (book.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setInt("volume", Integer.parseInt(book.getVolume()));
+            }
+
+            if (book.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", book.getMonth());
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            sQuery = "SELECT cod FROM integrado.publication WHERE title='" + book.getTitle() + "' AND loginUser='" + login + "';";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+            double codPublication = -1;
+
+            if (result.next()) {
+                codPublication = result.getDouble("cod");
+                if (!book.getBookTitle().equals("") || !book.getStrAuthors().equals("") || !book.getEditor().equals("") || !book.getPublisher().equals("")) {
+                    this.saveAuthorPublication(book.getStrAuthors(), codPublication);
+                    this.saveBookTitleDocument(book.getBookTitle(), codPublication);
+                    this.saveEditorDocument(book.getEditor(), codPublication);
+                    this.savePublisherDocument(book.getPublisher(), codPublication);
+                }
+                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + book.getIsbn() + "','book');";
+                stm.execute(sQuery);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveIncollection(Incollection incollection, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_incollection (?,?,?,?,?,?,?,?) }");
+            st.setString("title", incollection.getTitle());
+
+            if (incollection.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", incollection.getUrl());
+            }
+
+            if (incollection.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", incollection.getEe());
+            }
+
+            if (incollection.getChapter().equals("")) {
+                st.setString("chapter", null);
+            } else {
+                st.setInt("chapter", Integer.parseInt(incollection.getChapter()));
+            }
+
+            if (incollection.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", incollection.getCdrom());
+            }
+
+            if (incollection.getStartPage().equals("")) {
+                st.setString("startPage", null);
+            } else {
+                st.setInt("startPage", Integer.parseInt(incollection.getStartPage()));
+            }
+            if (incollection.getEndPage().equals("")) {
+                st.setString("endPage", null);
+            } else {
+                st.setInt("endPage", Integer.parseInt(incollection.getEndPage()));
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            sQuery = "SELECT cod FROM integrado.publication WHERE title='" + incollection.getTitle() + "' AND loginUser='" + login + "';";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+            double codPublication = -1;
+
+            if (result.next()) {
+                codPublication = result.getDouble("cod");
+                if (!incollection.getBookTitle().equals("") || !incollection.getStrAuthors().equals("") || !incollection.getEditor().equals("") || !incollection.getPublisher().equals("")) {
+                this.saveAuthorPublication(incollection.getStrAuthors(), codPublication);
+                    this.saveBookTitleDocument(incollection.getBookTitle(), codPublication);
+                    this.saveEditorDocument(incollection.getEditor(), codPublication);
+                    this.savePublisherDocument(incollection.getPublisher(), codPublication);
+                }
+                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + incollection.getIsbn() + "','book');";
+                stm.execute(sQuery);
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveWww(Www www, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_www (?,?,?,?,?) }");
+            st.setString("title", www.getTitle());
+
+            if (www.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", www.getUrl());
+            }
+
+            if (www.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", www.getEe());
+            }
+
+            if (www.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", www.getNote());
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            if (!www.getBookTitle().equals("") || !www.getStrAuthors().equals("") || !www.getEditor().equals("") || !www.getPublisher().equals("")) {
+                sQuery = "SELECT cod FROM integrado.publication WHERE title='" + www.getTitle() + "' AND loginUser='" + login + "';";
+                stm.execute(sQuery);
+                result = stm.getResultSet();
+                double codPublication = -1;
+
+                if (result.next()) {
+                    codPublication = result.getDouble("cod");
+                    this.saveAuthorPublication(www.getStrAuthors(), codPublication);
+                    this.saveBookTitleDocument(www.getBookTitle(), codPublication);
+                    this.saveEditorDocument(www.getEditor(), codPublication);
+                    this.savePublisherDocument(www.getPublisher(), codPublication);
+                }
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveProceedings(Proceedings proceedings, String login) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_insert_proceedings (?,?,?,?,?,?,?,?,?,?) }");
+            st.setString("title", proceedings.getTitle());
+
+            if (proceedings.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", proceedings.getUrl());
+            }
+
+            if (proceedings.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", proceedings.getEe());
+            }
+
+            if (proceedings.getJournal().equals("")) {
+                st.setString("journal", null);
+            } else {
+                st.setString("journal", proceedings.getJournal());
+            }
+
+            if (proceedings.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setInt("volume", Integer.parseInt(proceedings.getVolume()));
+            }
+
+            if (proceedings.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setInt("number", Integer.parseInt(proceedings.getNumber()));
+            }
+
+            if (proceedings.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", proceedings.getNote());
+            }
+
+            if (proceedings.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", proceedings.getMonth());
+            }
+
+            if (proceedings.getAddress().equals("")) {
+                st.setString("address", null);
+            } else {
+                st.setString("address", proceedings.getAddress());
+            }
+
+            st.setString("loginUser", login);
+            st.execute();
+            st.close();
+
+            ResultSet result = null;
+            String sQuery = null;
+
+            sQuery = "SELECT cod FROM integrado.publication WHERE title='" + proceedings.getTitle() + "' AND loginUser='" + login + "';";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+            double codPublication = -1;
+
+            if (result.next()) {
+                codPublication = result.getDouble("cod");
+                 if (!proceedings.getBookTitle().equals("") || !proceedings.getStrAuthors().equals("") || !proceedings.getEditor().equals("") || !proceedings.getPublisher().equals("")) {
+                       codPublication = result.getDouble("cod");
+                    this.saveAuthorPublication(proceedings.getStrAuthors(), codPublication);
+                    this.saveBookTitleDocument(proceedings.getBookTitle(), codPublication);
+                    this.saveEditorDocument(proceedings.getEditor(), codPublication);
+                    this.savePublisherDocument(proceedings.getPublisher(), codPublication);
+                }
+                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + proceedings.getIsbn() + "','proceedings');";
+                stm.execute(sQuery);
+            }
+         } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
+    public Article setArticle(double codPublication) throws PublicationDAOException {
+        Article article = null;
+        ResultSet result = null;
+        String sQuery = "SELECT * FROM view_article WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String journal = result.getString("journal");
+                String volume = result.getString("volume");
+                String number = result.getString("number");
+                String month = result.getString("month");
+                String cdrom = result.getString("cdrom");
+                String startPage = result.getString("startPage");
+                String endPage = result.getString("endPage");
+                String note = result.getString("note");
+
+                article = new Article(title, url, ee, journal,
+                        volume, note, number, month, cdrom, startPage, endPage, null, null, null, null, codPublication);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return article;
+    }
+
+    public Incollection setIncollection(double codPublication) throws PublicationDAOException {
+        Incollection incollection = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, ee, chapter, startPage, endPage, cdrom FROM view_incollection WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String chapter = result.getString("chapter");
+                String startPage = result.getString("startPage");
+                String endPage = result.getString("endPage");
+                String cdrom = result.getString("cdrom");
+
+                incollection = new Incollection(title, url, ee, startPage, endPage, cdrom, chapter, null, null, null, null, null, codPublication);
+            }
+
+            sQuery = "SELECT isbn FROM integrado.isbn WHERE codPublication = " + codPublication + ";";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String isbn = result.getString("isbn");
+                incollection.setIsbn(isbn);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return incollection;
+    }
+
+    public Book setBook(double codPublication) throws PublicationDAOException {
+        Book book = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, ee, volume, cdrom, month FROM view_book WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String volume = result.getString("volume");
+                String cdrom = result.getString("cdrom");
+                String month = result.getString("month");
+
+                book = new Book(title, url, ee, volume, cdrom, month, null, null, null, null, null, codPublication);
+            }
+
+            sQuery = "SELECT isbn FROM integrado.isbn WHERE codPublication = " + codPublication + ";";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String isbn = result.getString("isbn");
+                book.setIsbn(isbn);
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return book;
+    }
+
+    public Inproceedings setInproceedings(double codPublication) throws PublicationDAOException {
+        Inproceedings inproceedings = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, ee, startPage, endPage, cdrom, note, number, month FROM view_inproceedings WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String startPage = result.getString("startPage");
+                String endPage = result.getString("endPage");
+                String cdrom = result.getString("cdrom");
+                String note = result.getString("note");
+                String number = result.getString("number");
+                String month = result.getString("month");
+
+                inproceedings = new Inproceedings(title, url, ee, startPage, endPage, cdrom, note, number, month, null, null, null, null, codPublication);
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return inproceedings;
+    }
+
+    public Proceedings setProceedings(double codPublication) throws PublicationDAOException {
+        Proceedings proceedings = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, ee, journal, volume, number, note, month, address  FROM view_proceedings WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String journal = result.getString("journal");
+                String volume = result.getString("volume");
+                String number = result.getString("number");
+                String note = result.getString("note");
+                String month = result.getString("month");
+                String address = result.getString("address");
+
+                proceedings = new Proceedings(title, url, ee, journal, volume, number, note, month, address, null, null, null, null, null, codPublication);
+            }
+
+            sQuery = "SELECT isbn FROM integrado.isbn WHERE codPublication = " + codPublication + ";";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String isbn = result.getString("isbn");
+                proceedings.setIsbn(isbn);
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return proceedings;
+    }
+
+    public PhdThesis setPhdThesis(double codPublication) throws PublicationDAOException {
+        PhdThesis phdThesis = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, ee, volume, school, number, month  FROM view_phdThesis WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String volume = result.getString("volume");
+                String school = result.getString("school");
+                String number = result.getString("number");
+                String month = result.getString("month");
+
+                phdThesis = new PhdThesis(title, url, school, number, volume, month, ee, null, null, codPublication);
+            }
+
+            sQuery = "SELECT isbn FROM integrado.isbn WHERE codPublication = " + codPublication + ";";
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String isbn = result.getString("isbn");
+                phdThesis.setIsbn(isbn);
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return phdThesis;
+    }
+
+    public Www setWww(double codPublication) throws PublicationDAOException {
+        Www www = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, ee, note  FROM view_www WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String ee = result.getString("ee");
+                String note = result.getString("note");
+
+                www = new Www(title, url, ee, note, null, null, null, null, codPublication);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return www;
+    }
+
+    public MasterThesis setMastersThesis(double codPublication) throws PublicationDAOException {
+        MasterThesis masterThesis = null;
+        ResultSet result = null;
+        String sQuery = "SELECT title, url, school  FROM view_masterThesis WHERE cod =" + codPublication + ";";
+
+        try {
+            stm.execute(sQuery);
+            result = stm.getResultSet();
+
+            if (result.next()) {
+                String title = result.getString("title");
+                String url = result.getString("url");
+                String school = result.getString("school");
+
+                masterThesis = new MasterThesis(title, url, school, null, codPublication);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return masterThesis;
+    }
+
+    public void updateArticle(Article article, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_article (?,?,?,?,?,?,?,?,?,?,?,?) }");
+            st.setString("title", article.getTitle());
+
+            if (article.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", article.getUrl());
+            }
+
+            if (article.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", article.getEe());
+            }
+
+            if (article.getJournal().equals("")) {
+                st.setString("journal", null);
+            } else {
+                st.setString("journal", article.getJournal());
+            }
+
+            if (article.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setInt("volume", Integer.parseInt(article.getVolume()));
+            }
+
+            if (article.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setInt("number", Integer.parseInt(article.getNumber()));
+            }
+
+            if (article.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", article.getNote());
+            }
+
+            if (article.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", article.getMonth());
+            }
+
+            if (article.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", article.getCdrom());
+            }
+
+            if (article.getStartPage().equals("")) {
+                st.setString("startPage", null);
+            } else {
+                st.setInt("startPage", Integer.parseInt(article.getStartPage()));
+            }
+            if (article.getEndPage().equals("")) {
+                st.setString("endPage", null);
+            } else {
+                st.setInt("endPage", Integer.parseInt(article.getEndPage()));
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+        } catch (SQLException e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updatePhdThesis(PhdThesis phdThesis, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_phdthesis (?,?,?,?,?,?,?,?) }");
+
+            st.setString("title", phdThesis.getTitle());
+
+            if (phdThesis.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", phdThesis.getUrl());
+            }
+
+            if (phdThesis.getSchool().equals("")) {
+                st.setString("school", null);
+            } else {
+                st.setString("school", phdThesis.getSchool());
+            }
+
+            if (phdThesis.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setString("number", phdThesis.getNumber());
+            }
+
+            if (phdThesis.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setString("volume", phdThesis.getVolume());
+            }
+
+            if (phdThesis.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", phdThesis.getMonth());
+            }
+
+            if (phdThesis.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", phdThesis.getEe());
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+
+            String sQuery = "UPDATE integrado.isbn SET isbn='" + phdThesis.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
+            stm.execute(sQuery);
+
+        } catch (SQLException e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updateMasterThesis(MasterThesis masterThesis, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_masterThesis (?,?,?,?) }");
+
+            st.setString("title", masterThesis.getTitle());
+
+            if (masterThesis.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", masterThesis.getUrl());
+            }
+
+            if (masterThesis.getSchool().equals("")) {
+                st.setString("school", null);
+            } else {
+                st.setString("school", masterThesis.getSchool());
+            }
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updateInproceedings(Inproceedings inproceedings, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_inproceedings (?,?,?,?,?,?,?,?,?,?) }");
+            st.setString("title", inproceedings.getTitle());
+
+            if (inproceedings.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", inproceedings.getUrl());
+            }
+
+            if (inproceedings.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", inproceedings.getEe());
+            }
+
+            if (inproceedings.getStartPage().equals("")) {
+                st.setString("startPage", null);
+            } else {
+                st.setInt("startPage", Integer.parseInt(inproceedings.getStartPage()));
+            }
+
+            if (inproceedings.getEndPage().equals("")) {
+                st.setString("endPage", null);
+            } else {
+                st.setInt("endPage", Integer.parseInt(inproceedings.getEndPage()));
+            }
+
+            if (inproceedings.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", inproceedings.getCdrom());
+            }
+
+            if (inproceedings.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", inproceedings.getNote());
+            }
+
+            if (inproceedings.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setInt("number", Integer.parseInt(inproceedings.getNumber()));
+            }
+
+            if (inproceedings.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", inproceedings.getMonth());
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updateBook(Book book, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_book (?,?,?,?,?,?,?) }");
+            st.setString("title", book.getTitle());
+
+            if (book.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", book.getUrl());
+            }
+
+            if (book.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", book.getEe());
+            }
+
+            if (book.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", book.getCdrom());
+            }
+
+            if (book.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setInt("volume", Integer.parseInt(book.getVolume()));
+            }
+
+            if (book.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", book.getMonth());
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+
+            String sQuery = "UPDATE integrado.isbn SET isbn ='" + book.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
+            System.out.println("QUERY ISBN " + sQuery);
+            stm.execute(sQuery);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updateIncollection(Incollection incollection, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_incollection (?,?,?,?,?,?,?,?) }");
+            st.setString("title", incollection.getTitle());
+
+            if (incollection.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", incollection.getUrl());
+            }
+
+            if (incollection.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", incollection.getEe());
+            }
+
+            if (incollection.getChapter().equals("")) {
+                st.setString("chapter", null);
+            } else {
+                st.setInt("chapter", Integer.parseInt(incollection.getChapter()));
+            }
+
+            if (incollection.getCdrom().equals("")) {
+                st.setString("cdrom", null);
+            } else {
+                st.setString("cdrom", incollection.getCdrom());
+            }
+
+            if (incollection.getStartPage().equals("")) {
+                st.setString("startPage", null);
+            } else {
+                st.setInt("startPage", Integer.parseInt(incollection.getStartPage()));
+            }
+            if (incollection.getEndPage().equals("")) {
+                st.setString("endPage", null);
+            } else {
+                st.setInt("endPage", Integer.parseInt(incollection.getEndPage()));
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+
+            String sQuery = "UPDATE integrado.isbn SET isbn ='" + incollection.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
+            stm.execute(sQuery);
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updateWww(Www www, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_www (?,?,?,?,?) }");
+            st.setString("title", www.getTitle());
+
+            if (www.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", www.getUrl());
+            }
+
+            if (www.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", www.getEe());
+            }
+
+            if (www.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", www.getNote());
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void updateProceedings(Proceedings proceedings, double codPublication) throws PublicationDAOException {
+        try {
+            CallableStatement st = con.prepareCall("{ call sp_update_proceedings (?,?,?,?,?,?,?,?,?,?) }");
+            st.setString("title", proceedings.getTitle());
+
+            if (proceedings.getUrl().equals("")) {
+                st.setString("url", null);
+            } else {
+                st.setString("url", proceedings.getUrl());
+            }
+
+            if (proceedings.getEe().equals("")) {
+                st.setString("ee", null);
+            } else {
+                st.setString("ee", proceedings.getEe());
+            }
+
+            if (proceedings.getJournal().equals("")) {
+                st.setString("journal", null);
+            } else {
+                st.setString("journal", proceedings.getJournal());
+            }
+
+            if (proceedings.getVolume().equals("")) {
+                st.setString("volume", null);
+            } else {
+                st.setInt("volume", Integer.parseInt(proceedings.getVolume()));
+            }
+
+            if (proceedings.getNumber().equals("")) {
+                st.setString("number", null);
+            } else {
+                st.setInt("number", Integer.parseInt(proceedings.getNumber()));
+            }
+
+            if (proceedings.getNote().equals("")) {
+                st.setString("note", null);
+            } else {
+                st.setString("note", proceedings.getNote());
+            }
+
+            if (proceedings.getMonth().equals("")) {
+                st.setString("month", null);
+            } else {
+                st.setString("month", proceedings.getMonth());
+            }
+
+            if (proceedings.getAddress().equals("")) {
+                st.setString("address", null);
+            } else {
+                st.setString("address", proceedings.getAddress());
+            }
+
+            st.setDouble("idPub", codPublication);
+            st.execute();
+            st.close();
+
+            String sQuery = "UPDATE integrado.isbn SET isbn ='" + proceedings.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
+            stm.execute(sQuery);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveEditorDocument(String editor, double codPublication) throws PublicationDAOException {
+        if (editor != null && !editor.equals("")) {
+            String sQuery = null;
+            ResultSet result = null;
+
+            try {
+                String[] vectorEditor = editor.split(";");
+
+                for (int i = 0; i < vectorEditor.length; i++) {
+                    sQuery = "SELECT cod FROM integrado.editor WHERE name like '" + this.formatField(vectorEditor[i]) + "';";
+                    stm.execute(sQuery);
+
+                    result = stm.getResultSet();
+
+                    if (result.next()) {
+                        int cod = result.getInt("cod");
+                        sQuery = "INSERT INTO integrado.editorDocument VALUES (" + cod + "," + codPublication + ");";
+                        stm.execute(sQuery);
+                    }
+                }
+            } catch (Exception e) {
+                throw new PublicationDAOException();
+            }
+        }
+    }
+
+    public void savePublisherDocument(String publisher, double codPublication) throws PublicationDAOException {
+        if (publisher != null && !publisher.equals("")) {
+            String sQuery = null;
+            ResultSet result = null;
+
+            try {
+                String[] vectorPublisher = publisher.split(";");
+
+                for (int i = 0; i < vectorPublisher.length; i++) {
+                    sQuery = "SELECT cod FROM integrado.publisher WHERE name like '" + this.formatField(vectorPublisher[i]) + "';";
+                    stm.execute(sQuery);
+
+                    result = stm.getResultSet();
+
+                    if (result.next()) {
+                        int cod = result.getInt("cod");
+                        sQuery = "INSERT INTO integrado.publisherDocument VALUES (" + codPublication + "," + cod + ");";
+                        stm.execute(sQuery);
+                    }
+                }
+            } catch (Exception e) {
+                throw new PublicationDAOException();
+            }
+        }
+    }
+
+    public void saveBookTitleDocument(String bookTitle, double codPublication) throws PublicationDAOException {
+        if (bookTitle != null && !bookTitle.equals("")) {
+            ResultSet resultBook = null;
+            bookTitle = bookTitle.substring(0, bookTitle.length() - 1);
+            String sQuery = "SELECT cod FROM integrado.bookTitle WHERE name like '" + this.formatField(bookTitle) + "';";
+
+            try {
+                stm.execute(sQuery);
+                resultBook = stm.getResultSet();
+
+                if (resultBook.next()) {
+                    int cod = resultBook.getInt("cod");
+                    sQuery = "UPDATE integrado.document SET codBookTitle = " + cod + " WHERE codPublication=" + codPublication + ";";
+                    stm.execute(sQuery);
+                }
+            } catch (Exception e) {
+                throw new PublicationDAOException();
+            }
+        }
+    }
+
+    public void saveAuthorPublication(String authors, double codPublication) throws PublicationDAOException {
+        if (authors != null && !authors.equals("")) {
+            String sQuery = null;
+            ResultSet result = null;
+
+            try {
+                String[] vectorAuthors = authors.split(";");
+
+                for (int i = 0; i < vectorAuthors.length; i++) {
+                    sQuery = "SELECT cod FROM integrado.author WHERE name like '" + this.formatField(vectorAuthors[i]) + "';";
+                    stm.execute(sQuery);
+
+                    result = stm.getResultSet();
+
+                    if (result.next()) {
+                        int cod = result.getInt("cod");
+                        sQuery = "INSERT INTO integrado.authorPublication VALUES (" + codPublication + "," + cod + ");";
+                        stm.execute(sQuery);
+                    }
+                }
+            } catch (Exception e) {
+                throw new PublicationDAOException();
+            }
+        }
+    }
 }
