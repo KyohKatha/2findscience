@@ -13,6 +13,7 @@
 <%
 
             Vector newsVector = (Vector) request.getSession().getAttribute("newsVector");
+            request.removeAttribute("newsVector");
 
 %>
 
@@ -21,42 +22,45 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title> </title>
     </head>
-    <p class="title">News</p>
-    <marquee id="newsContent" height="85%" direction="up" onmouseover="this.stop()" onmouseout="this.start()">
-        <table>
-            <%
-                        if (newsVector != null) {
-                            for (int i = 0; i < newsVector.size(); i++) {
-                                News n = (News) newsVector.get(i);
-            %>
-            <tr>
-                <td>
-                    <div id="item" align="center" style="width: 288px;">
-                        <%if (n.getType() == 0) {%>
+    <table>
+        <%
+                    if (newsVector != null) {
 
-                        <div id="image">
-                            <img src="Imagens/sign_pub.png" alt="pub"/>
-                        </div>
-                        <%  } else {%>
-                        <div id="image">
-                            <img src="Imagens/sign_event.png" alt="eve"/>
-                        </div>
-                        <%                                                    }
-                        %>
-                        <p><i><a href="http://www.google.com"><%= n.getName()%></a></i></p>
-                        <p><%= n.getDate()%></p>
+                        for (int i = 0; i < newsVector.size(); i++) {
+
+                            News n = (News) newsVector.get(i);
+        %>
+        <tr>
+            <td>
+                <div id="item" align="center" style="width: 288px;">
+                    <%if (n.getType() == 0) {%>
+
+                    <div id="image">
+                        <img src="Imagens/sign_pub.png" alt="pub"/>
                     </div>
-                </td>
-            </tr>
-            <%
-                                        }
-                                    } else {
-            %>
-            <p align="center">
-                Loading error
-            </p>
-            <%}
-            %>
-        </table>
-    </marquee>
+                    <p><i><a href="http://www.google.com"><%= n.getName()%></a></i></p>
+                    <p><%= n.getDate()%></p>
+                    <%  } else {%>
+                    <div id="image">
+                        <img src="Imagens/sign_event.png" alt="eve"/>
+                    </div>
+                    <p><i><%= n.getName()%></i></p>
+                    <p><%= n.getDate()%></p>
+                    <%  }
+                    %>
+
+                </div>
+            </td>
+        </tr>
+        <%
+                                    }
+                                } else {
+
+        %>
+        <p align="center">
+            Loading error
+        </p>
+        <%}
+        %>
+    </table>
 </html>

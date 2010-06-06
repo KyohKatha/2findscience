@@ -435,8 +435,35 @@ function validateFormBusca(){
 
 }
 
-function validateFormEvent(){
-    alert("entrouu");
+function validateFormEvent1(){
+    form = document.getElementById("formEvent");
+    var message = "";
+
+    var name = form.name.value;
+    var local = form.city.value;
+    var startDate = "";
+    var endDate = "";
+
+    if (name == ""){
+        message += ("<p>- <strong>Name</strong> is required!</p>");
+        form.name.focus();
+    }
+
+    if(message != ""){
+        message += "<p>- Click on the box to close it.</p>";
+        showMessage('critical', message);
+        return false;
+    }
+
+    var url = "EventMaintenance?action=save&cod=0&name=" + name + "&city=" + local +
+    "&startDate=" + startDate + "&endDate=" + endDate;
+
+    callServlet(url, "AjaxContent");
+
+    return true;
+}
+
+function validateFormEvent2(cod){
     form = document.getElementById("formEvent");
     var message = "";
 
@@ -450,28 +477,17 @@ function validateFormEvent(){
         form.name.focus();
     }
 
-    if (local == ""){
-        local = "null";
-    }
-
-    if (startDate == ""){
-        startDate = "null";
-    }
-
-    if (endDate == ""){
-        endDate = "null";
-    }
-
     if(message != ""){
         message += "<p>- Click on the box to close it.</p>";
         showMessage('critical', message);
         return false;
     }
 
-    var url = "EventMaintenance?action=save&name=" + form.name.value + "&city=" + form.city.value +
-    "&startDate=" + form.startDate.value + "&endDate=" + form.endDate.value;
-    
+    var url = "EventMaintenance?action=save&cod=" + cod + "&name=" + name + "&city=" + local +
+    "&startDate=" + startDate + "&endDate=" + endDate;
+
     callServlet(url, "AjaxContent");
+
     return true;
 }
 
@@ -607,4 +623,44 @@ function validateFormInsertUpgrade(){
 
     callServlet(url, "AjaxContent");
     return true;
+}
+
+function saveDate(){
+    var dates = {sDate : null, eDate : null};
+
+    dates[0] = document.getElementById('startDate').value;
+    dates[1] = document.getElementById('endDate').value;
+
+    window.returnValue = dates;
+
+    window.close();
+}
+
+function loadDate(type){
+
+    var form = document.getElementById('formEvent');
+    var name = form.name.value;
+    var local = form.city.value;
+    var sDate;
+    var eDate;
+
+    if (type == 0){
+        sDate = null;
+        eDate = null;
+    } else {
+        sDate = form.startDate.value;
+        eDate = form.endDate.value;
+    }
+
+    var period = new Array();
+    period[0] = sDate;
+    period[1] = eDate;
+
+    var dates = window.showModalDialog('popupCalendar.jsp', period, '');
+
+    sDate = dates[0];
+    eDate = dates[1];
+
+    callServlet('Calendar?cod=' + type + '&name=' + name + '&local=' + local +
+        '&sDate=' + sDate + '&eDate=' + eDate, 'events_data');
 }

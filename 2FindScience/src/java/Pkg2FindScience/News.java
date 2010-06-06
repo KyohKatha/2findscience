@@ -10,7 +10,7 @@ package Pkg2FindScience;
  * @author Kaori
  */
 public class News {
-
+    private double cod;
     private int type;  // 1 : booktitle, 0: publication
     private String date;
     private String name;
@@ -37,6 +37,20 @@ public class News {
 
     public int getType() {
         return type;
+    }
+
+    /**
+     * @return the cod
+     */
+    public double getCod() {
+        return cod;
+    }
+
+    /**
+     * @param cod the cod to set
+     */
+    public void setCod(double cod) {
+        this.cod = cod;
     }
 
 }

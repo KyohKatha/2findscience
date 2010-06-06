@@ -30,7 +30,7 @@
                     case "Home":
                         document.getElementById("home").className="current";
                         document.getElementById("currentMenu").value="home";
-                        //callServlet('NewsMaintenance','news');
+                        callServlet('NewsMaintenance','AjaxNewsContent');
                         loadContent('HomeUserCommon.jsp', 'AjaxContent');
                         break;
 
@@ -87,8 +87,10 @@
                 Welcome,  <strong><%out.print(user.getName());%></strong>
             </div>
 
-
             <div id="news" class="news">
+                <p class="title">News</p>
+                <marquee id="AjaxNewsContent" height="85%" direction="up" onmouseover="this.stop()" onmouseout="this.start()">
+                </marquee>
             </div>
 
             <div id="AjaxContent" > </div>
