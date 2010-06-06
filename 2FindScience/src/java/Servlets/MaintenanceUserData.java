@@ -65,40 +65,44 @@ public class MaintenanceUserData extends HttpServlet {
         }
 
         try {
-            if (action.equals("allowUpgrade")) {
+            if (action.equals("show")) {
+                this.show(request, response);
+            } else if (action.equals("save")) {
+                this.save(request, response);
+            } else if (action.equals("allowUpgrade")) {
                 this.updateUpgrade(request, response, ALLOW);
             } else if (action.equals("denyUpgrade")) {
                 this.updateUpgrade(request, response, DENY);
-            }else{
-            if (action.equals("consultRegister")) {
-                this.consultRegister(request, response);
             } else {
-                if (action.equals("consultProfile")) {
-                    this.consultProfile(request, response, user);
-
+                if (action.equals("consultRegister")) {
+                    this.consultRegister(request, response);
                 } else {
-                    String login = request.getParameter("login");
-                    String password = request.getParameter("password");
-                    String name = request.getParameter("name");
-                    String email = request.getParameter("email");
-                    String page = request.getParameter("page");
-                    String subjects = request.getParameter("subjects");
+                    if (action.equals("consultProfile")) {
+                        this.consultProfile(request, response, user);
 
-                    User newUser = new User();
-                    newUser.setLogin(login);
-                    newUser.setPassword(password);
-                    newUser.setName(name);
-                    newUser.setEmail(email);
-                    newUser.setPage(page);
+                    } else {
+                        String login = request.getParameter("login");
+                        String password = request.getParameter("password");
+                        String name = request.getParameter("name");
+                        String email = request.getParameter("email");
+                        String page = request.getParameter("page");
+                        String subjects = request.getParameter("subjects");
 
-                    if (action.equals("saveRegister")) { //Register new User
-                        this.saveRegister(request, response, newUser, subjects);
+                        User newUser = new User();
+                        newUser.setLogin(login);
+                        newUser.setPassword(password);
+                        newUser.setName(name);
+                        newUser.setEmail(email);
+                        newUser.setPage(page);
 
-                    } else { //Update profile
-                        this.updateProfile(request, response, newUser, subjects);
+                        if (action.equals("saveRegister")) { //Register new User
+                            this.saveRegister(request, response, newUser, subjects);
+
+                        } else { //Update profile
+                            this.updateProfile(request, response, newUser, subjects);
+                        }
                     }
                 }
-            }
             }
         } finally {
             rd.forward(request, response);
@@ -184,7 +188,7 @@ public class MaintenanceUserData extends HttpServlet {
         try {
             Vector subjectsUser = connection.getSubjectsUser(user);
             request.setAttribute("subjectsUser", subjectsUser);
-            setHiddenSubjects(request,response,subjectsUser);
+            setHiddenSubjects(request, response, subjectsUser);
             Vector subjects = connection.getSubjectsAvailable(subjectsUser);
             request.setAttribute("subjects", subjects);
             rd = request.getRequestDispatcher("/AjaxEditProfile.jsp");
@@ -225,7 +229,7 @@ public class MaintenanceUserData extends HttpServlet {
 
         User currentUser = (User) request.getSession().getAttribute("user");
         String profile = (String) request.getParameter("profile");
-  
+
         try {
             connection.updateUser(currentUser, newUser, subjects);
             request.getSession().removeAttribute("user");
@@ -247,14 +251,14 @@ public class MaintenanceUserData extends HttpServlet {
         }
     }
 
-    public void setHiddenSubjects(HttpServletRequest request, HttpServletResponse response, Vector subjects){
+    public void setHiddenSubjects(HttpServletRequest request, HttpServletResponse response, Vector subjects) {
         String hiddenSubjects = "";
-        for(int i = 0; i < subjects.size(); i++){
+        for (int i = 0; i < subjects.size(); i++) {
             Subject subject = (Subject) subjects.elementAt(i);
             hiddenSubjects += subject.getName() + ";";
         }
         request.setAttribute("hiddenSubjects", hiddenSubjects);
-      }
+    }
 
     private void updateUpgrade(HttpServletRequest request, HttpServletResponse response, int mode) {
         String login = (String) request.getParameter("login");
@@ -297,4 +301,57 @@ public class MaintenanceUserData extends HttpServlet {
 
     }
 
+    private void show(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int index = Integer.parseInt(request.getParameter("index"));
+        Vector users = (Vector) request.getSession().getAttribute("userVector");
+
+        //request.getSession().setAttribute("index", index);
+
+        User u = null;
+
+        if (index > 0) {
+            u = (User) users.get(index - 1);
+        }
+
+        request.getSession().setAttribute("selectedUser", u);
+
+        request.getSession().setAttribute("type", null);
+        request.getSession().setAttribute("message", null);
+
+        rd = request.getRequestDispatcher("/AjaxUserMaintenanceData.jsp");
+    }
+
+    private void save(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        User u = new User();
+
+        u.setName(request.getParameter("name"));
+        u.setLogin(request.getParameter("login"));
+        u.setEmail(request.getParameter("email"));
+        u.setPage(request.getParameter("page"));
+        String profile = request.getParameter("profile");
+        if (profile.equals("Admin")) {
+            u.setProfile(0);
+        } else if (profile.equals("Academic")) {
+            u.setProfile(1);
+        } else {
+            u.setProfile(2);
+        }
+        try {
+            connection.saveUser(u);
+            request.getSession().setAttribute("type", "success");
+            request.getSession().setAttribute("message", "<p>- <strong>User</strong> saved successfully </p><p>- Click on the box to close it.</p>");
+
+        } catch (PublicationDAOException e) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database </p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("selectedUser", u);
+
+        } finally {
+            rd = request.getRequestDispatcher("Filter?action=RequestUpgrade");
+        }
+
+    }
 }

@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : UserMaintenance
     Created on : 24/04/2010, 11:22:47
     Author     : Welington
@@ -9,6 +9,7 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
+            User user = (User) session.getAttribute("user");
             boolean upgrade = true;
             String sUpgrade = "";
 %>
@@ -29,7 +30,7 @@
                 <table align="center">
                     <tr>
                         <td  class="tooltip" align="left" colspan="3">
-                            <input class="textBox" type="text" name="parametro" size="112" onkeyup="loadContent('GetHint.jsp?user=' + this.value,'userlist')"/>
+                            <input class="textBox" type="text" name="parametro" size="112" onkeyup="javascript:callServlet('Filter?action=UserFilter&parameter=' + this.value,'userlist')"/>
                             <span>TYPE THE USER</span>
                         </td>
                     </tr>
@@ -45,8 +46,7 @@
             %>
 
             <div id="userlist">
-                <select class="list" onchange="javascript:loadContent('UserMaintenanceData.jsp?login=' + this.options[selectedIndex].value + '&upgrade=true', 'user_data')" size=10>
-                    <option style="color: #ffffff; background-color: #000000">INSERT A NEW USER...</option>
+                <select class="list" onchange="javascript:callServlet('MaintenanceUserData?action=show&index=' + (this.selectedIndex + 1),'user_data')" size=10>
                 </select>
             </div>
             <div id="user_data">

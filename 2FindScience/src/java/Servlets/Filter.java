@@ -69,6 +69,8 @@ public class Filter extends HttpServlet {
                         this.upgradeRequest(request, response);
                     } else if (action.equals("ThemeUpgradeFilter")) {
                         this.ThemeUpgradeFilter(request, response);
+                    } else if (action.equals("UserFilter")){
+                        this.UserFilter(request, response, parameter);
                     }
                 }
             }
@@ -218,6 +220,27 @@ public class Filter extends HttpServlet {
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
 
             rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
+        }
+    }
+
+
+    private void UserFilter(HttpServletRequest request, HttpServletResponse response, String parameter)
+            throws ServletException, IOException {
+
+        String sql = "SELECT TOP 200 *"
+                + " FROM integrado.userData WHERE login LIKE '%" + parameter + "%';";
+
+        Vector users;
+
+        try {
+            users = connection.getUsers(sql);
+            request.getSession().setAttribute("userVector", users);
+            rd = request.getRequestDispatcher("/AjaxUserMaintenanceTitle.jsp");
+        } catch (PublicationDAOException e) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("userVector", new Vector());
+            rd = request.getRequestDispatcher("/AjaxUserMaintenanceTitle.jsp");
         }
     }
 }
