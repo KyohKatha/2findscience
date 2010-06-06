@@ -72,6 +72,7 @@
                         ArrayList<User> result = (ArrayList<User>) request.getAttribute("result");
 
                         if (result != null && !result.isEmpty()) {
+                            out.print("<p class=\"title\">Upgrade requests</p>");
                             // height 60px para 1 item
                             int size = result.size();
                             if (size > 9) {

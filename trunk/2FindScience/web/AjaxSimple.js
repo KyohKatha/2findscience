@@ -611,7 +611,6 @@ function validateFormInsertUpgrade(){
         form.newMaxUpgrade.focus();
     }
 
-
     if(message != ""){
         message += "<p>- Click on the box to close it.</p>";
         showMessage('critical', message);

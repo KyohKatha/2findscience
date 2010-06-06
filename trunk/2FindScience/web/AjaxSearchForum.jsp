@@ -92,7 +92,7 @@
                                 ArrayList<Post> result = (ArrayList<Post>) request.getAttribute("result");
 
                                 Format formato = new SimpleDateFormat(
-                                        "dd'/'MM'/'yyyy hh':'mm");
+                                        "yyyy'/'MM'/'dd hh':'mm");
 
                                 if (result != null && !result.isEmpty()) {
                                     for (int i = 0; i < result.size(); i++) {

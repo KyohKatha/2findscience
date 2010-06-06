@@ -9,8 +9,8 @@
 
             int edit = (Integer) request.getSession().getAttribute("edit");
             
-            request.removeAttribute("edit");
-            request.removeAttribute("selectedEvent");
+            request.getSession().removeAttribute("edit");
+            request.getSession().removeAttribute("selectedEvent");
 
 %>
 
