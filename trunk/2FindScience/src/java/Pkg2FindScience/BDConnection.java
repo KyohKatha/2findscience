@@ -2,6 +2,8 @@ package Pkg2FindScience;
 
 import java.sql.*;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -682,7 +684,7 @@ public class BDConnection {
         return publications;
     }
 
-    public Vector getEvents(String sql) throws PublicationDAOException {
+public Vector getEvents(String sql) throws PublicationDAOException {
         ResultSet rs = null;
         Vector events = new Vector();
         Booktitle b;
@@ -725,28 +727,37 @@ public class BDConnection {
     }
 
     public void saveEvent(Booktitle b) throws PublicationDAOException {
-        String codigo = "SELECT max(cod) FROM integrado.bookTitle";
-        ResultSet rs = null;
 
         try {
-            stm.execute(codigo);
-            rs = stm.getResultSet();
-            double cod = 1;
+            CallableStatement st = con.prepareCall("{call sp_insert_event(?, ?, ?, ?)}");
 
-            if (rs.next()) {
-                cod = rs.getDouble(1);
-                cod = cod + 1;
-
-                String sql = "INSERT INTO integrado.bookTitle VALUES ( " + cod
-                        + ", '" + b.getName() + "', '" + b.getStartDate() + "', '"
-                        + b.getEndDate() + "', '" + b.getLocal() + "');";
-
-                stmTeste.execute(sql);
-                System.out.println("EXECUTOU");
+            st.setString(1, b.getName());
+            // inserir null em vez de string vazia
+            if (!b.getStartDate().equals("")){
+                DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
+                java.sql.Date startDate = new java.sql.Date(fmt.parse(b.getStartDate()).getTime());
+                st.setDate(2, startDate);
+            } else {
+                st.setDate(2, null);
+            }
+            if (!b.getEndDate().equals("")){
+                DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
+                java.sql.Date endDate = new java.sql.Date(fmt.parse(b.getEndDate()).getTime());
+                st.setDate(3, endDate);
+            } else {
+                st.setString(3, null);
+            }
+            if (!b.getEndDate().equals("")){
+                st.setString(4, b.getLocal());
+            } else {
+                st.setString(4, null);
             }
 
+            st.execute();
+
+            st.close();
+
         } catch (Exception e) {
-            System.out.println("PEPRINOOO");
             e.printStackTrace();
             throw new PublicationDAOException();
         }
@@ -763,7 +774,7 @@ public class BDConnection {
         String data;
         News n;
 
-        String sql = "SELECT TOP 30 ID_PUB, ID_EV, DATA FROM integrado.news ORDER BY DATA DESC";
+        String sql = "SELECT ID_PUB, ID_EV, DATA FROM integrado.news ORDER BY DATA DESC";
 
         try {
             stm.execute(sql);
@@ -782,6 +793,7 @@ public class BDConnection {
 
                     while (rsEv.next()) {
                         n = new News();
+                        n.setCod(id_ev);
                         n.setName(rsEv.getString("name"));
                         n.setType(1);
                         n.setDate(data);
@@ -797,6 +809,7 @@ public class BDConnection {
 
                     while (rsPub.next()) {
                         n = new News();
+                        n.setCod(id_pub);
                         n.setName(rsPub.getString("title"));
                         n.setType(0);
                         n.setDate(data);
@@ -804,12 +817,12 @@ public class BDConnection {
                         i++;
                     }
                 }
+
             }
 
         } catch (Exception e) {
             throw new PublicationDAOException();
         }
-
         return news;
     }
 
@@ -911,4 +924,44 @@ public class BDConnection {
             return false;
         }
     }
+
+    public void updateEvent(Booktitle b) throws PublicationDAOException {
+
+        try {
+            CallableStatement st = con.prepareCall("{call sp_update_event(?, ?, ?, ?, ?)}");
+
+            st.setString(1, b.getName());
+            // inserir null em vez de string vazia
+            if (!b.getStartDate().equals("")){
+                DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
+                java.sql.Date startDate = new java.sql.Date(fmt.parse(b.getStartDate()).getTime());
+                st.setDate(2, startDate);
+            } else {
+                st.setDate(2, null);
+            }
+            if (!b.getEndDate().equals("")){
+                DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
+                java.sql.Date endDate = new java.sql.Date(fmt.parse(b.getEndDate()).getTime());
+                st.setDate(3, endDate);
+            } else {
+                st.setString(3, null);
+            }
+            if (!b.getEndDate().equals("")){
+                st.setString(4, b.getLocal());
+            } else {
+                st.setString(4, null);
+            }
+            System.out.println(b.getCod());
+            st.setInt(5, b.getCod());
+
+            st.execute();
+
+            st.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
 }

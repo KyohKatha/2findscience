@@ -40,7 +40,7 @@ public class EventMaintenance extends HttpServlet {
             connection = BDConnection.getInstance();
         } catch (PublicationDAOException ex) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database</p><p>- Click on the box to close it.</p>");
             rd = request.getRequestDispatcher("/AjaxEvents.jsp");
             rd.forward(request, response);
         }
@@ -99,18 +99,21 @@ public class EventMaintenance extends HttpServlet {
             throws ServletException, IOException {
         int index = Integer.parseInt(request.getParameter("index"));
         Vector events = (Vector) request.getSession().getAttribute("eventVector");
+        request.removeAttribute("eventVector");
 
         Booktitle b = null;
 
-        if (index > 0){
+        if (index > 0 && index <= events.size()){
+            // alterar um evento já existente
             b = (Booktitle) events.get(index-1);
+            request.getSession().setAttribute("edit", 1);
+            request.getSession().setAttribute("selectedEvent", b);
+            rd = request.getRequestDispatcher("/AjaxEventsDataUpdate.jsp");
+        } else {
+            // criar um novo
+            rd = request.getRequestDispatcher("/AjaxEventsDataInsert.jsp");
         }
 
-        request.getSession().setAttribute("selectedEvent", b);
-
-        request.getSession().setAttribute("type", null);
-        request.getSession().setAttribute("message", null);
-        rd = request.getRequestDispatcher("/AjaxEventsData.jsp");
     }
 
 
@@ -119,20 +122,25 @@ public class EventMaintenance extends HttpServlet {
 
         Booktitle b = new Booktitle();
 
+        b.setCod(Integer.parseInt(request.getParameter("cod")));
         b.setName(request.getParameter("name"));
         b.setStartDate(request.getParameter("startDate"));
         b.setEndDate(request.getParameter("endDate"));
         b.setLocal(request.getParameter("city"));
 
         try{
-            connection.saveEvent(b);
+            if (b.getCod() == 0)
+                connection.saveEvent(b);
+            else
+                connection.updateEvent(b);
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- The <strong>Event</strong> was saved successfully.</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- The <strong>Event</strong> was saved successfully </p><p>- Click on the box to close it.</p>");
+            rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         } catch (PublicationDAOException e){
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving new  event.</p><p>- Click on the box to close it.</p>");
-            request.getSession().setAttribute("selectedEvent", b);
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving new <strong>event</strong></p><p>- Click on the box to close it.</p>");
+            rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         }
-         rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
     }
+
 }
