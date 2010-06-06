@@ -10,51 +10,85 @@ package Pkg2FindScience;
  * @author Welington
  */
 public class Incollection extends Document{
-    private int chapter;
-    private int startPage;
-    private int endPage;
+    private String chapter;
+    private String startPage;
+    private String endPage;
     private String cdrom;
     private String isbn;
+    private String publisher;
+    private String editor;
+
+    public Incollection(String title, String url, String ee, String startPage,
+            String endPage, String cdrom, String chapter, String editor, String author,
+            String publisher, String bookTitle, String isbn, double cod) {
+
+        super(title, url, ee, "incollection", author, bookTitle, cod);
+        this.chapter = chapter;
+        this.startPage = startPage;
+        this.endPage = endPage;
+        this.editor = editor;
+        this.cdrom = cdrom;
+        this.isbn = isbn;
+        this.publisher = publisher;
+
+    }
+
+
+    public String getEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
     /**
      * @return the chapter
      */
-    public int getChapter() {
+    public String getChapter() {
         return chapter;
     }
 
     /**
      * @param chapter the chapter to set
      */
-    public void setChapter(int chapter) {
+    public void setChapter(String chapter) {
         this.chapter = chapter;
     }
 
     /**
      * @return the startPage
      */
-    public int getStartPage() {
+    public String getStartPage() {
         return startPage;
     }
 
     /**
      * @param startPage the startPage to set
      */
-    public void setStartPage(int startPage) {
+    public void setStartPage(String startPage) {
         this.startPage = startPage;
     }
 
     /**
      * @return the endPage
      */
-    public int getEndPage() {
+    public String getEndPage() {
         return endPage;
     }
 
     /**
      * @param endPage the endPage to set
      */
-    public void setEndPage(int endPage) {
+    public void setEndPage(String endPage) {
         this.endPage = endPage;
     }
 

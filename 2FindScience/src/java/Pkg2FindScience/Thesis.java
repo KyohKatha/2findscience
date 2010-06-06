@@ -12,6 +12,11 @@ package Pkg2FindScience;
 public class Thesis extends Publication{
     private String school;
 
+    public Thesis(String title, String url, String school, String type, String strAuthor, double cod){
+        super(title, url, type, strAuthor, cod);
+        this.school = school;
+    }
+
     /**
      * @return the school
      */

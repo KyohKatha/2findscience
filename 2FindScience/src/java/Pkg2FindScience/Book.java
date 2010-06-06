@@ -11,9 +11,42 @@ package Pkg2FindScience;
  */
 public class Book extends Document{
     private String cdrom;
-    private int volume;
+    private String volume;
     private String month;
     private String isbn;
+    private String editor;
+    private String publisher;
+
+
+    public Book(String title, String url, String ee, String volume, String cdrom,
+            String month, String bookTitle, String publisher, String editor,
+            String author, String isbn, double cod) {
+        super(title, url, ee, "book", author, bookTitle, cod);
+
+        this.cdrom = cdrom;
+        this.volume = volume;
+        this.month = month;
+        this.isbn = isbn;
+        this.editor = editor;
+        this.publisher = publisher;
+    }
+
+
+    public String getEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
     /**
      * @return the cdrom
@@ -32,14 +65,14 @@ public class Book extends Document{
     /**
      * @return the volume
      */
-    public int getVolume() {
+    public String getVolume() {
         return volume;
     }
 
     /**
      * @param volume the volume to set
      */
-    public void setVolume(int volume) {
+    public void setVolume(String volume) {
         this.volume = volume;
     }
 

@@ -11,14 +11,24 @@ package Pkg2FindScience;
  */
 public class Document extends Publication{
     private String ee;
+    private String bookTitle;
+
+    public String getBookTitle() {
+        return bookTitle;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
 
     public Document(){
 
     }
-    
-    public Document(String title, String insertion, String url, String ee, String type){
-        super(title, insertion, url, type);
+
+    public Document(String title, String url, String ee, String type, String strAuthors, String bookTitle, double cod){
+        super(title, url, type, strAuthors, cod);
         this.ee = ee;
+        this.bookTitle = bookTitle;
 
     }
 

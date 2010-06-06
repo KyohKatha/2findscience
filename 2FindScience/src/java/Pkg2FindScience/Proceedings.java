@@ -12,6 +12,37 @@ package Pkg2FindScience;
 public class Proceedings extends ResearchReport{
     private String address;
     private String isbn;
+    private String publisher;
+    private String editor;
+
+    public Proceedings(String title, String url, String ee, String journal, String volume,
+            String number, String note, String month, String address, String editor, String author,
+            String publisher, String bookTitle, String isbn, double cod) {
+
+        super(title, url, ee, journal, volume, number, note, month, "proceedings", author, bookTitle, cod);
+        this.address = address;
+        this.isbn = isbn;
+        this.publisher = publisher;
+        this.editor = editor;
+
+    }
+
+
+    public String getEditor() {
+        return editor;
+    }
+
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
     /**
      * @return the address

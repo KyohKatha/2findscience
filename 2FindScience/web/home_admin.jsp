@@ -20,6 +20,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <link rel = "stylesheet" type = "text/css" href = "style.css" />
         <script type="text/javascript" src="AjaxSimple.js"></script>
+        <script type="text/javascript" src="js/mootools-1.2.4-core.js"></script>
+        <script type="text/javascript" src="js/mootools-1.2.4.4-more.js"></script>
+        <script type="text/javascript" src="js/calendar-eightysix-v1.1.js"></script>
+        <link type="text/css" media="screen" href="css/calendar-eightysix-v1.1-vista.css" rel="stylesheet" />
+
 
         <script type="text/javascript">
               function loadAjaxAdmin(name){

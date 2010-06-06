@@ -126,106 +126,135 @@ public class PublicationMaintenance extends HttpServlet {
         int index = Integer.parseInt(request.getParameter("index"));
         if (user.getProfile() != ADMIN && index == 0) {
             rd = request.getRequestDispatcher("/AjaxPublicationDataSelect.jsp");
-         } else {
-
-       
-        Vector publications = (Vector) request.getSession().getAttribute("publications");
-        Publication publication = null;
-
-        if (user.getProfile() == ADMIN) {
-            publication = (Publication) publications.elementAt(index);
         } else {
-            publication = (Publication) publications.elementAt(index - 1);
-        }
+            Vector publications = (Vector) request.getSession().getAttribute("publications");
+            Publication publication = null;
 
-        String typePublication = publication.getType();
-        PhdThesis phdThesis = null;
-        MasterThesis masterThesis = null;
-        Inproceedings inproceedings = null;
-        Book book = null;
-        Incollection incollection = null;
-        Www www = null;
-        Article article = null;
-        Proceedings procedings = null;
-        request.setAttribute("indexSelected", index + "");
-
-        try {
-            if (typePublication.equals("phdThesis")) {
-                phdThesis = (PhdThesis) request.getAttribute("phdThesis");
+            if (user.getProfile() == ADMIN) {
+                publication = (Publication) publications.elementAt(index);
             } else {
-                if (typePublication.equals("masterThesis")) {
-                    masterThesis = (MasterThesis) request.getAttribute("masterThesis");
+                publication = (Publication) publications.elementAt(index - 1);
+            }
+
+            String typePublication = publication.getType();
+            PhdThesis phdThesis = null;
+            MasterThesis masterThesis = null;
+            Inproceedings inproceedings = null;
+            Book book = null;
+            Incollection incollection = null;
+            Www www = null;
+            Article article = null;
+            Proceedings proceedings = null;
+            request.setAttribute("indexSelected", index + "");
+            request.setAttribute("typePublication", typePublication);
+
+            try {
+                if (typePublication.equals("phdthesis")) {
+                    phdThesis = connection.setPhdThesis(publication.getCod());
+                    request.setAttribute("phdthesis", phdThesis);
                 } else {
-                    if (typePublication.equals("inprocedings")) {
-                        inproceedings = (Inproceedings) request.getAttribute("inproceedings");
+                    if (typePublication.equals("mastersthesis")) {
+                        masterThesis = connection.setMastersThesis(publication.getCod());
+                        request.setAttribute("mastersthesis", masterThesis);
                     } else {
-                        if (typePublication.equals("book")) {
-                            book = (Book) request.getAttribute("book");
+                        if (typePublication.equals("inproceedings")) {
+                            inproceedings = connection.setInproceedings(publication.getCod());
+                            request.setAttribute("inproceedings", inproceedings);
                         } else {
-                            if (typePublication.equals("incollection")) {
-                                incollection = (Incollection) request.getAttribute("incollection");
+                            if (typePublication.equals("book")) {
+                                book = connection.setBook(publication.getCod());
+                                request.setAttribute("book", book);
                             } else {
-                                if (typePublication.equals("www")) {
-                                    www = (Www) request.getAttribute("www");
+                                if (typePublication.equals("incollection")) {
+                                    incollection = connection.setIncollection(publication.getCod());
+                                     request.setAttribute("incollection", incollection);
                                 } else {
-                                    if (typePublication.equals("article")) {
-                                        article = connection.setArticle(publication.getCod());
-                                        request.setAttribute("typePublication", "article");
-                                        request.setAttribute("article", article);
+                                    if (typePublication.equals("www")) {
+                                        www = connection.setWww(publication.getCod());
+                                        request.setAttribute("www", www);
                                     } else {
-                                        procedings = (Proceedings) request.getAttribute("procedings");
+                                        if (typePublication.equals("article")) {
+                                            article = connection.setArticle(publication.getCod());
+                                            request.setAttribute("article", article);
+                                        } else {
+                                            proceedings = connection.setProceedings(publication.getCod());
+                                            request.setAttribute("proceedings", proceedings);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+            } catch (PublicationDAOException e) {
+                request.getSession().setAttribute("type", "critical");
+                request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connection with database </p>");
             }
-        } catch (PublicationDAOException e) {
-            request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
+            rd = request.getRequestDispatcher("/AjaxPublicationData.jsp");
         }
-        rd = request.getRequestDispatcher("/AjaxPublicationData.jsp");
-         }
     }
 
     private void savePublication(HttpServletRequest request, HttpServletResponse response) {
-
         String typePublication = request.getParameter("typePublication");
         String title = request.getParameter("title");
         String author = request.getParameter("author");
-        String bookTitle = request.getParameter("bookTitle");
+        String bookTitle = request.getParameter("booktitle");
+        String editor = request.getParameter("editor");
+        String publisher = request.getParameter("publisher");
+
+        //VERIFICAR AQUII
+      /*  request.getSession().removeAttribute("Author");
+        request.getSession().removeAttribute("BookTitle");
+        request.getSession().removeAttribute("Editor");
+        request.getSession().removeAttribute("Publisher"); */
+
+        String cdrom = request.getParameter("cdrom");
+        String journal = request.getParameter("journal");
+        String note = request.getParameter("note");
+        String month = request.getParameter("month");
+        String ee = request.getParameter("ee");
+        String url = request.getParameter("url");
+        String startPage = request.getParameter("startPage");
+        String endPage = request.getParameter("endPage");
+        String volume = request.getParameter("volume");
+        String number = request.getParameter("number");
+        String school = request.getParameter("school");
+        String isbn = request.getParameter("isbn");
+        String chapter = request.getParameter("chapter");
+        String address = request.getParameter("address");
 
         try {
-            if (typePublication.equals("phdThesis")) {
+            if (typePublication.equals("phdthesis")) {
+                PhdThesis phdThesis = new PhdThesis(title, url, school, number, volume, month, ee, isbn, author, 0);
+                connection.savePhdThesis(phdThesis,user.getLogin() );
             } else {
-                if (typePublication.equals("masterThesis")) {
+                if (typePublication.equals("mastersthesis")) {
+                    MasterThesis masterThesis = new MasterThesis(title, url, school, author, 0);
+                    connection.saveMasterThesis(masterThesis, user.getLogin());
                 } else {
                     if (typePublication.equals("inprocedings")) {
+                        Inproceedings inproceedings = new Inproceedings(title, url, ee, startPage, endPage, cdrom, note, number, month, author, bookTitle, publisher, editor, 0);
+                        connection.saveInproceedings(inproceedings, user.getLogin());
                     } else {
                         if (typePublication.equals("book")) {
-                        } else {
+                            Book book = new Book(title, url, ee, volume, cdrom, month, bookTitle, publisher, editor, author, isbn, 0);
+                            connection.saveBook(book, user.getLogin());
+                         } else {
                             if (typePublication.equals("incollection")) {
+                                Incollection incollection = new Incollection(title, url, ee, startPage, endPage, cdrom, chapter, editor, author, publisher, bookTitle, isbn, 0);
+                                connection.saveIncollection(incollection, user.getLogin());
                             } else {
                                 if (typePublication.equals("www")) {
+                                    Www www = new Www(title, url, ee, note, editor, author, publisher, bookTitle, 0);
+                                    connection.saveWww(www, user.getLogin());
                                 } else {
                                     if (typePublication.equals("article")) {
-                                        String cdrom = request.getParameter("cdrom");
-                                        String journal = request.getParameter("journal");
-                                        String note = request.getParameter("note");
-                                        String month = request.getParameter("month");
-                                        String ee = request.getParameter("ee");
-                                        String url = request.getParameter("url");
-                                        String startPage = request.getParameter("startPage");
-                                        String endPage = request.getParameter("endPage");
-                                        String volume = request.getParameter("volume");
-                                        String number = request.getParameter("number");
-
-                                        Article article = new Article(title, note, url, ee, journal, volume, note, number, month, cdrom, startPage, endPage);
-
-                                        connection.saveArticle(article, user.getLogin(), author, bookTitle);
-                                    } else {
-                                        //procedings
+                                        Article article = new Article(title, url, ee, journal, volume, note, number, month, cdrom, startPage, endPage, author, bookTitle, publisher, editor, 0);
+                                        connection.saveArticle(article, user.getLogin());
+                                    } else { //Proceedings
+                                        Proceedings proceedings = new Proceedings(title, url, ee, journal, volume, number, note, month, address, editor, author, publisher, bookTitle, isbn, 0);
+                                        connection.saveProceedings(proceedings, user.getLogin());
                                     }
                                 }
                             }
@@ -234,18 +263,17 @@ public class PublicationMaintenance extends HttpServlet {
                 }
             }
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was saved successfully!</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Register publication</strong> successfully! </p>");
 
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving publication!</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> save data publication</p> <p>- Try again </p>");
         }
         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
     }
 
     private void updatePublication(HttpServletRequest request, HttpServletResponse response) {
-
-        int index = Integer.parseInt(request.getParameter("index"));
+int index = Integer.parseInt(request.getParameter("index"));
         Vector publications = (Vector) request.getSession().getAttribute("publications");
         Publication publication = null;
 
@@ -255,40 +283,55 @@ public class PublicationMaintenance extends HttpServlet {
             publication = (Publication) publications.elementAt(index - 1);
         }
 
-        String titleAnt = publication.getTitle();
         String typePublication = request.getParameter("typePublication");
         String title = request.getParameter("title");
+        String cdrom = request.getParameter("cdrom");
+        String journal = request.getParameter("journal");
+        String note = request.getParameter("note");
+        String month = request.getParameter("month");
+        String ee = request.getParameter("ee");
+        String url = request.getParameter("url");
+        String startPage = request.getParameter("startPage");
+        String endPage = request.getParameter("endPage");
+        String volume = request.getParameter("volume");
+        String number = request.getParameter("number");
+        String school = request.getParameter("school");
+        String isbn = request.getParameter("isbn");
+        String chapter = request.getParameter("chapter");
+        String address = request.getParameter("address");
+
 
         try {
-            if (typePublication.equals("phdThesis")) {
+            if (typePublication.equals("phdthesis")) {
+                PhdThesis newPhdThesis = new PhdThesis(title, url, school, number, volume, month, ee, isbn, null, 0);
+                connection.updatePhdThesis(newPhdThesis, publication.getCod() );
             } else {
-                if (typePublication.equals("masterThesis")) {
+                if (typePublication.equals("mastersthesis")) {
+                    MasterThesis newMasterThesis = new MasterThesis(title, url, school, null, 0);
+                    connection.updateMasterThesis(newMasterThesis, publication.getCod());
                 } else {
                     if (typePublication.equals("inprocedings")) {
+                        Inproceedings newInproceedings = new Inproceedings(title, url, ee, startPage, endPage, cdrom, note, number, month, null, null, null, null, 0);
+                        connection.updateInproceedings(newInproceedings, publication.getCod());
                     } else {
                         if (typePublication.equals("book")) {
+                            Book newBook = new Book(title, url, ee, volume, cdrom, month, null, null, null, null, isbn, 0);
+                            connection.updateBook(newBook, publication.getCod());
                         } else {
                             if (typePublication.equals("incollection")) {
+                                Incollection newIncollection = new Incollection(title, url, ee, startPage, endPage, cdrom, chapter, null, null, null, null, isbn, 0);
+                                connection.updateIncollection(newIncollection, publication.getCod());
                             } else {
                                 if (typePublication.equals("www")) {
+                                    Www newWww = new Www(title, url, ee, note, null, null, null, null, 0);
+                                    connection.updateWww(newWww, publication.getCod());
                                 } else {
                                     if (typePublication.equals("article")) {
-                                        String cdrom = request.getParameter("cdrom");
-                                        String journal = request.getParameter("journal");
-                                        String note = request.getParameter("note");
-                                        String month = request.getParameter("month");
-                                        String ee = request.getParameter("ee");
-                                        String url = request.getParameter("url");
-                                        String startPage = request.getParameter("startPage");
-                                        String endPage = request.getParameter("endPage");
-                                        String volume = request.getParameter("volume");
-                                        String number = request.getParameter("number");
-
-                                        Article article = new Article(title, note, url, ee, journal, volume, note, number, month, cdrom, startPage, endPage);
-
-                                        connection.updateArticle(article, user.getLogin(), titleAnt);
-                                    } else {
-                                        //procedings
+                                        Article newArticle = new Article(title, url, ee, journal, volume, note, number, month, cdrom, startPage, endPage, null, null, null, null, 0);
+                                        connection.updateArticle(newArticle, publication.getCod());
+                                    } else { //Proceedings
+                                        Proceedings newProceedings = new Proceedings(title, url, ee, journal, volume, number, note, month, address, null, null, null, null, isbn, 0);
+                                       connection.updateProceedings(newProceedings, publication.getCod());
                                     }
                                 }
                             }
@@ -297,13 +340,14 @@ public class PublicationMaintenance extends HttpServlet {
                 }
             }
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- The <strong>publication</strong> was updated successfully!</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Update publication</strong> successfully! </p>");
 
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> updating publication!</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> update data publication</p> <p>- Try again </p>");
         }
         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
+      
     }
 
     private void deletePublication(HttpServletRequest request, HttpServletResponse response) {
@@ -319,11 +363,11 @@ public class PublicationMaintenance extends HttpServlet {
         try {
             connection.deletePublication(publication, login);
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was deleted successfully!</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Publication delete</strong> successfully! </p>");
 
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> deleting publication!</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> delete publication</p> <p>- Try again </p>");
         }
         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
     }
@@ -335,8 +379,6 @@ public class PublicationMaintenance extends HttpServlet {
         String sCod = (String) request.getParameter("publication");
         double codPublication = Double.parseDouble(sCod);
         Vector publication  =  (Vector) request.getSession().getAttribute("publication");
-
-        
 
         try {
             switch (mode) {
@@ -365,7 +407,6 @@ public class PublicationMaintenance extends HttpServlet {
 
             rd = request.getRequestDispatcher("/AjaxSearchForum.jsp");
             
-
         } catch (PublicationDAOException ex) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");

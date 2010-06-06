@@ -5,14 +5,11 @@
 --%>
 
 <%
-            User user = (User) session.getAttribute("user");
-
             final int ADMIN = 0;
             final int COMMON = 1;
             final int ACADEMIC = 2;
 %>
 
-<%@page import="Pkg2FindScience.User"%>
 <%@page import="Pkg2FindScience.Subject" %>
 <%@page import="java.util.Vector" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -56,266 +53,221 @@
                         out.println("</fieldset>");
                         out.println("</div>");
                     } else {
-                        String typePublication = (String) request.getAttribute("typePublication");
+                        String typePublication = request.getParameter("typePublication");
+
         %>
 
         <form id="formPublication" action="#" method="post" onsubmit="return validateFormPublication('savePublication')" >
             <table class="maintenance" align="center" cellspacing="15px">
                 <tr>
                     <td>(*)Title:</td>
-                    <td><input type="text" name="title" size="90" maxlength="255" /></td>
+                    <td class="tooltip"><input type="text" id="title" size="90" maxlength="255" /><span>Insert title</span></td>
                 </tr>
 
                 <tr>
                     <td>Author:</td>
-                    <td> <table class="maintenance" align="center" cellspacing="15px">
-                            <tr>
-                                <td class="tooltip">
-                                    <select class="list" size=5 id="listAvailableAuthor" >
-                                        <option style="color: #ffffff; background-color: #000000">SELECT AUTHORS </option>
-                                        <%
-                                                                Vector authorsAvailable = (Vector) request.getAttribute("authorsAvailable");
-                                                                Boolean color = false;
-
-                                                                for (int i = 0; i < authorsAvailable.size(); i++) {
-                                                                    if (color) {%>
-                                        <option style="background-color: #dddddd"> <%= authorsAvailable.elementAt(i).toString()%> </option>
-                                        <% } else {%>
-                                        <option> <%= authorsAvailable.elementAt(i).toString()%> </option>
-                                        <% }
-                                                                    color = !color;
-                                                                }
-                                        %>
-                                    </select>
-                                    <span>Authors available</span></td>
-                                <td>
-                                    <p> <input type="button" class="button" value="Add" name="add" onclick="addOption(document.getElementById('listAvailableAuthor'),document.getElementById('listSelectedAuthor'), 'author')"/> </p>
-                                    <p> <input type="button" class="button" value="Remove" name="remove" onclick="removeOption(document.getElementById('listSelectedAuthor'),document.getElementById('listAvailableAuthor'), 'author')"/> </p>
-                                </td>
-                                <td class="tooltip">
-                                    <select id="listSelectedAuthor" class="list" onchange="" size=5 style="min-width: 150px;">
-                                        <%
-                                                                Vector authorsPub = (Vector) request.getAttribute("authorsPub");
-                                                                Boolean colorUser = false;
-
-                                                                if (authorsPub != null) {
-                                                                    for (int j = 0; j < authorsPub.size(); j++) {
-                                                                        if (colorUser) {%>
-                                        <option style="background-color: #dddddd"> <%= authorsPub.elementAt(j).toString()%> </option>
-                                        <% } else {%>
-                                        <option> <%= authorsPub.elementAt(j).toString()%> </option>
-                                        <%}
-                                                                        colorUser = !colorUser;
-                                                                    }
-                                                                }
-                                        %>
-                                    </select>
-                                    <span>Authors selected</span></td>
-                            </tr>
-                        </table>
-                    </td>
+                    <td class="tooltip"><input type="text" id="author" size=90 onclick="openDGDialog('author', 'popupSelectBox.jsp?nameOption=Author', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
                 </tr>
 
                 <tr>
                     <td>Url:</td>
-                    <td><input type="text" name="url" size="90" maxlength="255" /></td>
+                    <td class="tooltip"><input type="text" id="url" size="90" maxlength="255" /><span>Insert url</span></td>
                 </tr>
 
-                <%if (typePublication.equals("phdThesis")) {%>
+                <%if (typePublication.equals("phdthesis")) {%>
                 <tr>
                     <td> Number: </td>
-                    <td><input type="text" name="number" size="10" maxlength="10" /></td>
+                    <td class="tooltip"><input type="text" id="number" size="15" /><span>Insert number</span></td>
                 </tr>
 
                 <tr
                     <td> Volume:</td>
-                    <td><input type="text" name="volume" size="10" maxlength="10" /></td>
+                    <td class="tooltip"><input type="text" id="volume" size="15" /><span>Insert volume</span></td>
                 </tr>
 
                 <tr>
                     <td> Month: </td>
-                    <td><input type="text" name="month" size="15" maxlength="15" /></td>
+                    <td class="tooltip"><input type="text" id="month" size="15" maxlength="15" /><span>Insert month</span></td>
+                </tr>
+
+                <tr>
+                    <td> ISBN: </td>
+                    <td class="tooltip"><input type="text" id="isbn" size="15" maxlength="30" /><span>Insert ISBN</span></td>
                 </tr>
 
                 <tr>
                     <td> Ee: </td>
-                    <td><input type="text" name="ee" size="90" maxlength="255" /> </td>
+                    <td class="tooltip"><input type="text" id="ee" size="90" maxlength="255" /> <span>Insert ee</span></td>
+                </tr>
+
+                <tr>
+                    <td> School: </td>
+                    <td class="tooltip"><input type="text" id="school" size="90" maxlength="255" /><span>Insert school</span></td>
                 </tr>
 
                 <%} else {
-                    if (typePublication.equals("mastersThesis")) {%>
+                    if (typePublication.equals("mastersthesis")) {%>
                 <tr>
                     <td> School: </td>
-                    <td><input type="text" name="school" size="90" maxlength="100" /></td>
+                    <td class="tooltip"><input type="text" id="school" size="90" maxlength="255" /><span>Insert school</span></td>
                 </tr>
                 <% } else {/*Certamente eh um document */%>
                 <tr>
                     <td>BookTitle: </td>
-                    <td> <table class="maintenance" align="center" cellspacing="15px">
-                            <tr>
-                                <td class="tooltip">
-                                    <select class="list" size=5 id="listAvailableBookTitle" >
-                                        <option style="color: #ffffff; background-color: #000000"> SELECT BOOKTITLE </option>
-                                        <%
-                                                                Vector bookTitleAvailable = (Vector) request.getAttribute("bookTitleAvailable");
-                                                                color = false;
+                    <td class="tooltip"><input type="text" id="booktitle" size=90 onclick="openDGDialog('booktitle', 'popupSelectBox.jsp?nameOption=BookTitle', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert booktitle</span></td>
+                </tr>
 
-                                                                for (int k = 0; k < bookTitleAvailable.size(); k++) {
-                                                                    if (color) {%>
-                                        <option style="background-color: #dddddd"> <%= bookTitleAvailable.elementAt(k).toString()%> </option>
-                                        <% } else {%>
-                                        <option> <%= bookTitleAvailable.elementAt(k).toString()%> </option>
-                                        <% }
-                                                                    color = !color;
-                                                                }
-                                        %>
-                                    </select>
-                                    <span>BookTitles available</span></td>
-                                <td>
-                                    <p> <input type="button" class="button" value="Add" name="add" onclick="addOption(document.getElementById('listAvailableBookTitle'),document.getElementById('listSelectedBookTitle'), 'bookTitle')"/> </p>
-                                    <p> <input type="button" class="button" value="Remove" name="remove" onclick="removeOption(document.getElementById('listSelectedBookTitle'),document.getElementById('listAvailableBookTitle'), 'bookTitle')"/> </p>
-                                </td>
-                                <td class="tooltip">
-                                    <select id="listSelectedBookTitle" class="list" onchange="" size=5 style="min-width: 150px;">
-                                        <%
-                                                                Vector bookTitlePub = (Vector) request.getAttribute("bookTitlePub");
-                                                                colorUser = false;
+                <tr>
+                    <td>Editor: </td>
+                    <td class="tooltip"><input type="text" id="editor" size=90 onclick="openDGDialog('editor', 'popupSelectBox.jsp?nameOption=Editor', 950, 200, setPrefs);" readonly="false"> <span>Click here to insert editor</span></td>
+                </tr>
 
-                                                                if (authorsPub != null) {
-                                                                    for (int q = 0; q < bookTitlePub.size(); q++) {
-                                                                        if (colorUser) {%>
-                                        <option style="background-color: #dddddd"> <%= bookTitlePub.elementAt(q).toString()%> </option>
-                                        <% } else {%>
-                                        <option> <%= bookTitlePub.elementAt(q).toString()%> </option>
-                                        <% }
-                                                                        colorUser = !colorUser;
-                                                                    }
-                                                                }
-                                        %>
-                                    </select>
-                                    <span>BookTitles selected</span></td>
-                            </tr>
-                        </table>
-                    </td>
-
+                <tr>
+                    <td>Publisher: </td>
+                    <td class="tooltip"><input type="text" id="publisher" size=90 onclick="openDGDialog('publisher', 'popupSelectBox.jsp?nameOption=Publisher', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert publisher</span></td>
                 </tr>
 
                 <tr>
                     <td> Ee: </td>
-                    <td><input type="text" name="ee" size="90" maxlength="255" /></td>
+                    <td class="tooltip"><input type="text" id="ee" size="90" maxlength="255" /><span>Insert ee</span></td>
                 </tr>
 
-                <% if (typePublication.equals("inprocedings")) {%>
+                <% if (typePublication.equals("inproceedings")) {%>
                 <tr>
                     <td> CdRom: </td>
-                    <td><input type="text" name="cdrom" size="90" maxlength="50" /></td>
+                    <td class="tooltip"><input type="text" id="cdrom" size="50" maxlength="50" /><span>Insert cdrom</span></td>
                 </tr>
 
                 <tr>
                     <td> Start Page: </td>
-                    <td><input type="text" name="startPage" size="15" maxlength="15" /></td>
+                    <td class="tooltip"><input type="text" id="startPage" size="15" maxlength="15" /><span>Insert number start page</span></td>
                 </tr>
 
                 <tr>
                     <td> End Page: </td>
-                    <td><input type="text" name="endPage" size="15" maxlength="15" /></td>
+                    <td class="tooltip"><input type="text" id="endPage" size="15" maxlength="15" /><span>Insert number end page</span></td>
+                </tr>
+
+                <tr>
+                    <td> Number: </td>
+                    <td class="tooltip"><input type=text id=number size="15" maxlength="10" /><span>Insert number</span></td>
                 </tr>
 
                 <tr>
                     <td> Note: </td>
-                    <td><input type="text" name="note" size="90" maxlength="100" /></td>
+                    <td class="tooltip"><input type="text" id="note" size="90" maxlength="255" /><span>Insert note</span></td>
+                </tr>
+
+                <tr>
+                    <td> Month: </td>
+                    <td class="tooltip"><input type="text" id="month" size="15" maxlength="15" /><span>Insert month</span></td>
                 </tr>
                 <% } else {
                      if (typePublication.equals("book")) {%>
                 <tr>
                     <td> CdRom: </td>
-                    <td><input type="text" name="cdrom" size="90" maxlength="50" /></td>
+                    <td class="tooltip"><input type="text" id="cdrom" size="50" maxlength="50" /><span>Insert cdrom</span></td>
                 </tr>
 
                 <tr>
                     <td> Volume: </td>
-                    <td><input type="text" name="volume" size="10" maxlength="10" /></td>
+                    <td class="tooltip"><input type="text" id="volume" size="15" maxlength="15" /><span>Insert volume</span></td>
                 </tr>
 
                 <tr>
                     <td> Month: </td>
-                    <td><input type="text" name="month" size="15" maxlength="15" /></td>
+                    <td class="tooltip"><input type="text" id="month" size="15" maxlength="15" /><span>Insert month</span></td>
+                </tr>
+
+                <tr>
+                    <td> ISBN: </td>
+                    <td class="tooltip"><input type="text" id="isbn" size="15" maxlength="30" /><span>Insert ISBN</span></td>
                 </tr>
                 <% } else {
                                          if (typePublication.equals("incollection")) {%>
                 <tr>
                     <td> Chapter: </td>
-                    <td><input type=text name=chapter size=15 maxlength=15 /></td>
+                    <td class="tooltip"><input type=text id=chapter size="15" maxlength="15" /><span>Insert number chapter</span></td>
                 </tr>
 
                 <tr>
                     <td> Start Page: </td>
-                    <td><input type=text name=startPage size=15 maxlength=15 /></td>
+                    <td class="tooltip"><input type=text id=startPage size="15" maxlength="15" /><span>Insert number start page</span></td>
                 </tr>
 
                 <tr>
                     <td> End Page: </td>
-                    <td><input type=text name=endPage size=15 maxlength=15 /></td>
+                    <td class="tooltip"><input type=text id=endPage size="15" maxlength="15" /><span>Insert number end page</span></td>
                 </tr>
 
                 <tr>
                     <td> CdRom: </td>
-                    <td><input type=text name=cdrom size=90 maxlength=50 /></td>
+                    <td class="tooltip"><input type=text id=cdrom size=50 maxlength=50 /><span>Insert cdrom</span></td>
+                </tr>
+
+                <tr>
+                    <td> ISBN: </td>
+                    <td class="tooltip"><input type="text" id="isbn" size="15" maxlength="30" /><span>Insert ISBN</span></td>
                 </tr>
 
                 <% } else {
                                                              if (typePublication.equals("www")) {%>
                 <tr>
                     <td> Note: </td>
-                    <td><input type=text name=note size=90 maxlength=100 /></td>
+                    <td class="tooltip"><input type=text id=note size=90 maxlength=200 /><span>Insert note</span></td>
                 </tr>
 
                 <% } else { /*Eh um Research Report*/%>
                 <tr>
                     <td> Journal: </td>
-                    <td><input type=text name=journal size=90 maxlength=100 /></td>
+                    <td class="tooltip"><input type=text id=journal size=90 maxlength=200 /><span>Insert journal</span></td>
                 </tr>
 
                 <tr>
                     <td> Volume: </td>
-                    <td><input type=text name=volume size=10 maxlength=10 /></td>
+                    <td class="tooltip"><input type=text id=volume size=15 maxlength=15 /><span>Insert volume</span></td>
                 </tr>
 
                 <tr>
                     <td> Number: </td>
-                    <td><input type=text name=number size=10 maxlength=10 /></td>
+                    <td class="tooltip"><input type=text id=number size=15 maxlength=15 /><span>Insert number</span></td>
                 </tr>
 
                 <tr>
                     <td> Note: </td>
-                    <td><input type=text name=note size=90 maxlength=100 /></td>
+                    <td class="tooltip"><input type=text id=note size=90 maxlength=100 /><span>Insert note</span></td>
                 </tr>
 
                 <tr>
                     <td> Month: </td>
-                    <td><input type=text name=month size=15 maxlength=15 /></td>
+                    <td class="tooltip"><input type=text id=month size=15 maxlength=15 /><span>Insert month</span></td>
                 </tr>
 
                 <% if (typePublication.equals("article")) {%>
                 <tr>
                     <td> CdRom: </td>
-                    <td><input type=text name=cdrom size=90 maxlength=50 /></td>
+                    <td class="tooltip"><input type=text id=cdrom size=50 maxlength=50 /><span>Insert cdrom</span></td>
                 </tr>
 
                 <tr>
                     <td> Start Page: </td>
-                    <td><input type=text name=startPage size=15 maxlength=15 /></td>
+                    <td class="tooltip"><input type=text id=startPage size=15 maxlength=15 /><span>Insert number start page</span></td>
                 </tr>
 
                 <tr>
                     <td> End Page: </td>
-                    <td><input type=text name=endPage size=15 maxlength=15 /></td>
+                    <td class="tooltip"><input type=text id=endPage size=15 maxlength=15 /><span>Insert number end page</span></td>
                 </tr>
 
                 <%} else { /* Procedings */%>
                 <tr>
                     <td> Address: </td>
-                    <td><input type=text name=address size=90 maxlength=80 /></td>
+                    <td class="tooltip"><input type=text id=address size=90 maxlength=80 /><span>Insert address</span></td>
+                </tr>
+
+                <tr>
+                    <td> ISBN: </td>
+                    <td class="tooltip"><input type="text" id="isbn" size="15" maxlength="15" /><span>Insert ISBN</span></td>
                 </tr>
                 <% }
                                                             }
@@ -325,39 +277,14 @@
                                             }
                                         }
                 %>
+                <input type="hidden" id="typePublication" value="<%=typePublication%>">
 
-
-                <input type="hidden" id="typePublication" value=" <%= typePublication%>">
-                <input type="hidden" id="author" value="">
-                <input type="hidden" id="bookTitle" value="">
                 <tr>
                     <td colspan="2">
                         <div id="buttonsbox">
                             <input type="submit" class="button" value="Save" name="save" />
                             <input type="reset" class="button" value="Clear" name="clear" />
-                            <%
-                                                    switch (user.getProfile()) {
-                                                        case ADMIN:
-                            %>
-                            <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeAdmin.jsp', 'AjaxContent')"/>
-                            <%
-                                                            break;
-                                                        case COMMON:
-                            %>
-                            <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeUserCommon.jsp', 'AjaxContent')"/>
-                            <%
-                                                            break;
-                                                        case ACADEMIC:
-                            %>
-                            <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeAcademic.jsp', 'AjaxContent')"/>
-                            <%
-                                                            break;
-                                                        default:
-                            %>
-                            <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('Home.jsp', 'AjaxContent')"/>
-                            <%
-                                                    }
-                            %>
+                             <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('PublicationMaintenance.jsp', 'content')"/>
                         </div>
                     </td>
                 </tr>

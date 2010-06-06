@@ -45,13 +45,13 @@ public class Filter extends HttpServlet {
         String action = (String) request.getParameter("action");
         String parameter = (String) request.getParameter("parameter");
         User user = (User) request.getSession().getAttribute("user");
+        boolean redirect = true;
 
         try {
             connection = BDConnection.getInstance();
         } catch (PublicationDAOException ex) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
-
             rd = request.getRequestDispatcher("/AjaxPublicationData.jsp");
             rd.forward(request, response);
         }
@@ -60,8 +60,9 @@ public class Filter extends HttpServlet {
             if (action.equals("PublicationMaintenance")) {
                 this.publicationMaintenance(request, response, user, parameter);
             } else {
-                if (action.equals("selectTypePublication")) {
-                    this.selectTypePublication(request, response);
+                if (action.equals("popupInsert")) {
+                        this.popUpSelectBox(request, response);
+                        redirect = false;
                 } else {
                     if (action.equals("EventFilter")) {
                         this.EventFilter(request, response, user, parameter);
@@ -75,7 +76,9 @@ public class Filter extends HttpServlet {
                 }
             }
         } finally {
-            rd.forward(request, response);
+            if (redirect) {
+                rd.forward(request, response);
+            }
         }
     }
 
@@ -121,8 +124,8 @@ public class Filter extends HttpServlet {
         String sQuery = null;
 
         if (user.getProfile() == ADMIN) {
-            sQuery = "SELECT TOP 200 title, type, cod  FROM integrado.publication WHERE title like '%" + parameter + "%' AND type ='article';";
-            //sQuery = "SELECT TOP 200 title, type, cod  FROM integrado.publication WHERE title like '%" + parameter + "%';";
+            sQuery = "SELECT TOP 200 title, type, cod  FROM integrado.publication WHERE title like '%" + parameter + "%';";
+
         } else {
             sQuery = "SELECT TOP 200 title, type, cod FROM integrado.publication WHERE loginUser = '" + user.getLogin() + "' AND title like '%" + parameter + "%';";
         }
@@ -137,27 +140,6 @@ public class Filter extends HttpServlet {
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
 
             rd = request.getRequestDispatcher("/AjaxPublicationData.jsp");
-        }
-    }
-
-    private void selectTypePublication(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String typePublication = (String) request.getParameter("type");
-        Vector authorsAvailable = null;
-        Vector bookTitle = null;
-
-        try {
-            request.setAttribute("typePublication", typePublication);
-            authorsAvailable = connection.getAuthors();
-            request.setAttribute("authorsAvailable", authorsAvailable);
-            bookTitle = connection.getBookTitle();
-            request.setAttribute("bookTitleAvailable", bookTitle);
-            rd = request.getRequestDispatcher("/AjaxPublicationDataInsert.jsp");
-        } catch (Exception e) {
-            request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting <strong>authors.</strong></p><p>- Click on the box to close it.</p>");
-            rd = request.getRequestDispatcher("/AjaxPublicationDataSelect.jsp");
         }
     }
 
@@ -243,4 +225,36 @@ public class Filter extends HttpServlet {
             rd = request.getRequestDispatcher("/AjaxUserMaintenanceTitle.jsp");
         }
     }
+
+     private void popUpSelectBox(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String mode = (String) request.getParameter("mode");
+        Vector available = null;
+
+        try {
+
+            if (mode.equals("author")) {
+                available = connection.getAuthors();
+            } else {
+                if (mode.equals("booktitle")) {
+                    available = connection.getBookTitle();
+                } else {
+                    if (mode.equals("editor")) {
+                        available = connection.getEditor();
+                    } else {
+                        if (mode.equals("publisher")) {
+                            available = connection.getPublisher();
+                        }
+                    }
+                }
+            }
+            request.getSession().setAttribute("available", available);
+            request.getSession().setAttribute("nameOption", mode);
+        } catch (Exception e) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting authors </p>");
+        }
+    }
+
 }

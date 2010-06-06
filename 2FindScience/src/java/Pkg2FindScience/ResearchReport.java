@@ -19,10 +19,10 @@ public class ResearchReport extends Document{
     public ResearchReport(){
         super();
     }
-    public ResearchReport(String title, String insertion, String url, String ee, String journal, String volume,
-            String number, String note, String month, String type){
+    public ResearchReport(String title, String url, String ee, String journal, String volume,
+            String number, String note, String month, String type, String strAuthors, String bookTitle, double cod){
 
-        super(title, insertion, url, ee, type);
+        super(title, url, ee, type, strAuthors, bookTitle, cod);
         this.journal = journal;
         this.volume = volume;
         this.number = number;
