@@ -76,8 +76,10 @@ function validateFormUser(acao){
     var message = "";
     var login = trim(form.login.value);
     var name = trim(form.name.value);
-    var password = trim(form.password.value);
-    var passwordConfirmation = trim(form.passwordConfirmation.value);
+    if(acao != "save"){
+        var password = trim(form.password.value);
+        var passwordConfirmation = trim(form.passwordConfirmation.value);
+    }
     var email = trim(form.email.value);
     var page = trim(form.page.value);
 
@@ -90,17 +92,23 @@ function validateFormUser(acao){
         message += ("<p>- <strong>Name</strong> is required!</p>");
         form.name.focus();
     }
+    if(acao != "save"){
+        if (password == ""){
+            message += ("<p>- <strong>Password</strong> is required!</p>");
+            form.password.focus();
+        }
 
-    if (password == ""){
-        message += ("<p>- <strong>Password</strong> is required!</p>");
-        form.password.focus();
-    }
+        if (passwordConfirmation == ""){
+            message += ("<p>- <strong>Password Confirmation</strong> is required!</p>");
+            form.passwordConfirmation.focus();
+        }
 
-    if (passwordConfirmation == ""){
-        message += ("<p>- <strong>Password Confirmation</strong> is required!</p>");
-        form.passwordConfirmation.focus();
+        if(form.password.value != form.passwordConfirmation.value){
+            message += ("<p>- <strong>Password</strong> and <strong>Confirmation</strong> don't match!</p>");
+            form.password.focus();
+        }
+
     }
-    
     if (email != ""){
         if( email.match( /[a-z|A-Z|0-9]{2,8}@[a-z|A-Z|0-9]{2,20}\.[a-z]{3}([\.]{1}[a-z]{2})*/ ) == null ){
             message += ("<p>- <strong>Email</strong> is in incorrect format!</p>");
@@ -117,25 +125,22 @@ function validateFormUser(acao){
     }else{
         form.page.value="";
     }
-    
-    if(form.password.value != form.passwordConfirmation.value){
-        message += ("<p>- <strong>Password</strong> and <strong>Confirmation</strong> don't match!</p>");
-        form.password.focus();
-    }
-
-    message += "<p>- Click on the box to close it.</p>";
 
     if(message != ""){
+        message += "<p>- Click on the box to close it.</p>";
         showMessage('critical', message);
         return false;
     }
 
-    var subjectsParameter = document.getElementById("subjects").value;
+    if(acao != "save")
+        var subjectsParameter = document.getElementById("subjects").value;
     var url;
 
     if(acao == "Register"){
         url = "MaintenanceUserData?action=saveRegister&login=" + login + "&password=" + password +
         "&name=" + name + "&email=" + email + "&page=" + page + "&subjects=" +  subjectsParameter;
+    }else if(acao == "save"){
+        url = "MaintenanceUserData?action=save&login=" + form.login.value + "&name=" + form.name.value + "&email=" + form.email.value + "&page=" + form.page.value + "&profile=" + form.profile.value;
     }else{
         url = "MaintenanceUserData?action=updateProfile&profile=" + form.profile.value + "&login=" + login + "&password=" + password +
         "&name=" + name + "&email=" + email + "&page=" + page + "&subjects=" +  subjectsParameter;
@@ -625,7 +630,10 @@ function validateFormInsertUpgrade(){
 }
 
 function saveDate(){
-    var dates = {sDate : null, eDate : null};
+    var dates = {
+        sDate : null,
+        eDate : null
+    };
 
     dates[0] = document.getElementById('startDate').value;
     dates[1] = document.getElementById('endDate').value;

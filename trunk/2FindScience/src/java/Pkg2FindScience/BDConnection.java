@@ -964,4 +964,49 @@ public Vector getEvents(String sql) throws PublicationDAOException {
         }
     }
 
+        public Vector getUsers(String sql) throws PublicationDAOException {
+        ResultSet rs = null;
+        Vector users = new Vector();
+        User s;
+
+        try {
+            Statement stm2 = con.createStatement();
+            stm2.execute(sql);
+            rs = stm2.getResultSet();
+
+            while (rs.next()) {
+                s = new User();
+                s.setEmail(rs.getString("email"));
+                s.setLogin(rs.getString("login"));
+                s.setName(rs.getString("name"));
+                s.setNumTrialUpgrade(rs.getInt("numTrialUpgrade"));
+                s.setPage(rs.getString("page"));
+                s.setPassword(rs.getString("password"));
+                s.setProfile(rs.getInt("profile"));
+                s.setUpgrade(rs.getInt("upgrade"));
+                users.addElement(s);
+
+            }
+
+            return users;
+
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+    public void saveUser(User u) throws PublicationDAOException {
+        try {
+
+            String sql = "UPDATE integrado.userData SET name = '" + u.getName() + "', email = '" +
+                u.getEmail() + "', page = '" + u.getPage() + "', profile = "+u.getProfile()+" where login = '" + u.getLogin() + "';";
+
+            stm.execute(sql);
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAaa");
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+    }
+
 }
