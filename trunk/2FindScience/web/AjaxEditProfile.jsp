@@ -136,7 +136,7 @@
                 </table>
 
                 <input type="hidden" id="profile" value="<%=profile%>" >
-                <input type="hidden" id="subjects" value="<%=hiddenSubjects%>">
+                <input type="hidden" id="options" value="<%=hiddenSubjects%>">
 
                 <div id="buttonsbox">
                     <input type="submit" class="button" value="Save" name="save" />

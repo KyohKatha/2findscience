@@ -133,7 +133,7 @@ function validateFormUser(acao){
     }
 
     if(acao != "save")
-        var subjectsParameter = document.getElementById("subjects").value;
+        var subjectsParameter = document.getElementById("options").value;
     var url;
 
     if(acao == "Register"){

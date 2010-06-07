@@ -97,7 +97,7 @@
                     </tr>
                 </table>
 
-                <input id="subjects" type="hidden" value="">
+                <input id="options" type="hidden" value="">
                 <div id="buttonsbox">
                     <input type="submit" class="button" value="Save" name="save" />
                     <input type="reset" class="button" value="Clear" name="clear" />
