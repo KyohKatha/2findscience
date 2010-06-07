@@ -189,7 +189,7 @@ public class PublicationMaintenance extends HttpServlet {
 
             } catch (PublicationDAOException e) {
                 request.getSession().setAttribute("type", "critical");
-                request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connection with database </p>");
+                request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
             }
             rd = request.getRequestDispatcher("/AjaxPublicationData.jsp");
         }
@@ -263,11 +263,11 @@ public class PublicationMaintenance extends HttpServlet {
                 }
             }
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- <strong>Register publication</strong> successfully! </p>");
+            request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was saved successfully!</p><p>- Click on the box to close it.</p>");
 
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> save data publication</p> <p>- Try again </p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving <p>publication.</p><p>- Click on the box to close it.</p>");
         }
         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
     }
@@ -340,11 +340,11 @@ int index = Integer.parseInt(request.getParameter("index"));
                 }
             }
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- <strong>Update publication</strong> successfully! </p>");
+            request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was updated successfully!</p><p>- Click on the box to close it.</p>");
 
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> update data publication</p> <p>- Try again </p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> updating <strong>publication</strong>.</p><p>- Click on the box to close it.</p>");
         }
         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
       
@@ -363,11 +363,11 @@ int index = Integer.parseInt(request.getParameter("index"));
         try {
             connection.deletePublication(publication, login);
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- <strong>Publication delete</strong> successfully! </p>");
+            request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was deleted successfully!</p><p>- Click on the box to close it.</p>");
 
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> delete publication</p> <p>- Try again </p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> deleting <strong>publication</strong>.</p><p>- Click on the box to close it.</p>");
         }
         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
     }
