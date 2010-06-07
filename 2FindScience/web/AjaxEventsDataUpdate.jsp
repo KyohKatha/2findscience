@@ -31,7 +31,6 @@
 
     </head>
     <div id="msg">
-
         <% if (edit == 0) {%>
         <fieldset class="information" onclick="closeMessageBox()">
             <legend>Information</legend>

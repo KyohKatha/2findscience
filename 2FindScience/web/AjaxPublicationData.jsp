@@ -107,6 +107,7 @@
             <fieldset class="information">
                 <legend>Information</legend>
                 <p>-  All fields with (*) are required.</p>
+                <p>- Click on the box to close it.</p>
             </fieldset>
         </div>
 

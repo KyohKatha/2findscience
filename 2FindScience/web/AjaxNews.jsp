@@ -22,7 +22,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title> </title>
     </head>
-    <table>
+    <table class="maintenance" align="left" cellspacing="1px">
         <%
                     if (newsVector != null) {
 
@@ -34,21 +34,19 @@
             <td>
                 <div id="item" align="center" style="width: 288px;">
                     <%if (n.getType() == 0) {%>
-
                     <div id="image">
                         <img src="Imagens/sign_pub.png" alt="pub"/>
                     </div>
-                    <p><i><a href="http://www.google.com"><%= n.getName()%></a></i></p>
+                    <p><a class="title" href="http://www.google.com"><%= n.getName() %></a></p>
                     <p><%= n.getDate()%></p>
                     <%  } else {%>
                     <div id="image">
                         <img src="Imagens/sign_event.png" alt="eve"/>
                     </div>
-                    <p><i><%= n.getName()%></i></p>
+                    <p><a class="title" href="http://www.google.com"><%= n.getName()%></a></p>
                     <p><%= n.getDate()%></p>
                     <%  }
                     %>
-
                 </div>
             </td>
         </tr>

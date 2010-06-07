@@ -160,13 +160,6 @@ body {
     background: url(Imagens/Content.png) no-repeat;
 }
 
-#content.unique {
-    width: 1023px;
-    height:758px;
-    background: url(Imagens/Content_Unique.png) no-repeat;
-    text-align: left;
-}
-
 p.title {
     height: auto;
     width: inherit;
@@ -226,7 +219,7 @@ table.maintenance ul{
 table.maintenance td a{
     color: blue;
     text-decoration: none;
-    text-transform: lowercase;
+    /*text-transform: lowercase;*/
 }
 
 table.maintenance td.admin:hover{

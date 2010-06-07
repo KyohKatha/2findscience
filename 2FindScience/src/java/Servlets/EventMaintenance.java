@@ -142,5 +142,4 @@ public class EventMaintenance extends HttpServlet {
             rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         }
     }
-
 }
