@@ -124,8 +124,9 @@
                 </tr>
 
                 <tr>
-                    <td> <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/> </td>
-                    <td> <input type="button" class="button" value="Save Choice" onclick="handleOKPopUp()"/> </td>
+                     <td> <input type="button" class="button" value="New <%=nameOption%>" onclick="javascript: document.location = 'popupNewOption.jsp?nameOption=' + '<%=nameOption%>';"/> </td>
+                     <td> <input type="button" class="button" value="Save Choice" onclick="handleOKPopUp()"/> </td>
+                     <td> <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/> </td>
                 </tr>
             </table>
         <input type="hidden" id="nameOption" value="<%=nameOption%>">
