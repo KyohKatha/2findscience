@@ -354,4 +354,8 @@ public class MaintenanceUserData extends HttpServlet {
         }
 
     }
+
+    private void requestUpgrade(String login, String pwd){
+        
+    }
 }

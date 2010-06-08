@@ -273,7 +273,7 @@ public class PublicationMaintenance extends HttpServlet {
     }
 
     private void updatePublication(HttpServletRequest request, HttpServletResponse response) {
-int index = Integer.parseInt(request.getParameter("index"));
+        int index = Integer.parseInt(request.getParameter("index"));
         Vector publications = (Vector) request.getSession().getAttribute("publications");
         Publication publication = null;
 
@@ -378,14 +378,12 @@ int index = Integer.parseInt(request.getParameter("index"));
 
         String sCod = (String) request.getParameter("publication");
         double codPublication = Double.parseDouble(sCod);
-        Vector publication  =  (Vector) request.getSession().getAttribute("publication");
-
+        Publication pub = null;
         try {
+              pub = connection.getPublication(codPublication);
             switch (mode) {
                 //Consulta de posts
                 case 0:
-                    int position = Integer.parseInt( request.getParameter("position"));
-                    request.getSession().setAttribute("position", position + "");
                     break;
 
                 case 1:
@@ -398,18 +396,24 @@ int index = Integer.parseInt(request.getParameter("index"));
 
             }
 
+            if(pub != null){
+                System.out.println("blzura blzuran");
+            }else{
+                 System.out.println("pepino");
+            }
+            
+            System.out.println("antes posts " + codPublication);
             ArrayList<Post> result = connection.getPosts(codPublication);
-            request.setAttribute("result", result);
-
-            String positionSession = (String) request.getSession().getAttribute("position");
-            Publication pub = (Publication) publication.elementAt( Integer.parseInt(positionSession));
+            System.out.println("depos post");
+            pub.setPosts(result);
+            
             request.setAttribute("publication", pub);
 
             rd = request.getRequestDispatcher("/AjaxSearchForum.jsp");
             
         } catch (PublicationDAOException ex) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving post.</p><p>- Click on the box to close it.</p>");
             rd = request.getRequestDispatcher("/AjaxSearchResult.jsp");
         }
     }

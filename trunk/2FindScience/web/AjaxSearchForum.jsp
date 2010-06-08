@@ -6,7 +6,6 @@
 
 <%@page import="Pkg2FindScience.*" %>
 <%@page import="java.util.ArrayList" %>
-<%@page import="java.sql.ResultSet" %>
 <%@page import="java.text.*" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -16,7 +15,6 @@
 <%
             User user = (User) session.getAttribute("user");
             Publication publication = (Publication) request.getAttribute("publication");
-            String position = (String) session.getAttribute("position");
 
             final int ADMIN = 0;
             final int COMMON = 1;
@@ -74,6 +72,8 @@
                                                     sAuthors += ".";
                                                 }
                                             }
+                                        } else {
+                                            sAuthors = "No authors";
                                         }
                             %>
                             <li>
@@ -89,7 +89,7 @@
             <div id="scroll" style="height:240px; border: 1px solid #666666;">
                 <table class="maintenance" align="left" cellspacing="1px">
                     <%
-                                ArrayList<Post> result = (ArrayList<Post>) request.getAttribute("result");
+                                ArrayList<Post> result = (ArrayList<Post>) publication.getPosts();
 
                                 Format formato = new SimpleDateFormat(
                                         "yyyy'/'MM'/'dd hh':'mm");
@@ -190,7 +190,7 @@
                     <tr>
                         <td colspan="2">
                             <div id="buttonsbox">
-                                <input type="button" class="button" value="Save" name="save" onclick="validateFormPost(<%= publication.getCod()%>, <%= "'" + user.getLogin() + "'"%>, document.getElementById('comment').value, <%=position%>)"/>
+                                <input type="button" class="button" value="Save" name="save" onclick="validateFormPost(<%= publication.getCod()%>, <%= "'" + user.getLogin() + "'"%>, document.getElementById('comment').value)"/>
                                 <input type="reset" class="button" value="Clear" name="clear" onmouseup="blockTyping('')"/>
                                 <%
                                         switch (user.getProfile()) {

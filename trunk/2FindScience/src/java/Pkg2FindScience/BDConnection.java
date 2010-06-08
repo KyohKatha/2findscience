@@ -364,21 +364,23 @@ public class BDConnection {
 
     public Vector searchPublication(String filtro, String param) throws PublicationDAOException {
         Vector<Publication> publications = new Vector();
-        ResultSet rs = null;
+        //PreparedStatement st = null;
         Publication publication;
-        String sQuery = "";
+
         try {
+            String sQuery = "";
+            CallableStatement st = null;
             if (filtro.equals("isbn")) {
-                sQuery = "select * from view_search_isbn where isbn like '" + param + "%' order by isbn;";
+                st = con.prepareCall("{call sp_search_isbn (?)}");
             } else if (filtro.equals("journal")) {
-                sQuery = "select * from view_search_journal where journal = '" + param + "' order by journal;";
+                st = con.prepareCall("{call sp_search_journal (?)}");
             }
-            stm.execute(sQuery);
-            rs = stm.getResultSet();
+
+            st.setString(1, param);
+            ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
                 String title = rs.getString("title");
-                String type = rs.getString("type");
                 double cod = rs.getDouble("codPublication");
                 String p = "";
                 if (filtro.equals("isbn")) {
@@ -388,7 +390,7 @@ public class BDConnection {
                 }
                 publication = new Publication();
                 publication.setTitle(title);
-                publication.setType(type);
+                //publication.setType(type);
                 publication.setCod(cod);
                 if (filtro.equals("isbn")) {
                     publication.setIsbn(p);
@@ -398,49 +400,52 @@ public class BDConnection {
                 publications.addElement(publication);
             }
             Statement stm2 = con.createStatement();
-            for (int i = 0; i < publications.size(); i++) {
-                double cod = publications.get(i).getCod();
-                String table = "";
-                if (filtro.equals("isbn")) {
-                    table = "view_isbn_author";
-                } else if (filtro.equals("journal")) {
-                    table = "view_journal_author";
-                }
-                sQuery = "select nameAuthor from " + table + " where codPublication = " + cod + " order by nameAuthor;";
-                stm2.execute(sQuery);
-                rs = stm2.getResultSet();
-
-                while (rs.next()) {
-                    Author a = new Author();
-                    a.setName(rs.getString("nameAuthor"));
-                    publications.get(i).addAuthor(a);
-                }
-            }
-            for (int i = 0; i < publications.size(); i++) {
-                String p = "";
-                if (filtro.equals("isbn")) {
-                    p = publications.get(i).getIsbn();
-                    sQuery = "select journal from view_search_journal_isbn where isbn = '" + p + "' order by journal;";
-                } else if (filtro.equals("journal")) {
-                    p = publications.get(i).getJournal();
-                    sQuery = "select isbn from view_search_journal_isbn where journal = '" + p + "' order by isbn;";
-                }
-                stm2.execute(sQuery);
-                rs = stm2.getResultSet();
-
-                while (rs.next()) {
-                    if (filtro.equals("isbn")) {
-                        publications.get(i).setJournal(rs.getString("journal"));
-                    } else if (filtro.equals("journal")) {
-                        publications.get(i).setIsbn(rs.getString("isbn"));
-                    }
-                }
-            }
+//            for (int i = 0; i < publications.size(); i++) {
+//                double cod = publications.get(i).getCod();
+//                String table = "";
+//                if (filtro.equals("isbn")) {
+//                    table = "view_isbn_author";
+//                } else if (filtro.equals("journal")) {
+//                    table = "view_journal_author";
+//                }
+//                sQuery = "select nameAuthor from " + table + " where codPublication = " + cod + " order by nameAuthor;";
+//                stm2.execute(sQuery);
+//                rs = stm2.getResultSet();
+//
+//                while (rs.next()) {
+//                    Author a = new Author();
+//                    a.setName(rs.getString("nameAuthor"));
+//                    System.out.println(a.getName());
+//                    publications.get(i).addAuthor(a);
+//                }
+//            }
+//            for (int i = 0; i < publications.size(); i++) {
+//                String p = "";
+//                if (filtro.equals("isbn")) {
+//                    p = publications.get(i).getIsbn();
+//                    sQuery = "select journal from view_search_journal_isbn where isbn = '" + p + "' order by journal;";
+//                } else if (filtro.equals("journal")) {
+//                    p = publications.get(i).getJournal();
+//                    sQuery = "select isbn from view_search_journal_isbn where journal = '" + p + "' order by isbn;";
+//                }
+//                stm2.execute(sQuery);
+//                rs = stm2.getResultSet();
+//
+//                while (rs.next()) {
+//                    if (filtro.equals("isbn")) {
+//                        publications.get(i).setJournal(rs.getString("journal"));
+//                    } else if (filtro.equals("journal")) {
+//                        publications.get(i).setIsbn(rs.getString("isbn"));
+//                    }
+//                }
+//            }
+            st.close();
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
         }
+
         return publications;
     }
 
@@ -611,6 +616,7 @@ public class BDConnection {
             stm.execute(statement);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new PublicationDAOException();
         }
     }
@@ -2138,5 +2144,73 @@ public class BDConnection {
                 throw new PublicationDAOException();
             }
         }
+    }
+
+    public Publication getPublication(double cod) throws PublicationDAOException {
+        Publication p = new Publication();
+        String sQuery = "";
+
+        try {
+            CallableStatement st = null;
+            st = con.prepareCall("{call sp_get_authors_by_pub (?)}");
+            st.setDouble(1, cod);
+            ResultSet rs = st.executeQuery();
+
+            p.setCod(cod);
+
+            while (rs.next()) {
+                Author a = new Author();
+                a.setName(rs.getString("name"));
+                p.addAuthor(a);
+            }
+
+            sQuery = "select * from view_search_journal where codPublication = " + cod + ";";
+            stm.execute(sQuery);
+            rs = stm.getResultSet();
+
+            if (rs.next()) {
+                p.setTitle(rs.getString("title"));
+                p.setJournal(rs.getString("journal"));
+            }
+
+            sQuery = "select * from view_search_isbn where codPublication = " + cod + ";";
+            Statement stm2 = con.createStatement();
+            stm2.execute(sQuery);
+            rs = stm.getResultSet();
+            if (rs.next()) {
+                p.setTitle(rs.getString("title"));
+                p.setIsbn(rs.getString("isbn"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+
+        return p;
+    }
+
+    public boolean requestUpgrade(String login, String pwd) throws PublicationDAOException {
+        boolean status = false;
+        try {
+            CallableStatement st = null;
+            st = con.prepareCall("{call sp_request_upgrade (?,?,?)}");
+            st.setString(1, login);
+            st.setString(2, pwd);
+            st.registerOutParameter(3,Types.BOOLEAN);
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                status = rs.getBoolean(1);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+
+        return status;
+
     }
 }
