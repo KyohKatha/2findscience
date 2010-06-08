@@ -56,7 +56,7 @@
             <table class="maintenance" align="center" cellspacing="15px">
                 <tr>
                     <td>Select type of new publication </td>
-                    <td> <select id="selectType" onchange="javascript:loadContent('PublicationDataInsert.jsp?typePublication=' + this[selectedIndex].value, 'AjaxPublicationDataInsert')">
+                    <td> <select id="selectType" onchange="javascript:loadContent('PublicationDataInsert.jsp?typePublication=' + this[selectedIndex].value, 'AjaxPublicationData')">
                 <option value="article">Article</option>
                             <option value="book">Book</option>
                             <option value="incollection">Incollection</option>
@@ -69,7 +69,7 @@
                     </td>
                 </tr>
             </table>
-            <div id="AjaxPublicationDataInsert">  </div>
+            <div id="AjaxPublicationData">  </div>
             <% }%>
         </div>
     </body>

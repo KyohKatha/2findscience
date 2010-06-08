@@ -25,7 +25,7 @@
         <title> </title>
     </head>
     <body>
-        <select class="list" onchange="javascript:callServlet('EventMaintenance?action=show&index=' + this.selectedIndex,'events_data')" size=10>
+        <select class="list" onchange="javascript:callEventInsert(this.selectedIndex)" size=10>
             <option style="color: #ffffff; background-color: #000000">
                 INSERT A NEW EVENT...
             </option>

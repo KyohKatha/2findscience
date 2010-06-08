@@ -99,20 +99,20 @@ public class EventMaintenance extends HttpServlet {
             throws ServletException, IOException {
         int index = Integer.parseInt(request.getParameter("index"));
         Vector events = (Vector) request.getSession().getAttribute("eventVector");
-        request.removeAttribute("eventVector");
-
+        //request.removeAttribute("eventVector");
+        String edit = null;
         Booktitle b = null;
 
         if (index > 0 && index <= events.size()){
             // alterar um evento já existente
             b = (Booktitle) events.get(index-1);
-            request.getSession().setAttribute("edit", 1);
-            request.getSession().setAttribute("selectedEvent", b);
-            rd = request.getRequestDispatcher("/AjaxEventsDataUpdate.jsp");
+            edit = "update";
+            request.setAttribute("selectedEvent", b);
         } else {
-            // criar um novo
-            rd = request.getRequestDispatcher("/AjaxEventsDataInsert.jsp");
+            edit = "insert";
         }
+        request.setAttribute("edit", edit);
+        rd = request.getRequestDispatcher("/AjaxEventsData.jsp");
 
     }
 
