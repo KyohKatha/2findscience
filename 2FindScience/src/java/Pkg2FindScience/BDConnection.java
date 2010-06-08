@@ -20,15 +20,23 @@ public class BDConnection {
             ds.setUser("317624");
             ds.setPassword("#gustavo123");
             ds.setDatabaseName("317624");
-
-           ds.setServerName("192.168.12.4");
-           // ds.setServerName("189.109.33.220");
-
+            ds.setServerName("192.168.12.4");
             con = ds.getConnection();
             stm = con.createStatement();
             stmTeste = con.createStatement();
         } catch (Exception e) {
-            throw new PublicationDAOException();
+            try {
+                SQLServerDataSource ds = new SQLServerDataSource();
+                ds.setUser("317624");
+                ds.setPassword("#gustavo123");
+                ds.setDatabaseName("317624");
+                ds.setServerName("189.109.33.220");
+                con = ds.getConnection();
+                stm = con.createStatement();
+                stmTeste = con.createStatement();
+            } catch (Exception j) {
+                throw new PublicationDAOException();
+            }
         }
     }
 
@@ -436,7 +444,7 @@ public class BDConnection {
         return publications;
     }
 
-public Vector getEvents(String sql) throws PublicationDAOException {
+    public Vector getEvents(String sql) throws PublicationDAOException {
         ResultSet rs = null;
         Vector events = new Vector();
         Booktitle b;
@@ -485,21 +493,21 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
             st.setString(1, b.getName());
             // inserir null em vez de string vazia
-            if (!b.getStartDate().equals("")){
+            if (!b.getStartDate().equals("")) {
                 DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
                 java.sql.Date startDate = new java.sql.Date(fmt.parse(b.getStartDate()).getTime());
                 st.setDate(2, startDate);
             } else {
                 st.setDate(2, null);
             }
-            if (!b.getEndDate().equals("")){
+            if (!b.getEndDate().equals("")) {
                 DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
                 java.sql.Date endDate = new java.sql.Date(fmt.parse(b.getEndDate()).getTime());
                 st.setDate(3, endDate);
             } else {
                 st.setString(3, null);
             }
-            if (!b.getEndDate().equals("")){
+            if (!b.getEndDate().equals("")) {
                 st.setString(4, b.getLocal());
             } else {
                 st.setString(4, null);
@@ -684,21 +692,21 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
             st.setString(1, b.getName());
             // inserir null em vez de string vazia
-            if (!b.getStartDate().equals("")){
+            if (!b.getStartDate().equals("")) {
                 DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
                 java.sql.Date startDate = new java.sql.Date(fmt.parse(b.getStartDate()).getTime());
                 st.setDate(2, startDate);
             } else {
                 st.setDate(2, null);
             }
-            if (!b.getEndDate().equals("")){
+            if (!b.getEndDate().equals("")) {
                 DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
                 java.sql.Date endDate = new java.sql.Date(fmt.parse(b.getEndDate()).getTime());
                 st.setDate(3, endDate);
             } else {
                 st.setString(3, null);
             }
-            if (!b.getEndDate().equals("")){
+            if (!b.getEndDate().equals("")) {
                 st.setString(4, b.getLocal());
             } else {
                 st.setString(4, null);
@@ -716,7 +724,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
         }
     }
 
-        public Vector getUsers(String sql) throws PublicationDAOException {
+    public Vector getUsers(String sql) throws PublicationDAOException {
         ResultSet rs = null;
         Vector users = new Vector();
         User s;
@@ -750,19 +758,18 @@ public Vector getEvents(String sql) throws PublicationDAOException {
     public void saveUser(User u) throws PublicationDAOException {
         try {
 
-            String sql = "UPDATE integrado.userData SET name = '" + u.getName() + "', email = '" +
-                u.getEmail() + "', page = '" + u.getPage() + "', profile = "+u.getProfile()+" where login = '" + u.getLogin() + "';";
+            String sql = "UPDATE integrado.userData SET name = '" + u.getName() + "', email = '"
+                    + u.getEmail() + "', page = '" + u.getPage() + "', profile = " + u.getProfile() + " where login = '" + u.getLogin() + "';";
 
             stm.execute(sql);
             System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAaa");
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
         }
     }
 
     /***************GUSTAVO****************/
-
     public Vector getEditor() throws PublicationDAOException {
         Vector editor = new Vector();
         ResultSet rs = null;
@@ -840,7 +847,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void savePhdThesis(PhdThesis phdThesis, String login) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_insert_phdthesis (?,?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_insert_phdthesis (?,?,?,?,?,?,?,?,?) }");
 
             st.setString("title", phdThesis.getTitle());
 
@@ -880,6 +887,12 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setString("ee", phdThesis.getEe());
             }
 
+            if (phdThesis.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", phdThesis.getIsbn());
+            }
+
             st.setString("loginUser", login);
             st.execute();
             st.close();
@@ -897,8 +910,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 if (!phdThesis.getStrAuthors().equals("")) {
                     this.saveAuthorPublication(phdThesis.getStrAuthors(), codPublication);
                 }
-                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + phdThesis.getIsbn() + "','book');";
-                stm.execute(sQuery);
+
             }
 
         } catch (Exception e) {
@@ -1079,7 +1091,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void saveBook(Book book, String login) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_insert_book (?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_insert_book (?,?,?,?,?,?,?,?) }");
             st.setString("title", book.getTitle());
 
             if (book.getUrl().equals("")) {
@@ -1112,6 +1124,12 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setString("month", book.getMonth());
             }
 
+            if (book.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", book.getIsbn());
+            }
+
             st.setString("loginUser", login);
             st.execute();
             st.close();
@@ -1132,8 +1150,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                     this.saveEditorDocument(book.getEditor(), codPublication);
                     this.savePublisherDocument(book.getPublisher(), codPublication);
                 }
-                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + book.getIsbn() + "','book');";
-                stm.execute(sQuery);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1143,7 +1160,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void saveIncollection(Incollection incollection, String login) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_insert_incollection (?,?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_insert_incollection (?,?,?,?,?,?,?,?,?) }");
             st.setString("title", incollection.getTitle());
 
             if (incollection.getUrl().equals("")) {
@@ -1181,6 +1198,12 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setInt("endPage", Integer.parseInt(incollection.getEndPage()));
             }
 
+            if (incollection.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", incollection.getIsbn());
+            }
+
             st.setString("loginUser", login);
             st.execute();
             st.close();
@@ -1196,13 +1219,12 @@ public Vector getEvents(String sql) throws PublicationDAOException {
             if (result.next()) {
                 codPublication = result.getDouble("cod");
                 if (!incollection.getBookTitle().equals("") || !incollection.getStrAuthors().equals("") || !incollection.getEditor().equals("") || !incollection.getPublisher().equals("")) {
-                this.saveAuthorPublication(incollection.getStrAuthors(), codPublication);
+                    this.saveAuthorPublication(incollection.getStrAuthors(), codPublication);
                     this.saveBookTitleDocument(incollection.getBookTitle(), codPublication);
                     this.saveEditorDocument(incollection.getEditor(), codPublication);
                     this.savePublisherDocument(incollection.getPublisher(), codPublication);
                 }
-                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + incollection.getIsbn() + "','book');";
-                stm.execute(sQuery);
+
             }
 
         } catch (Exception e) {
@@ -1261,7 +1283,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void saveProceedings(Proceedings proceedings, String login) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_insert_proceedings (?,?,?,?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_insert_proceedings (?,?,?,?,?,?,?,?,?,?,?) }");
             st.setString("title", proceedings.getTitle());
 
             if (proceedings.getUrl().equals("")) {
@@ -1312,6 +1334,12 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setString("address", proceedings.getAddress());
             }
 
+            if (proceedings.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", proceedings.getIsbn());
+            }
+
             st.setString("loginUser", login);
             st.execute();
             st.close();
@@ -1326,17 +1354,15 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
             if (result.next()) {
                 codPublication = result.getDouble("cod");
-                 if (!proceedings.getBookTitle().equals("") || !proceedings.getStrAuthors().equals("") || !proceedings.getEditor().equals("") || !proceedings.getPublisher().equals("")) {
-                       codPublication = result.getDouble("cod");
+                if (!proceedings.getBookTitle().equals("") || !proceedings.getStrAuthors().equals("") || !proceedings.getEditor().equals("") || !proceedings.getPublisher().equals("")) {
+                    codPublication = result.getDouble("cod");
                     this.saveAuthorPublication(proceedings.getStrAuthors(), codPublication);
                     this.saveBookTitleDocument(proceedings.getBookTitle(), codPublication);
                     this.saveEditorDocument(proceedings.getEditor(), codPublication);
                     this.savePublisherDocument(proceedings.getPublisher(), codPublication);
                 }
-                sQuery = "INSERT INTO integrado.isbn VALUES(" + codPublication + ", '" + proceedings.getIsbn() + "','proceedings');";
-                stm.execute(sQuery);
             }
-         } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
         }
@@ -1665,7 +1691,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void updatePhdThesis(PhdThesis phdThesis, double codPublication) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_update_phdthesis (?,?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_update_phdthesis (?,?,?,?,?,?,?,?,?) }");
 
             st.setString("title", phdThesis.getTitle());
 
@@ -1705,12 +1731,15 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setString("ee", phdThesis.getEe());
             }
 
+            if (phdThesis.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", phdThesis.getIsbn());
+            }
+            
             st.setDouble("idPub", codPublication);
             st.execute();
             st.close();
-
-            String sQuery = "UPDATE integrado.isbn SET isbn='" + phdThesis.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
-            stm.execute(sQuery);
 
         } catch (SQLException e) {
             throw new PublicationDAOException();
@@ -1806,7 +1835,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void updateBook(Book book, double codPublication) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_update_book (?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_update_book (?,?,?,?,?,?,?,?) }");
             st.setString("title", book.getTitle());
 
             if (book.getUrl().equals("")) {
@@ -1839,13 +1868,15 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setString("month", book.getMonth());
             }
 
+            if (book.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", book.getIsbn());
+            }
+
             st.setDouble("idPub", codPublication);
             st.execute();
             st.close();
-
-            String sQuery = "UPDATE integrado.isbn SET isbn ='" + book.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
-            System.out.println("QUERY ISBN " + sQuery);
-            stm.execute(sQuery);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1855,7 +1886,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void updateIncollection(Incollection incollection, double codPublication) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_update_incollection (?,?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_update_incollection (?,?,?,?,?,?,?,?,?) }");
             st.setString("title", incollection.getTitle());
 
             if (incollection.getUrl().equals("")) {
@@ -1893,12 +1924,16 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setInt("endPage", Integer.parseInt(incollection.getEndPage()));
             }
 
+            if (incollection.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", incollection.getIsbn());
+            }
+
             st.setDouble("idPub", codPublication);
             st.execute();
             st.close();
 
-            String sQuery = "UPDATE integrado.isbn SET isbn ='" + incollection.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
-            stm.execute(sQuery);
 
         } catch (Exception e) {
             throw new PublicationDAOException();
@@ -1939,7 +1974,7 @@ public Vector getEvents(String sql) throws PublicationDAOException {
 
     public void updateProceedings(Proceedings proceedings, double codPublication) throws PublicationDAOException {
         try {
-            CallableStatement st = con.prepareCall("{ call sp_update_proceedings (?,?,?,?,?,?,?,?,?,?) }");
+            CallableStatement st = con.prepareCall("{ call sp_update_proceedings (?,?,?,?,?,?,?,?,?,?,?) }");
             st.setString("title", proceedings.getTitle());
 
             if (proceedings.getUrl().equals("")) {
@@ -1990,12 +2025,16 @@ public Vector getEvents(String sql) throws PublicationDAOException {
                 st.setString("address", proceedings.getAddress());
             }
 
+            if (proceedings.getIsbn().equals("")) {
+                st.setString("isbn", null);
+            } else {
+                st.setString("isbn", proceedings.getIsbn());
+            }
+
             st.setDouble("idPub", codPublication);
             st.execute();
             st.close();
 
-            String sQuery = "UPDATE integrado.isbn SET isbn ='" + proceedings.getIsbn() + "' WHERE codPublication=" + codPublication + ";";
-            stm.execute(sQuery);
         } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
