@@ -154,7 +154,7 @@
                                                         }
                     %>
                 <div id="item" align="justify" style="width: 679px;">
-                    <a href="#" onclick="callServlet('PublicationMaintenance?action=managePost&publication=' + <%=rs.get(count - 1).getCod()%> + '&position=' + <%=(count - 1)%> + '&mode=0','AjaxContent')">
+                    <a href="#" onclick="callServlet('PublicationMaintenance?action=managePost&publication=' + <%=rs.get(count - 1).getCod()%> + '&mode=0','AjaxContent')">
                         <%
                                                             if (isbn != null && journal != null) {
                         %>

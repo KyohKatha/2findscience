@@ -7,6 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector" %>
 <%@page import="Pkg2FindScience.News" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -25,7 +26,7 @@
     <table class="maintenance" align="left" cellspacing="1px">
         <%
                     if (newsVector != null) {
-
+                        //Format formato = new SimpleDateFormat("yyyy'/'MM'/'dd hh':'mm");
                         for (int i = 0; i < newsVector.size(); i++) {
 
                             News n = (News) newsVector.get(i);

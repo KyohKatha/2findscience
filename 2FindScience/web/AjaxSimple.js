@@ -621,7 +621,7 @@ function updateUpgrade(login, mode) {
     callServlet(url, "AjaxContent");
 }
 
-function validateFormPost(publication, login, text, position){
+function validateFormPost(publication, login, text){
     var message = "";
 
     if (text == ""){
@@ -644,7 +644,6 @@ function validateFormPost(publication, login, text, position){
         var url = "PublicationMaintenance?action=managePost&publication=" + publication + "&";
         url    += "login=" + login;
         url    += "&text=" + text;
-        url    += "&position=" + position;
         url    += "&mode=1";
         callServlet(url, "AjaxContent");
     }
