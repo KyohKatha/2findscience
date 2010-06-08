@@ -3,58 +3,6 @@
  * and open the template in the editor.
  */
 
-function callEventInsert(index){
-    var sDate;
-    var eDate;
-
-    callServlet('EventMaintenance?action=show&index=' + index,'events_data');
-
-    if (index == 0){
-        sDate = null;
-        eDate = null;
-    } else {
-        sDate = document.getElementById("startDateHidden").value;
-        eDate = document.getElementById("endDataHidden").value;
-    }
-
-    var period = new Array();
-    period[0] = sDate;
-    period[1] = eDate;
-
-    document.getElementById('startDate').value = period[0];
-    document.getElementById('endDate').value = period[1];
-
-    window.addEvent('domready', function() {
-        var startDate = new CalendarEightysix('startDate', {
-            'disallowUserInput': true,
-            'alignX': 'left',
-            'alignY': 'bottom',
-            'offsetX': -4 , 
-            'theme': 'vista',
-            'inputOutputFormat' : 'Y/m/d'
-        });
-        var endDate = new CalendarEightysix('endDate', {
-            'disallowUserInput': true,
-            'alignX': 'left',
-            'alignY': 'bottom',
-            'offsetX': -4,
-            'theme': 'vista'
-        });
-       startDate.addEvent('change', function(date) {
-            date = date.clone().increment(); 
-            endDate.options.minDate = date; 
-           if(endDate.getDate().diff(date) >= 1) endDate.setDate(date);
-            else endDate.render(); 
-        })
-    });
-   
-
-}
-
-function fillDate(){
-
-}
-
 var xmlhttp
 
 function loadContent(url, div)
@@ -159,10 +107,9 @@ function validateFormUser(acao){
             message += ("<p>- <strong>Password</strong> and <strong>Confirmation</strong> don't match!</p>");
             form.password.focus();
         }
-
     }
     if (email != ""){
-        if( email.match( /[a-z|A-Z|0-9]{2,8}@[a-z|A-Z|0-9]{2,20}\.[a-z]{3}([\.]{1}[a-z]{2})*/ ) == null ){
+        if( email.match( /[a-z|A-Z|0-9|._]{2,8}@[a-z|A-Z|0-9]{2,20}\.[a-z]{3}([\.]{1}[a-z]{2})*/ ) == null ){
             message += ("<p>- <strong>Email</strong> is in incorrect format!</p>");
             form.email.focus();
         }
@@ -189,13 +136,13 @@ function validateFormUser(acao){
     var url;
 
     if(acao == "Register"){
-        url = "MaintenanceUserData?action=saveRegister&login=" + login + "&password=" + password +
-        "&name=" + name + "&email=" + email + "&page=" + page + "&subjects=" +  subjectsParameter;
+        url = "MaintenanceUserData?action=saveRegister&login=" + trim(login) + "&password=" + trim(password) +
+        "&name=" + trim(name) + "&email=" + trim(email) + "&page=" + trim(page) + "&subjects=" +  trim(subjectsParameter);
     }else if(acao == "save"){
-        url = "MaintenanceUserData?action=save&login=" + form.login.value + "&name=" + form.name.value + "&email=" + form.email.value + "&page=" + form.page.value + "&profile=" + form.profile.value;
+        url = "MaintenanceUserData?action=save&login=" + trim(form.login.value) + "&name=" + trim(form.name.value) + "&email=" + trim(form.email.value) + "&page=" + trim(form.page.value) + "&profile=" + trim(form.profile.value);
     }else{
-        url = "MaintenanceUserData?action=updateProfile&profile=" + form.profile.value + "&login=" + login + "&password=" + password +
-        "&name=" + name + "&email=" + email + "&page=" + page + "&subjects=" +  subjectsParameter;
+        url = "MaintenanceUserData?action=updateProfile&profile=" + trim(form.profile.value) + "&login=" + trim(login) + "&password=" + trim(password) +
+        "&name=" + trim(name) + "&email=" + trim(email) + "&page=" + trim(page) + "&subjects=" +  trim(subjectsParameter);
     }
     
     callServlet(url, "AjaxContent");
@@ -618,68 +565,36 @@ function validateFormBusca(){
 }
 
 function validateFormEvent(mode){
+    form = document.getElementById("formEvent");
+    var message = "";
+
+    var name = form.name.value;
+    var local = form.city.value;
+    var startDate = form.startDate.value;
+    var endDate = form.endDate.value;
+
+    if (name == ""){
+        message += ("<p>- <strong>Name</strong> is required!</p>");
+        form.name.focus();
+    }
+
+    if(message != ""){
+        message += "<p>- Click on the box to close it.</p>";
+        showMessage('critical', message);
+        return false;
+    }
+
+    var url;
     if(mode == "update"){
-        var code = document.getElementById("codBookTitle").value;
-        return validateFormEventUpdate(code);
-        
+        var cod = document.getElementById("codBookTitle").value;
+         url = "EventMaintenance?action=save&cod=" + cod + "&name=" + name + "&city=" + local +
+        "&startDate=" + startDate + "&endDate=" + endDate;
     }else{
-       return validateFormEventInsert();
+       url = "EventMaintenance?action=save&cod=0&name=" + name + "&city=" + local +
+        "&startDate=" + startDate + "&endDate=" + endDate;
     }
-}
-
-function validateFormEventInsert(){
-    form = document.getElementById("formEvent");
-    var message = "";
-
-    var name = form.name.value;
-    var local = form.city.value;
-    var startDate = form.startDate.value;
-    var endDate = form.endDate.value;
-
-    if (name == ""){
-        message += ("<p>- <strong>Name</strong> is required!</p>");
-        form.name.focus();
-    }
-
-    if(message != ""){
-        message += "<p>- Click on the box to close it.</p>";
-        showMessage('critical', message);
-        return false;
-    }
-
-    var url = "EventMaintenance?action=save&cod=0&name=" + name + "&city=" + local +
-    "&startDate=" + startDate + "&endDate=" + endDate;
 
     callServlet(url, "AjaxContent");
-
-    return true;
-}
-
-function validateFormEventUpdate(cod){
-    form = document.getElementById("formEvent");
-    var message = "";
-
-    var name = form.name.value;
-    var local = form.city.value;
-    var startDate = form.startDate.value;
-    var endDate = form.endDate.value;
-
-    if (name == ""){
-        message += ("<p>- <strong>Name</strong> is required!</p>");
-        form.name.focus();
-    }
-
-    if(message != ""){
-        message += "<p>- Click on the box to close it.</p>";
-        showMessage('critical', message);
-        return false;
-    }
-
-    var url = "EventMaintenance?action=save&cod=" + cod + "&name=" + name + "&city=" + local +
-    "&startDate=" + startDate + "&endDate=" + endDate;
-
-    callServlet(url, "AjaxContent");
-
     return true;
 }
 
@@ -816,24 +731,53 @@ function validateFormInsertUpgrade(){
     return true;
 }
 
+function callEventInsert(index){
+    var sDate;
+    var eDate;
 
-function setPopUp(mode){
-    HttpMethod = "POST";
-    var req = null;
-    var urlPopUp = "Filter?action=popupInsert&mode=" + mode;
-    req = getXMLHTTPRequest();
-    if (req){
-        req.open(HttpMethod,urlPopUp,false);
-        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        req.setRequestHeader('Connection', 'close');
-        req.send(null);
-        req.responseText;
-        if (document.getElementById("loading") != null )
-            document.getElementById("loading").innerHTML="";
+    callServlet('EventMaintenance?action=show&index=' + index,'events_data');
+
+    if (index == 0){
+        sDate = null;
+        eDate = null;
+    } else {
+        sDate = document.getElementById("startDateHidden").value;
+        eDate = document.getElementById("endDataHidden").value;
     }
 
-}
+    var period = new Array();
+    period[0] = sDate;
+    period[1] = eDate;
 
+    document.getElementById('startDate').value = period[0];
+    document.getElementById('endDate').value = period[1];
+
+    window.addEvent('domready', function() {
+        var startDate = new CalendarEightysix('startDate', {
+            'disallowUserInput': true,
+            'alignX': 'left',
+            'alignY': 'bottom',
+            'offsetX': -4 ,
+            'theme': 'vista',
+            'inputOutputFormat' : 'Y/m/d'
+        });
+        var endDate = new CalendarEightysix('endDate', {
+            'disallowUserInput': true,
+            'alignX': 'left',
+            'alignY': 'bottom',
+            'offsetX': -4,
+            'theme': 'vista'
+        });
+       startDate.addEvent('change', function(date) {
+            date = date.clone().increment();
+            endDate.options.minDate = date;
+           if(endDate.getDate().diff(date) >= 1) endDate.setDate(date);
+            else endDate.render();
+        })
+    });
+
+
+}
 
 /***************POPUP*********************/
 
@@ -896,4 +840,21 @@ function finishChecking() {
 
 function setPrefs() {
     document.getElementById(optionPopUp).value =  dialogWin.returnedValue;
+}
+
+function setPopUp(mode){
+    HttpMethod = "POST";
+    var req = null;
+    var urlPopUp = "Filter?action=popupInsert&mode=" + mode;
+    req = getXMLHTTPRequest();
+    if (req){
+        req.open(HttpMethod,urlPopUp,false);
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        req.setRequestHeader('Connection', 'close');
+        req.send(null);
+        req.responseText;
+        if (document.getElementById("loading") != null )
+            document.getElementById("loading").innerHTML="";
+    }
+
 }
