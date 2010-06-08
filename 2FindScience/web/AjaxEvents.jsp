@@ -18,7 +18,6 @@
         <title>2FindScience - Events</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel = "stylesheet" type = "text/css" href = "style.css" />
-        <script type="text/javascript" src="AjaxSimple.js"></script>
 
     </head>
     <body>
@@ -36,7 +35,7 @@
             </div>
 
             <div id="userlist">
-                <select class="list" onchange="javascript:callServlet('EventMaintenance?action=show&index=' + this.selectedIndex,'events_data')" size=10>
+                <select class="list" onchange="javascript:callEventInsert(this.selectedIndex)" size=10>
                     <option style="color: #ffffff; background-color: #000000">INSERT A NEW EVENT...</option>
                 </select>
             </div>

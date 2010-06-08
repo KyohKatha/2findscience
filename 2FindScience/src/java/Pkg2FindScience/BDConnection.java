@@ -21,8 +21,8 @@ public class BDConnection {
             ds.setPassword("#gustavo123");
             ds.setDatabaseName("317624");
 
-            //ds.setServerName("192.168.12.4");
-            ds.setServerName("189.109.33.220");
+           ds.setServerName("192.168.12.4");
+           // ds.setServerName("189.109.33.220");
 
             con = ds.getConnection();
             stm = con.createStatement();

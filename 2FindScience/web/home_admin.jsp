@@ -25,7 +25,6 @@
         <script type="text/javascript" src="js/calendar-eightysix-v1.1.js"></script>
         <link type="text/css" media="screen" href="css/calendar-eightysix-v1.1-vista.css" rel="stylesheet" />
 
-
         <script type="text/javascript">
               function loadAjaxAdmin(name){
                 current = document.getElementById("currentMenu").value;

@@ -3,6 +3,58 @@
  * and open the template in the editor.
  */
 
+function callEventInsert(index){
+    var sDate;
+    var eDate;
+
+    callServlet('EventMaintenance?action=show&index=' + index,'events_data');
+
+    if (index == 0){
+        sDate = null;
+        eDate = null;
+    } else {
+        sDate = document.getElementById("startDateHidden").value;
+        eDate = document.getElementById("endDataHidden").value;
+    }
+
+    var period = new Array();
+    period[0] = sDate;
+    period[1] = eDate;
+
+    document.getElementById('startDate').value = period[0];
+    document.getElementById('endDate').value = period[1];
+
+    window.addEvent('domready', function() {
+        var startDate = new CalendarEightysix('startDate', {
+            'disallowUserInput': true,
+            'alignX': 'left',
+            'alignY': 'bottom',
+            'offsetX': -4 , 
+            'theme': 'vista',
+            'inputOutputFormat' : 'Y/m/d'
+        });
+        var endDate = new CalendarEightysix('endDate', {
+            'disallowUserInput': true,
+            'alignX': 'left',
+            'alignY': 'bottom',
+            'offsetX': -4,
+            'theme': 'vista'
+        });
+       startDate.addEvent('change', function(date) {
+            date = date.clone().increment(); 
+            endDate.options.minDate = date; 
+           if(endDate.getDate().diff(date) >= 1) endDate.setDate(date);
+            else endDate.render(); 
+        })
+    });
+   
+
+}
+
+function fillDate(){
+
+}
+
 var xmlhttp
 
 function loadContent(url, div)
@@ -290,7 +342,7 @@ function trim(texto) {
 }
 
 function validateFormPublication(action){
-   var messagePublication = "";
+    var messagePublication = "";
     var formPublication = document.getElementById("formPublication");
 
     // expressÃµes regulares
@@ -311,18 +363,18 @@ function validateFormPublication(action){
         authors = trim(formPublication.author.value);
         authors = authors.toString().replace(" ", "+");
         url  = "PublicationMaintenance?action=savePublication";
-         if(typePublication != "phdthesis" && typePublication != "mastersthesis"){
-             booktitle = trim(formPublication.booktitle.value);
-             editor = trim(formPublication.editor.value);
-             publisher = trim(formPublication.publisher.value);
-             booktitle = booktitle.toString().replace(" ", "+");
-             editor = editor.toString().replace(" ", "+");
-             publisher = publisher.toString().replace(" ", "+");
-             url += "&title=" + title + "&url=" + urlField + "&author=" + authors + "&booktitle=" + booktitle +
+        if(typePublication != "phdthesis" && typePublication != "mastersthesis"){
+            booktitle = trim(formPublication.booktitle.value);
+            editor = trim(formPublication.editor.value);
+            publisher = trim(formPublication.publisher.value);
+            booktitle = booktitle.toString().replace(" ", "+");
+            editor = editor.toString().replace(" ", "+");
+            publisher = publisher.toString().replace(" ", "+");
+            url += "&title=" + title + "&url=" + urlField + "&author=" + authors + "&booktitle=" + booktitle +
             "&editor=" + editor + "&publisher=" + publisher;
-         }else{
-             url += "&title=" + title + "&url=" + urlField + "&author=" + authors;
-         }
+        }else{
+            url += "&title=" + title + "&url=" + urlField + "&author=" + authors;
+        }
     }else{ /*Update publication*/
 
         url = "PublicationMaintenance?action=updatePublication&title=" + title + "&url=" + urlField;
@@ -347,7 +399,7 @@ function validateFormPublication(action){
                 formPublication.number.focus();
             }
             url += "&typePublication=phdthesis&school=" + school + "&number=" + number + "&volume=" + volume + "&month=" +
-                month + "&ee=" + ee + "&isbn=" + isbn;
+            month + "&ee=" + ee + "&isbn=" + isbn;
 
             break;
         case "mastersthesis":
@@ -379,7 +431,7 @@ function validateFormPublication(action){
             }
 
             url += "&typePublication=inprocedings&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage +
-                "&cdrom=" + cdrom + "&note=" + note + "&number=" + number + "&month=" + month;
+            "&cdrom=" + cdrom + "&note=" + note + "&number=" + number + "&month=" + month;
 
             break;
         case "book":
@@ -395,7 +447,7 @@ function validateFormPublication(action){
             }
 
             url += "&typePublication=book&ee=" + ee + "&volume=" + volume + "&cdrom=" + cdrom +
-                "&month=" + month + "&isbn=" + isbn;
+            "&month=" + month + "&isbn=" + isbn;
 
             break;
         case "incollection":
@@ -422,7 +474,7 @@ function validateFormPublication(action){
             }
 
             url += "&typePublication=incollection&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage +
-                "&cdrom=" + cdrom + "&chapter=" + chapter + "&isbn=" + isbn;
+            "&cdrom=" + cdrom + "&chapter=" + chapter + "&isbn=" + isbn;
 
             break;
         case "www":
@@ -463,8 +515,8 @@ function validateFormPublication(action){
             }
 
             url += "&typePublication=article&cdrom=" + cdrom + "&journal=" + journal + "&note=" + note + "&month=" + month +
-                "&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage + "&volume=" + volume +
-                "&number=" + number;
+            "&ee=" + ee + "&startPage=" + startPage + "&endPage=" + endPage + "&volume=" + volume +
+            "&number=" + number;
             break;
         case "proceedings":
             ee = trim(formPublication.ee.value);
@@ -488,8 +540,8 @@ function validateFormPublication(action){
             }
 
             url += "&typePublication=proceedings&ee=" + ee + "&journal=" + journal +
-                "&volume=" + volume + "&number=" + number + "&note=" + note + "&month=" + month +
-                "&address=" + address + "&isbn=" + isbn;
+            "&volume=" + volume + "&number=" + number + "&note=" + note + "&month=" + month +
+            "&address=" + address + "&isbn=" + isbn;
 
             break;
     }
@@ -565,14 +617,24 @@ function validateFormBusca(){
 
 }
 
-function validateFormEvent1(){
+function validateFormEvent(mode){
+    if(mode == "update"){
+        var code = document.getElementById("codBookTitle").value;
+        return validateFormEventUpdate(code);
+        
+    }else{
+       return validateFormEventInsert();
+    }
+}
+
+function validateFormEventInsert(){
     form = document.getElementById("formEvent");
     var message = "";
 
     var name = form.name.value;
     var local = form.city.value;
-    var startDate = "";
-    var endDate = "";
+    var startDate = form.startDate.value;
+    var endDate = form.endDate.value;
 
     if (name == ""){
         message += ("<p>- <strong>Name</strong> is required!</p>");
@@ -593,7 +655,7 @@ function validateFormEvent1(){
     return true;
 }
 
-function validateFormEvent2(cod){
+function validateFormEventUpdate(cod){
     form = document.getElementById("formEvent");
     var message = "";
 
@@ -754,47 +816,6 @@ function validateFormInsertUpgrade(){
     return true;
 }
 
-function saveDate(){
-    var dates = {
-        sDate : null,
-        eDate : null
-    };
-
-    dates[0] = document.getElementById('startDate').value;
-    dates[1] = document.getElementById('endDate').value;
-
-    window.returnValue = dates;
-
-    window.close();
-}
-
-function loadDate(type){
-    var form = document.getElementById('formEvent');
-    var name = form.name.value;
-    var local = form.city.value;
-    var sDate;
-    var eDate;
-
-    if (type == 0){
-        sDate = null;
-        eDate = null;
-    } else {
-        sDate = form.startDate.value;
-        eDate = form.endDate.value;
-    }
-
-    var period = new Array();
-    period[0] = sDate;
-    period[1] = eDate;
-
-    var dates = window.showModalDialog('popupCalendar.jsp', period, '');
-
-    sDate = dates[0];
-    eDate = dates[1];
-
-    callServlet('Calendar?cod=' + type + '&name=' + name + '&local=' + local +
-        '&sDate=' + sDate + '&eDate=' + eDate, 'events_data');
-}
 
 function setPopUp(mode){
     HttpMethod = "POST";
@@ -839,18 +860,18 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
         dialogWin.name = (new Date()).getSeconds().toString()
         if (Nav4) {
             dialogWin.left = window.screenX +
-                ((window.outerWidth - dialogWin.width) / 2)
+            ((window.outerWidth - dialogWin.width) / 2)
             dialogWin.top = window.screenY +
-                ((window.outerHeight - dialogWin.height) / 2)
+            ((window.outerHeight - dialogWin.height) / 2)
             var attr = "screenX=" + dialogWin.left +
-                ",screenY=" + dialogWin.top + ",resizable=no,width=" +
-                dialogWin.width + ",height=" + dialogWin.height
+            ",screenY=" + dialogWin.top + ",resizable=no,width=" +
+            dialogWin.width + ",height=" + dialogWin.height
         } else {
             dialogWin.left = (screen.width - dialogWin.width) / 2
             dialogWin.top = (screen.height - dialogWin.height) / 2
             var attr = "left=" + dialogWin.left + ",top=" +
-                dialogWin.top + ",resizable=no,width=" + dialogWin.width +
-                ",height=" + dialogWin.height
+            dialogWin.top + ",resizable=no,width=" + dialogWin.width +
+            ",height=" + dialogWin.height
         }
 
         dialogWin.win=window.open(dialogWin.url, dialogWin.name, attr)
@@ -858,7 +879,7 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
     } else {
         dialogWin.win.focus()
     }
-   if (document.getElementById("loading") != null )
+    if (document.getElementById("loading") != null )
         document.getElementById("loading").style.visibility = 'hidden';
 }
 

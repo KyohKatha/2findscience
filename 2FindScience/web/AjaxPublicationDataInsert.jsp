@@ -1,5 +1,5 @@
 <%-- 
-    Document   : AjaxPublicationDataInsert
+    Document   : AjaxPublicationData
     Created on : 26/05/2010, 02:27:55
     Author     : Gustavo Henrique
 --%>
