@@ -104,7 +104,7 @@
                 }
         %>
         <div id="msg">
-            <fieldset class="information">
+            <fieldset class="information" onclick="closeMessageBox()">
                 <legend>Information</legend>
                 <p>-  All fields with (*) are required.</p>
                 <p>- Click on the box to close it.</p>

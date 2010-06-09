@@ -61,8 +61,14 @@ public class Filter extends HttpServlet {
                 this.publicationMaintenance(request, response, user, parameter);
             } else {
                 if (action.equals("popupInsert")) {
+                        String redirectParameter = (String) request.getParameter("redirect");
+                        System.out.println("REDIRECIONARRR: " + redirectParameter);
                         this.popUpSelectBox(request, response);
-                        redirect = false;
+                        if(redirectParameter.equals("yes")){
+                            redirect = true;
+                        }else{
+                            redirect = false;
+                        }
                 } else {
                     if (action.equals("EventFilter")) {
                         this.EventFilter(request, response, user, parameter);
@@ -185,7 +191,7 @@ public class Filter extends HttpServlet {
 
         try {
             subjects = connection.getSubjects();
-            System.out.println("Size: " + subjects.size());
+            
             request.getSession().setAttribute("subjectVector", subjects);
 
             String sql = "select upgrade from integrado.settings";
@@ -232,20 +238,22 @@ public class Filter extends HttpServlet {
         String mode = (String) request.getParameter("mode");
         Vector available = null;
 
+        System.out.println("MODDDEEEE   " + mode);
+
         try {
-            if (mode.equals("author")) {
+            if (mode.equals("Author")) {
                 available = connection.getAuthors();
             } else {
-                if (mode.equals("booktitle")) {
+                if (mode.equals("BookTitle")) {
                     available = connection.getBookTitle();
                 } else {
-                    if (mode.equals("editor")) {
+                    if (mode.equals("Editor")) {
                         available = connection.getEditor();
                     } else {
-                        if (mode.equals("publisher")) {
+                        if (mode.equals("Publisher")) {
                             available = connection.getPublisher();
                         }else{
-                            if(mode.equals("subjects")){
+                            if(mode.equals("Subjects")){
                                 available = connection.getSubjects();
                             }
                         }
@@ -258,6 +266,39 @@ public class Filter extends HttpServlet {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting authors </p>");
         }
+        rd = request.getRequestDispatcher("/popupSelectBox.jsp?nameOption=" + mode);
     }
 
+
+     /*
+       private void popUpSelectBox(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String mode = (String) request.getParameter("mode");
+        Vector available = null;
+
+        try {
+            if (mode.equals("author")) {
+                available = connection.getAuthors();
+            } else {
+                if (mode.equals("booktitle")) {
+                    available = connection.getBookTitle();
+                } else {
+                    if (mode.equals("editor")) {
+                        available = connection.getEditor();
+                    } else {
+                        if (mode.equals("publisher")) {
+                            available = connection.getPublisher();
+                        }
+                    }
+                }
+            }
+            request.getSession().setAttribute("available", available);
+            request.getSession().setAttribute("nameOption", mode);
+        } catch (Exception e) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting authors </p>");
+        }
+    }
+*/
 }

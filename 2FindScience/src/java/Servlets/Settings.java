@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import Pkg2FindScience.BDConnection;
 import java.sql.ResultSet;
+import java.util.Vector;
 
 /**
  *
@@ -34,6 +35,8 @@ public class Settings extends HttpServlet {
         RequestDispatcher rd = null;
         String mode = (String) request.getParameter("mode");
 
+        System.out.println("MODEE " + mode);
+
         try {
             if (mode.equals("upgrade")) {
                 String newMaxUpgrade = request.getParameter("newMaxUpgrade");
@@ -45,20 +48,32 @@ public class Settings extends HttpServlet {
                 request.getSession().setAttribute("message", "<p>- The <strong>Maximum number of upgrade requests</strong> was updated successfully!</p><p>- Click on the box to close it.</p>");
                 rd = request.getRequestDispatcher("Filter?action=ThemeUpgradeFilter");
             } else {
+                if(mode.equals("deleteSubject")){
+                    int index = Integer.parseInt( request.getParameter("index"));
+
+                    Vector subjects = (Vector) request.getSession().getAttribute("subjectVector");
+                    String subject = subjects.elementAt(index).toString();
+                    BDConnection con = BDConnection.getInstance();
+
+                    con.deleteSubject(subject);
+                    request.getSession().setAttribute("type", "success");
+                    request.getSession().setAttribute("message", "<p>- <strong>Subject</strong> delete sucessfully!</p><p>- Click on the box to close it.</p>");
+                    rd = request.getRequestDispatcher("Filter?action=ThemeUpgradeFilter");
+
+                }else{
                 String newTheme = request.getParameter("newTheme");
                 BDConnection con = BDConnection.getInstance();
                 boolean inserido = con.inserirNovoTema(newTheme);
 
                 if (!inserido) {
                     request.getSession().setAttribute("type", "critical");
-                    request.getSession().setAttribute("message", "<p>- <strong>Theme</strong> already exists!</p><p>- Click on the box to close it.</p>");
-                    System.out.println("estou aqui querendo te.... ");
+                    request.getSession().setAttribute("message", "<p>- <strong>Subject</strong> already exists!</p><p>- Click on the box to close it.</p>");
                     rd = request.getRequestDispatcher("/AjaxSettings.jsp");
                 } else {
-                    System.out.println("inseri blé.... ");
                     request.getSession().setAttribute("type", "success");
-                    request.getSession().setAttribute("message", "<p>- The <strong>theme</strong> was saved successfully!</p><p>- Click on the box to close it.</p>");
+                    request.getSession().setAttribute("message", "<p>- The <strong>subject</strong> was saved successfully!</p><p>- Click on the box to close it.</p>");
                     rd = request.getRequestDispatcher("Filter?action=ThemeUpgradeFilter");
+                }
                 }
             }
 

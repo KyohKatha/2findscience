@@ -1,11 +1,12 @@
-<%--
+<%-- 
     Document   : popupNewOption
     Created on : 08/06/2010, 01:01:33
     Author     : Gustavo Henrique
 --%>
 
 <%
-            String nameOption = (String) request.getParameter("nameOption");
+           String nameOption = (String) request.getParameter("nameOption");
+
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.Vector" %>
@@ -21,32 +22,49 @@
     </head>
 
     <body>
-        <div id="msg">
-            <fieldset class="information" onclick="closeMessageBox()">
-                <legend>Information</legend>
-                <p>- All fields with (*) are required.</p>
-                <p>- Click on the box to close it.</p>
-            </fieldset>
-        </div>
+        <%
+                    String message, type;
+                    message = (String) request.getAttribute("message");
+                    type = (String) request.getAttribute("type");
+                    request.removeAttribute("message");
+                    request.removeAttribute("type");
 
-        <form action="PublicationMaintenance" method="post" onsubmit="return validateFormNewOption()" >
+                    if (message != null) {
+                        out.println("<div id=\"msg\">");
+                        out.println("<fieldset class=\"" + type + "\">");
+                        String legend = "Undefined";
+                        if (type == "information") {
+                            legend = "Information";
+                        } else if (type == "critical") {
+                            legend = "Error";
+                        } else if (type == "success") {
+                            legend = "Success";
+                        } else if (type == "warning") {
+                            legend = "Warning";
+                        }
+
+                        out.println("<legend>" + legend + "</legend>");
+                        out.println(message);
+                        out.println("</fieldset>");
+                        out.println("</div>");
+                    }
+        %>
+
+        <form action="#" method="post">
             <table align="center">
                 <tr>
                     <td> Name new <%=nameOption%>: </td>
-                    <td> <input type="text" id="newOption" name="newOption" maxlength="255"> </td>
+                    <td> <input type="text" maxlength="255"> </td>
                 </tr>
 
+                
                 <tr>
-                    <td colspan="2">
-                        <div id="buttonsbox">
-                            <input type="submit" class="button" value="Save"/>
-                            <input type="button" class="button" value="Cancel" onclick="javascript: document.location = 'popupSelectBox.jsp?nameOption=' + '<%=nameOption%>';"/>
-                        </div>
-                    </td>
+                    <td> <input type="button" class="button" value="Save" onclick="handleOKPopUp()"/> </td>
+                    <td> <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/> </td>
                 </tr>
             </table>
-            <input type="hidden" id="nameOption" name="nameOption" value="<%=nameOption%>">
-            <input type="hidden" id="action" name="action" value="newOption">
+            <input type="hidden" id="nameOption" value="<%=nameOption%>">
         </form>
+
     </body>
 </html>

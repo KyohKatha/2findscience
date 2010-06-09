@@ -96,8 +96,7 @@ public class BDConnection {
     public Vector getSubjects() throws PublicationDAOException {
         Vector subjects = new Vector();
         ResultSet rs = null;
-        Subject subject;
-
+       
         try {
             String sQuery = "SELECT subject FROM integrado.subject ORDER BY(subject);";
             stm.execute(sQuery);
@@ -298,7 +297,7 @@ public class BDConnection {
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT TOP 150 name FROM integrado.author ORDER BY name;";
+            String sQuery = "SELECT TOP 500 name FROM integrado.author ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -413,11 +412,13 @@ public class BDConnection {
                 publications.addElement(publication);
             }
 
-            if (st != null)
+            if (st != null) {
                 st.close();
+            }
 
-            if (stm3 != null)
+            if (stm3 != null) {
                 stm3.close();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -586,8 +587,7 @@ public class BDConnection {
     }
 
     public void insertPost(Double codPublication, String userLogin, String text) throws PublicationDAOException {
-        String statement = "INSERT INTO integrado.post (codPublication, userLogin, text) VALUES ("
-                + codPublication + ", '" + userLogin + "', '" + text + "');";
+        String statement = "INSERT INTO integrado.post (codPublication, userLogin, text) VALUES (" + codPublication + ", '" + userLogin + "', '" + text + "');";
 
         try {
             System.out.println("Sss: " + statement);
@@ -742,11 +742,9 @@ public class BDConnection {
     public void saveUser(User u) throws PublicationDAOException {
         try {
 
-            String sql = "UPDATE integrado.userData SET name = '" + u.getName() + "', email = '"
-                    + u.getEmail() + "', page = '" + u.getPage() + "', profile = " + u.getProfile() + " where login = '" + u.getLogin() + "';";
+            String sql = "UPDATE integrado.userData SET name = '" + u.getName() + "', email = '" + u.getEmail() + "', page = '" + u.getPage() + "', profile = " + u.getProfile() + " where login = '" + u.getLogin() + "';";
 
             stm.execute(sql);
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAaa");
         } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
@@ -792,7 +790,7 @@ public class BDConnection {
         return publisher;
     }
 
-    public void saveMasterThesis(MasterThesis masterThesis, String login) throws PublicationDAOException {
+    public void saveMasterThesis(MasterThesis masterThesis, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_masterThesis (?,?,?,?) }");
 
@@ -813,7 +811,7 @@ public class BDConnection {
             st.execute();
             st.close();
 
-            if (!masterThesis.getStrAuthors().equals("")) {
+            if (!masterThesis.getStrAuthors().equals("") || !subjects.equals("")) {
                 String sQuery = "SELECT cod FROM integrado.publication WHERE title='" + masterThesis.getTitle() + "' AND loginUser='" + login + "';";
                 stm.execute(sQuery);
                 ResultSet result = stm.getResultSet();
@@ -822,6 +820,7 @@ public class BDConnection {
                 if (result.next()) {
                     codPublication = result.getDouble("cod");
                     this.saveAuthorPublication(masterThesis.getStrAuthors(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
             }
         } catch (Exception e) {
@@ -829,7 +828,7 @@ public class BDConnection {
         }
     }
 
-    public void savePhdThesis(PhdThesis phdThesis, String login) throws PublicationDAOException {
+    public void savePhdThesis(PhdThesis phdThesis, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_phdthesis (?,?,?,?,?,?,?,?,?) }");
 
@@ -891,8 +890,9 @@ public class BDConnection {
 
             if (result.next()) {
                 codPublication = result.getDouble("cod");
-                if (!phdThesis.getStrAuthors().equals("")) {
+                if (!phdThesis.getStrAuthors().equals("") || !subjects.equals("")) {
                     this.saveAuthorPublication(phdThesis.getStrAuthors(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
 
             }
@@ -902,7 +902,7 @@ public class BDConnection {
         }
     }
 
-    public void saveArticle(Article article, String login) throws PublicationDAOException {
+    public void saveArticle(Article article, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_article (?,?,?,?,?,?,?,?,?,?,?,?) }");
             st.setString("title", article.getTitle());
@@ -973,7 +973,7 @@ public class BDConnection {
             ResultSet result = null;
             String sQuery = null;
 
-            if (!article.getBookTitle().equals("") || !article.getStrAuthors().equals("") || !article.getEditor().equals("") || !article.getPublisher().equals("")) {
+            if (!article.getBookTitle().equals("") || !article.getStrAuthors().equals("") || !article.getEditor().equals("") || !article.getPublisher().equals("") || !subjects.equals("")) {
                 sQuery = "SELECT cod FROM integrado.publication WHERE title='" + article.getTitle() + "' AND loginUser='" + login + "';";
                 stm.execute(sQuery);
                 result = stm.getResultSet();
@@ -985,6 +985,7 @@ public class BDConnection {
                     this.saveBookTitleDocument(article.getBookTitle(), codPublication);
                     this.saveEditorDocument(article.getEditor(), codPublication);
                     this.savePublisherDocument(article.getPublisher(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
             }
 
@@ -994,7 +995,7 @@ public class BDConnection {
         }
     }
 
-    public void saveInproceedings(Inproceedings inproceedings, String login) throws PublicationDAOException {
+    public void saveInproceedings(Inproceedings inproceedings, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_inproceedings (?,?,?,?,?,?,?,?,?,?) }");
             st.setString("title", inproceedings.getTitle());
@@ -1054,7 +1055,7 @@ public class BDConnection {
             ResultSet result = null;
             String sQuery = null;
 
-            if (!inproceedings.getBookTitle().equals("") || !inproceedings.getStrAuthors().equals("") || !inproceedings.getEditor().equals("") || !inproceedings.getPublisher().equals("")) {
+            if (!inproceedings.getBookTitle().equals("") || !inproceedings.getStrAuthors().equals("") || !inproceedings.getEditor().equals("") || !inproceedings.getPublisher().equals("") || !subjects.equals("")) {
                 sQuery = "SELECT cod FROM integrado.publication WHERE title='" + inproceedings.getTitle() + "' AND loginUser='" + login + "';";
                 stm.execute(sQuery);
                 result = stm.getResultSet();
@@ -1066,6 +1067,7 @@ public class BDConnection {
                     this.saveBookTitleDocument(inproceedings.getBookTitle(), codPublication);
                     this.saveEditorDocument(inproceedings.getEditor(), codPublication);
                     this.savePublisherDocument(inproceedings.getPublisher(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
             }
         } catch (Exception e) {
@@ -1073,7 +1075,7 @@ public class BDConnection {
         }
     }
 
-    public void saveBook(Book book, String login) throws PublicationDAOException {
+    public void saveBook(Book book, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_book (?,?,?,?,?,?,?,?) }");
             st.setString("title", book.getTitle());
@@ -1128,11 +1130,12 @@ public class BDConnection {
 
             if (result.next()) {
                 codPublication = result.getDouble("cod");
-                if (!book.getBookTitle().equals("") || !book.getStrAuthors().equals("") || !book.getEditor().equals("") || !book.getPublisher().equals("")) {
+                if (!book.getBookTitle().equals("") || !book.getStrAuthors().equals("") || !book.getEditor().equals("") || !book.getPublisher().equals("") || !subjects.equals("")) {
                     this.saveAuthorPublication(book.getStrAuthors(), codPublication);
                     this.saveBookTitleDocument(book.getBookTitle(), codPublication);
                     this.saveEditorDocument(book.getEditor(), codPublication);
                     this.savePublisherDocument(book.getPublisher(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
 
             }
@@ -1142,7 +1145,7 @@ public class BDConnection {
         }
     }
 
-    public void saveIncollection(Incollection incollection, String login) throws PublicationDAOException {
+    public void saveIncollection(Incollection incollection, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_incollection (?,?,?,?,?,?,?,?,?) }");
             st.setString("title", incollection.getTitle());
@@ -1202,11 +1205,12 @@ public class BDConnection {
 
             if (result.next()) {
                 codPublication = result.getDouble("cod");
-                if (!incollection.getBookTitle().equals("") || !incollection.getStrAuthors().equals("") || !incollection.getEditor().equals("") || !incollection.getPublisher().equals("")) {
+                if (!incollection.getBookTitle().equals("") || !incollection.getStrAuthors().equals("") || !incollection.getEditor().equals("") || !incollection.getPublisher().equals("") || !subjects.equals("")) {
                     this.saveAuthorPublication(incollection.getStrAuthors(), codPublication);
                     this.saveBookTitleDocument(incollection.getBookTitle(), codPublication);
                     this.saveEditorDocument(incollection.getEditor(), codPublication);
                     this.savePublisherDocument(incollection.getPublisher(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
 
             }
@@ -1216,7 +1220,7 @@ public class BDConnection {
         }
     }
 
-    public void saveWww(Www www, String login) throws PublicationDAOException {
+    public void saveWww(Www www, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_www (?,?,?,?,?) }");
             st.setString("title", www.getTitle());
@@ -1246,7 +1250,7 @@ public class BDConnection {
             ResultSet result = null;
             String sQuery = null;
 
-            if (!www.getBookTitle().equals("") || !www.getStrAuthors().equals("") || !www.getEditor().equals("") || !www.getPublisher().equals("")) {
+            if (!www.getBookTitle().equals("") || !www.getStrAuthors().equals("") || !www.getEditor().equals("") || !www.getPublisher().equals("") || !subjects.equals("")) {
                 sQuery = "SELECT cod FROM integrado.publication WHERE title='" + www.getTitle() + "' AND loginUser='" + login + "';";
                 stm.execute(sQuery);
                 result = stm.getResultSet();
@@ -1258,6 +1262,7 @@ public class BDConnection {
                     this.saveBookTitleDocument(www.getBookTitle(), codPublication);
                     this.saveEditorDocument(www.getEditor(), codPublication);
                     this.savePublisherDocument(www.getPublisher(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
             }
         } catch (Exception e) {
@@ -1265,7 +1270,7 @@ public class BDConnection {
         }
     }
 
-    public void saveProceedings(Proceedings proceedings, String login) throws PublicationDAOException {
+    public void saveProceedings(Proceedings proceedings, String login, String subjects) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{ call sp_insert_proceedings (?,?,?,?,?,?,?,?,?,?,?) }");
             st.setString("title", proceedings.getTitle());
@@ -1338,12 +1343,13 @@ public class BDConnection {
 
             if (result.next()) {
                 codPublication = result.getDouble("cod");
-                if (!proceedings.getBookTitle().equals("") || !proceedings.getStrAuthors().equals("") || !proceedings.getEditor().equals("") || !proceedings.getPublisher().equals("")) {
+                if (!proceedings.getBookTitle().equals("") || !proceedings.getStrAuthors().equals("") || !proceedings.getEditor().equals("") || !proceedings.getPublisher().equals("") || !subjects.equals("")) {
                     codPublication = result.getDouble("cod");
                     this.saveAuthorPublication(proceedings.getStrAuthors(), codPublication);
                     this.saveBookTitleDocument(proceedings.getBookTitle(), codPublication);
                     this.saveEditorDocument(proceedings.getEditor(), codPublication);
                     this.savePublisherDocument(proceedings.getPublisher(), codPublication);
+                    this.saveSubjectPublication(codPublication, subjects);
                 }
             }
         } catch (Exception e) {
@@ -1720,7 +1726,7 @@ public class BDConnection {
             } else {
                 st.setString("isbn", phdThesis.getIsbn());
             }
-            
+
             st.setDouble("idPub", codPublication);
             st.execute();
             st.close();
@@ -2151,7 +2157,7 @@ public class BDConnection {
             st = con.prepareCall("{call sp_get_authors_by_pub (?)}");
             st.setDouble(1, cod);
             rs = st.executeQuery();
-            
+
             while (rs.next()) {
                 Author a = new Author();
                 a.setName(rs.getString("name"));
@@ -2171,7 +2177,7 @@ public class BDConnection {
             if (rs.next()) {
                 p.setIsbn(rs.getString("isbn"));
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new PublicationDAOException();
@@ -2181,22 +2187,19 @@ public class BDConnection {
     }
 
     public boolean requestUpgrade(String login, String pwd) throws PublicationDAOException {
-        boolean status;
+        boolean status = false;
         try {
             CallableStatement st = null;
             st = con.prepareCall("{call sp_request_upgrade (?,?,?)}");
             st.setString(1, login);
             st.setString(2, pwd);
-            st.registerOutParameter(3,Types.BOOLEAN);
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            st.execute();
-            //ResultSet rs = st.executeQuery();
+            st.registerOutParameter(3, Types.BOOLEAN);
+            ResultSet rs = st.executeQuery();
 
-            status = st.getBoolean(3);
-               System.out.println("STATUS: "+status);
-            /*if (rs.next()) {
+            if (rs.next()) {
                 status = rs.getBoolean(1);
-            }*/
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -2204,10 +2207,9 @@ public class BDConnection {
         }
 
         return status;
-
     }
 
-    public void insertNewAuthor(String newAuthor) throws PublicationDAOException{
+    public void insertNewAuthor(String newAuthor) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{call sp_insert_new_author (?)}");
             st.setString(1, newAuthor);
@@ -2218,7 +2220,7 @@ public class BDConnection {
         }
     }
 
-       public void insertNewEditor(String newEditor) throws PublicationDAOException{
+    public void insertNewEditor(String newEditor) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{call sp_insert_new_editor (?)}");
             st.setString(1, newEditor);
@@ -2227,9 +2229,9 @@ public class BDConnection {
         } catch (SQLException e) {
             throw new PublicationDAOException();
         }
-       }
+    }
 
-       public void insertNewPublisher(String newPublisher) throws PublicationDAOException{
+    public void insertNewPublisher(String newPublisher) throws PublicationDAOException {
         try {
             CallableStatement st = con.prepareCall("{call sp_insert_new_publisher (?)}");
             st.setString(1, newPublisher);
@@ -2240,8 +2242,44 @@ public class BDConnection {
         }
     }
 
+    public void deleteSubject(String subject) throws PublicationDAOException {
+        try {
+            String sQuery = "DELETE FROM integrado.subject WHERE subject = '" + subject + "';";
+            stm.execute(sQuery);
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+    }
 
-    public int getMaxUpgrade() throws PublicationDAOException {
+    private void saveSubjectPublication(double codPublication, String subjects) throws PublicationDAOException{
+        String sQuery = null;
+        ResultSet result = null;
+        
+        try {
+            if (subjects != null && !subjects.equals("")) {
+                String[] vectorSubjects = subjects.split(";");
+
+                for (int i = 0; i < vectorSubjects.length; i++) {
+                    sQuery = "SELECT cod FROM integrado.subject WHERE subject= '" + vectorSubjects[i] + "';";
+                    stm.execute(sQuery);
+                    result = stm.getResultSet();
+
+                    if (result.next()) {
+                        int cod = result.getInt("cod");
+                        sQuery = "INSERT INTO integrado.publicationSubject VALUES(" + codPublication  + "," + cod + ");";
+                        System.out.println("Query " + sQuery);
+                        stm.execute(sQuery);
+                        System.out.println("INSERIU");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            throw new PublicationDAOException("<p>- Error <strong>save</strong> data</p> <p>- Please try again</p>");
+        }
+    }
+
+        public int getMaxUpgrade() throws PublicationDAOException {
         int max = 0;
         ResultSet rs = null;
         try {
@@ -2256,8 +2294,6 @@ public class BDConnection {
             e.printStackTrace();
             throw new PublicationDAOException();
         }
-
         return max;
-
     }
 }
