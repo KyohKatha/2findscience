@@ -25,23 +25,12 @@
             <table class="maintenance"  cellspacing="15px" >
                 <tr>
                     <td>
-                        <strong>How can I insert publications?</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Firstly you have to have an Academic Profile (you can check this in the <a href="#">Settings</a> tab in your menu after logging in).</p>
-                        <p>If your profile is correct, you can check the <a href="#">Publications</a> tab on your menu.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <strong>How can I register?</strong>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>Click <a href="#">here</a> to register. There's also a link on the top of the page.</p>
+                        <p>There's a link on the top of the page, near the 'Home' tab.</p>
                     </td>
                 </tr>
                 <tr>
@@ -51,7 +40,38 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Yes. Click in the <a href="#">Configurations</a> tab in your menu.</p>
+                        <p>Yes. Click in the 'Profile' tab in your menu.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Can I change my password?</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Yes. Click in the 'Profile' tab in your menu.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>How can I insert publications?</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Firstly you have to have an Academic Profile, which have a green banner.</p>
+                        <p>If your profile is correct, you can check the 'Publications' tab on your menu.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Meu perfil tem o banner laranja! Como eu faço para ter um 'Academic Profile'?</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Clique na aba 'Profile' em seu perfil e em seguida, clique em 'Upgrade!'.</p>
                     </td>
                 </tr>
             </table>

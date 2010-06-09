@@ -2239,4 +2239,25 @@ public class BDConnection {
             throw new PublicationDAOException();
         }
     }
+
+
+    public int getMaxUpgrade() throws PublicationDAOException {
+        int max = 0;
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT * FROM integrado.settings";
+            rs = stm.executeQuery(sql);
+
+            if(rs.next()){
+                max = rs.getInt("upgrade");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+
+        return max;
+
+    }
 }

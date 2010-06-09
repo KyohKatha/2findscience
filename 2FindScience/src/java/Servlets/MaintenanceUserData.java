@@ -69,6 +69,8 @@ public class MaintenanceUserData extends HttpServlet {
                 this.show(request, response);
             } else if (action.equals("save")) {
                 this.save(request, response);
+            } else if (action.equals("getMaxUpgrade")) {
+                this.getMaxUpgrade(request, response);
             } else if (action.equals("requestUpgrade")){
                 this.requestUpgrade(request, response, user);
             } else if (action.equals("allowUpgrade")) {
@@ -379,4 +381,18 @@ public class MaintenanceUserData extends HttpServlet {
 
         } 
      }
+
+
+      private void getMaxUpgrade(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, PublicationDAOException {
+          try{
+              int max = connection.getMaxUpgrade();
+              request.getSession().setAttribute("max", max);
+              rd = request.getRequestDispatcher("/AjaxUpgrade.jsp");
+          } catch (PublicationDAOException e){
+              request.getSession().setAttribute("type", "critical");
+              request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database </p><p>- Click on the box to close it.</p>");
+              rd = request.getRequestDispatcher("/AjaxUpgrade.jsp");
+          }
+      }
 }
