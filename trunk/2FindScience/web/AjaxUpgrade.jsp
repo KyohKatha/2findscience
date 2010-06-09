@@ -6,6 +6,7 @@
 
 <%
             User user = (User) session.getAttribute("user");
+            int max = Integer.parseInt(session.getAttribute("max").toString());
 %>
 
 <%@page import="Pkg2FindScience.User" %>
@@ -66,7 +67,7 @@
                 If you don't get your new profile, you can request the upgrade
                 again, but the maximum is
                 <% //consultar o BD para exibir o número máximo de upgrades por usuário
-                out.println("3");
+                out.println(max);
                 %>
                 times per account.</p>
 
@@ -74,7 +75,7 @@
                 <table align="center" cellspacing="15px">
                     <tr>
                         <%
-                            if (user.getNumTrialUpgrade() >= 3) {
+                            if (user.getNumTrialUpgrade() >= max) {
                                 %>
                                 <td style="color: blue">You have reached the maximum limit of request !</td>
                                 <%

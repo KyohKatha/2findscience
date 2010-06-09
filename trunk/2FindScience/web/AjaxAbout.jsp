@@ -86,16 +86,10 @@
                             <strong>Autores:</strong>
                         </p>
                         <p class="text">
-                            Aline Kaori Takechi
-                        </p>
-                        <p class="text">
-                            Gustavo Henrique Rodrigues Pinto Tomas
-                        </p>
-                        <p class="text">
-                            Katharina Carrapatoso Garcia
-                        </p>
-                        <p class="text">
-                            Welington Manoel da Silva
+                            Aline Kaori Takechi<br>
+                            Gustavo Henrique Rodrigues Pinto Tomas<br>
+                            Katharina Carrapatoso Garcia<br>
+                            Welington Manoel da Silva<br>
                         </p>
                     </td>
                 </tr>

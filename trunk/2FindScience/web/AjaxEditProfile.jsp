@@ -141,7 +141,7 @@
                 <div id="buttonsbox">
                     <input type="submit" class="button" value="Save" name="save" />
                     <% if (profile.equals("user")) {%>
-                    <input type="button" class="button" value="Upgrade!" name="upgrade" onclick="loadContent('Upgrade.jsp', 'AjaxContent')"/>
+                    <input type="button" class="button" value="Upgrade!" name="upgrade" onclick="callServlet('MaintenanceUserData?action=getMaxUpgrade', 'AjaxContent')"/>
                     <% }%>
                     <input type="reset" class="button" value="Clear" name="clear" />
                     <%
