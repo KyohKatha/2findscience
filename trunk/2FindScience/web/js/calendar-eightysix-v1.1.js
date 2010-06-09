@@ -65,7 +65,7 @@ var CalendarEightysix = new Class({
 		
 		this.target = $(target);
 		this.transitioning = false;
-		this.today = new Date().clearTime();
+                this.today = new Date().clearTime();
 		
 		//Extend Date with unix timestamp parser
 		Date.defineParser({

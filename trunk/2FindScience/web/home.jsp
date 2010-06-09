@@ -78,9 +78,7 @@
             </div>
 
             <div id="search">
-                <form action="#">
-                    <input type="text" name="search" size="47" maxlength="50" />
-                </form>
+                <input type="text" id="parametro" name="search" size="47" maxlength="50" onkeypress="return validateFormBusca('rapida', event)" />
             </div>
         </div>
 

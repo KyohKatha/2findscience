@@ -6,7 +6,7 @@
 
 <%
             User user = (User) session.getAttribute("user");
-            
+
 %>
 
 <%@page import="Pkg2FindScience.User" %>
@@ -26,7 +26,7 @@
         <link type="text/css" media="screen" href="css/calendar-eightysix-v1.1-vista.css" rel="stylesheet" />
 
         <script type="text/javascript">
-              function loadAjaxAdmin(name){
+            function loadAjaxAdmin(name){
                 current = document.getElementById("currentMenu").value;
                 document.getElementById( current ).className="";
 
@@ -101,8 +101,8 @@
         </div>
 
         <div id="search">
-            <form action="#">
-                <input type="text" name="search" size="47" maxlength="50" />
+            <form action="#" method="post"  onkeyup="javascript:callServlet('Search?action=doSearch&parametro=' + this.parametro.value + '&filtro=both','AjaxContent')">
+                <input type="text" id="parametro" name="search" size="47" maxlength="50" />
             </form>
         </div>
 

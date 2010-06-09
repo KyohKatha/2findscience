@@ -2181,19 +2181,22 @@ public class BDConnection {
     }
 
     public boolean requestUpgrade(String login, String pwd) throws PublicationDAOException {
-        boolean status = false;
+        boolean status;
         try {
             CallableStatement st = null;
             st = con.prepareCall("{call sp_request_upgrade (?,?,?)}");
             st.setString(1, login);
             st.setString(2, pwd);
             st.registerOutParameter(3,Types.BOOLEAN);
-            ResultSet rs = st.executeQuery();
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            st.execute();
+            //ResultSet rs = st.executeQuery();
 
-            if (rs.next()) {
+            status = st.getBoolean(3);
+               System.out.println("STATUS: "+status);
+            /*if (rs.next()) {
                 status = rs.getBoolean(1);
-            }
-
+            }*/
 
         } catch (SQLException e) {
             e.printStackTrace();
