@@ -97,14 +97,14 @@ public class EventMaintenance extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         int index = Integer.parseInt(request.getParameter("index"));
         Vector events = (Vector) request.getSession().getAttribute("eventVector");
-        //request.removeAttribute("eventVector");
+
         String edit = null;
         Booktitle b = null;
 
         if (index > 0 && index <= events.size()){
-            // alterar um evento já existente
             b = (Booktitle) events.get(index-1);
             edit = "update";
             request.setAttribute("selectedEvent", b);
@@ -121,25 +121,27 @@ public class EventMaintenance extends HttpServlet {
             throws ServletException, IOException {
 
         Booktitle b = new Booktitle();
-
         b.setCod(Integer.parseInt(request.getParameter("cod")));
         b.setName(request.getParameter("name"));
         b.setStartDate(request.getParameter("startDate"));
         b.setEndDate(request.getParameter("endDate"));
         b.setLocal(request.getParameter("city"));
+        String message = "";
 
         try{
-            if (b.getCod() == 0)
+            if (b.getCod() == 0){
                 connection.saveEvent(b);
-            else
+                message = "saved";
+            }else{
                 connection.updateEvent(b);
+                message = "update";
+            }
             request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- The <strong>Event</strong> was saved successfully </p><p>- Click on the box to close it.</p>");
-            rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
+            request.getSession().setAttribute("message", "<p>- The <strong>Event</strong> was " + message + " successfully </p><p>- Click on the box to close it.</p>");
         } catch (PublicationDAOException e){
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving new <strong>event</strong></p><p>- Click on the box to close it.</p>");
-            rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         }
+        rd = request.getRequestDispatcher("/AjaxEvents.jsp");
     }
 }

@@ -73,10 +73,8 @@ function showMessage(type, message) {
 }
 
 function validateFormRequest2(){
-    alert("AAAAAAAAAAAAAAAAAAAAAAAAAA");
     var formUpgrade = document.getElementById("formUpgrade");
     var message = "";
-    alert(formUpgrade.password.value);
     if(formUpgrade.password.value == ""){
         message += "<p>- Inform a valid <strong>passoword</strong></p>";
     }
@@ -86,7 +84,7 @@ function validateFormRequest2(){
         return false;
     }
     var url = "MaintenanceUserData?action=requestUpgrade&password=" + formUpgrade.password.value;
-    alert(url);
+
     callServlet(url, "AjaxContent");
     return true;
 
@@ -98,6 +96,7 @@ function validateFormUser(acao){
     var message = "";
     var login = trim(form.login.value);
     var name = trim(form.name.value);
+    
     if(acao != "save"){
         var password = trim(form.password.value);
         var passwordConfirmation = trim(form.passwordConfirmation.value);
@@ -328,23 +327,26 @@ function validateFormPublication(action){
     var typePublication = trim(document.getElementById("typePublication").value);
     var urlField = trim(formPublication.url.value);
     var url, school, cdrom, number, volume, journal, note, month, ee, startPage, endPage, isbn, chapter, address;
-    var booktitle, editor, publisher, authors;
+    var booktitle, editor, publisher, authors, subjects;
 
     if(action == 'savePublication'){
-        authors = trim(formPublication.author.value);
+        authors = trim(formPublication.Author.value);
         authors = authors.toString().replace(" ", "+");
+        subjects = trim(formPublication.Subjects.value);
+        subjects = subjects.toString().replace(" ", "+");
         url  = "PublicationMaintenance?action=savePublication";
         if(typePublication != "phdthesis" && typePublication != "mastersthesis"){
-            booktitle = trim(formPublication.booktitle.value);
-            editor = trim(formPublication.editor.value);
-            publisher = trim(formPublication.publisher.value);
+            booktitle = trim(formPublication.BookTitle.value);
+            editor = trim(formPublication.Editor.value);
+            publisher = trim(formPublication.Publisher.value);
             booktitle = booktitle.toString().replace(" ", "+");
             editor = editor.toString().replace(" ", "+");
             publisher = publisher.toString().replace(" ", "+");
+
             url += "&title=" + title + "&url=" + urlField + "&author=" + authors + "&booktitle=" + booktitle +
-            "&editor=" + editor + "&publisher=" + publisher;
+            "&editor=" + editor + "&publisher=" + publisher + "&subjects=" + subjects;
         }else{
-            url += "&title=" + title + "&url=" + urlField + "&author=" + authors;
+            url += "&title=" + title + "&url=" + urlField + "&author=" + authors + "&subjects=" + subjects;
         }
     }else{ /*Update publication*/
 
@@ -525,7 +527,7 @@ function validateFormPublication(action){
     if(action != 'savePublication'){
         url += "&index=" + trim(formPublication.indexSelected.value);
     }
-    alert(url);
+
     callServlet(url, "AjaxContent");
     return true;
   
@@ -536,6 +538,33 @@ function deletePublication(){
     callServlet(url, "AjaxContent");
 }
 
+function deleteSubject(){
+    var message = "";
+
+    if(indexSubject < 0 && indexSubject > sizeVectorSubject){
+       message += ("<p>- <strong>Subject selected</strong> is invalid!</p>");
+    }
+
+    if(message != ""){
+        message += "<p>- Click on the box to close it.</p>";
+        showMessage('critical', message);
+    }else{
+         var url  = "Settings?mode=deleteSubject&index=" + indexSubject;
+         callServlet(url, "AjaxContent");
+    }
+}
+
+var indexSubject;
+var sizeVectorSubject;
+function saveIndexSubject(index, ve){
+    indexSubject = index;
+    sizeVectorSubject = ve;
+    document.getElementById("buttonsbox").innerHTML= "<input type=\"submit\" class=\"button\" value=\"Save\" name=\"save\"/>" +
+                                "<input type=\"button\" class=\"button\" value=\"Delete\" name=\"delete\" onclick=\"deleteSubject()\"/>" +
+                                "<input type=\"reset\" class=\"button\" value=\"Clear\" name=\"clear\"/>" +
+                                "<input type=\"button\" class=\"button\" value=\"Cancel\" name=\"cancel\" onclick=\"loadContent('HomeAdmin.jsp', 'AjaxContent')\"/>";
+         
+}
 function validateFormContato(){
     formContact = document.getElementById("formContato");
     var message = "";
@@ -610,7 +639,7 @@ function validateFormBusca(tipo, e){
             }
 
             url = "Search?action=doSearch&parametro="+param+"&filtro=" + filtro;
-            alert(url);
+
             callServlet(url, 'AjaxContent');
             return true;
 
@@ -839,36 +868,38 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
         document.getElementById("loading").innerHTML="<div style=\"position: relative;left: 48px;top: 76px;font-family: tahoma,sans-serif;\">Loading. Please wait...</div>";
         document.getElementById("loading").style.visibility = 'visible';
     }
+
     setPopUp(mode);
     optionPopUp = mode;
     if (!dialogWin.win || (dialogWin.win && dialogWin.win.closed)) {
-        dialogWin.returnFunc = returnFunc
-        dialogWin.returnedValue = ""
-        dialogWin.args = args
-        dialogWin.url = url
-        dialogWin.width = width
-        dialogWin.height = height
+        dialogWin.returnFunc = returnFunc;
+        dialogWin.returnedValue = "";
+        dialogWin.args = args;
+        dialogWin.url = url;
+        dialogWin.width = width;
+        dialogWin.height = height;
         dialogWin.name = (new Date()).getSeconds().toString()
+        var attr;
         if (Nav4) {
             dialogWin.left = window.screenX +
             ((window.outerWidth - dialogWin.width) / 2)
             dialogWin.top = window.screenY +
             ((window.outerHeight - dialogWin.height) / 2)
-            var attr = "screenX=" + dialogWin.left +
+             attr = "screenX=" + dialogWin.left +
             ",screenY=" + dialogWin.top + ",resizable=no,width=" +
             dialogWin.width + ",height=" + dialogWin.height
         } else {
-            dialogWin.left = (screen.width - dialogWin.width) / 2
-            dialogWin.top = (screen.height - dialogWin.height) / 2
-            var attr = "left=" + dialogWin.left + ",top=" +
+            dialogWin.left = (screen.width - dialogWin.width) / 2;
+            dialogWin.top = (screen.height - dialogWin.height) / 2;
+            attr = "left=" + dialogWin.left + ",top=" +
             dialogWin.top + ",resizable=no,width=" + dialogWin.width +
-            ",height=" + dialogWin.height
+            ",height=" + dialogWin.height;
         }
 
-        dialogWin.win=window.open(dialogWin.url, dialogWin.name, attr)
-        dialogWin.win.focus()
+        dialogWin.win=window.open(dialogWin.url, dialogWin.name, attr);
+        dialogWin.win.focus();
     } else {
-        dialogWin.win.focus()
+        dialogWin.win.focus();
     }
     if (document.getElementById("loading") != null )
         document.getElementById("loading").style.visibility = 'hidden';
@@ -892,7 +923,7 @@ function setPrefs() {
 function setPopUp(mode){
     HttpMethod = "POST";
     var req = null;
-    var urlPopUp = "Filter?action=popupInsert&mode=" + mode;
+    var urlPopUp = "Filter?action=popupInsert&redirect=no&mode=" + mode;
     req = getXMLHTTPRequest();
     if (req){
         req.open(HttpMethod,urlPopUp,false);

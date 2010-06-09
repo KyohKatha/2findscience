@@ -6,7 +6,8 @@
 
 <%
             User user = (User) session.getAttribute("user");
-
+            Vector subjects = (Vector) request.getSession().getAttribute("subjectVector");
+            int sizeVector = subjects.size();
             final int ADMIN = 0;
             final int COMMON = 1;
             final int ACADEMIC = 2;
@@ -34,12 +35,10 @@
             <p class="title">Subjects</p>
 
             <div id="userlist">
-                <select class="list" size=10>
+                <select class="list" size=10 onclick="saveIndexSubject(selectedIndex, <%=sizeVector%>)">
                     <%
-                    Vector subjects = (Vector) request.getSession().getAttribute("subjectVector");
                     boolean color = false;
                     for(int i = 0; i < subjects.size(); i++){
-                        
                         if(color){%>
                         <option style="background-color: #dddddd"> <%=subjects.elementAt(i).toString()%> </option>
                     <% }else{ %>
@@ -91,14 +90,14 @@
                         <td  class="tooltip"><input type="text" id="newTheme" name="newTheme" size="80"/>
                             <span>Insert a new theme for the publications</span>
                         </td>
-                        <!--Quando inserir novo theme, recarregar ajax abaixo -->
+                        
                     </tr>
                     <tr>
                         <td colspan="2">
                             <div id="buttonsbox">
                                 <input type="submit" class="button" value="Save" name="save"/>
                                 <input type="reset" class="button" value="Clear" name="clear"/>
-                                <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('Home.jsp', 'content')"/>
+                                <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeAdmin.jsp', 'AjaxContent')"/>
                             </div>
                         </td>
                     </tr>

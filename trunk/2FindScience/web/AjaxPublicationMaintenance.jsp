@@ -21,8 +21,35 @@
         <script type="text/javascript" src="AjaxSimple.js"></script>
     </head>
     <body>
-        <div id="content" class="content">
 
+        <div id="content" class="content">
+            <%
+                    String message, type;
+                    message = (String) session.getAttribute("message");
+                    type = (String) session.getAttribute("type");
+                    session.removeAttribute("message");
+                    session.removeAttribute("type");
+
+                    if (message != null) {
+                        out.println("<div id=\"msg\">");
+                        out.println("<fieldset class=\"" + type + "\" onclick=\"closeMessageBox()\">");
+                        String legend = "Undefined";
+                        if (type == "information") {
+                            legend = "Information";
+                        } else if (type == "critical") {
+                            legend = "Error";
+                        } else if (type == "success") {
+                            legend = "Success";
+                        } else if (type == "warning") {
+                            legend = "Warning";
+                        }
+
+                        out.println("<legend>" + legend + "</legend>");
+                        out.println(message);
+                        out.println("</fieldset>");
+                        out.println("</div>");
+                    }
+        %>
             <p class="title">Maintenance Publication</p>
 
             <div id="fastsearch">

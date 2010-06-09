@@ -76,10 +76,6 @@ public class PublicationMaintenance extends HttpServlet {
                             if (action.equals("managePost")) {
                                 int mode  = Integer.parseInt( request.getParameter("mode"));
                                 this.managePosts(request, response, mode);
-                            }else{
-                                if(action.equals("newOption")){
-                                    this.newOption(request, response);
-                                }
                             }
                         }
                     }
@@ -193,7 +189,7 @@ public class PublicationMaintenance extends HttpServlet {
 
             } catch (PublicationDAOException e) {
                 request.getSession().setAttribute("type", "critical");
-                request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
+                request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting data publication.</p><p>- Click on the box to close it.</p>");
             }
             rd = request.getRequestDispatcher("/AjaxPublicationData.jsp");
         }
@@ -206,12 +202,9 @@ public class PublicationMaintenance extends HttpServlet {
         String bookTitle = request.getParameter("booktitle");
         String editor = request.getParameter("editor");
         String publisher = request.getParameter("publisher");
+        String subjects = request.getParameter("subjects");
 
-        //VERIFICAR AQUII
-      /*  request.getSession().removeAttribute("Author");
-        request.getSession().removeAttribute("BookTitle");
-        request.getSession().removeAttribute("Editor");
-        request.getSession().removeAttribute("Publisher"); */
+        request.getSession().removeAttribute("available");
 
         String cdrom = request.getParameter("cdrom");
         String journal = request.getParameter("journal");
@@ -231,34 +224,34 @@ public class PublicationMaintenance extends HttpServlet {
         try {
             if (typePublication.equals("phdthesis")) {
                 PhdThesis phdThesis = new PhdThesis(title, url, school, number, volume, month, ee, isbn, author, 0);
-                connection.savePhdThesis(phdThesis,user.getLogin() );
+                connection.savePhdThesis(phdThesis,user.getLogin(), subjects );
             } else {
                 if (typePublication.equals("mastersthesis")) {
                     MasterThesis masterThesis = new MasterThesis(title, url, school, author, 0);
-                    connection.saveMasterThesis(masterThesis, user.getLogin());
+                    connection.saveMasterThesis(masterThesis, user.getLogin(), subjects);
                 } else {
                     if (typePublication.equals("inprocedings")) {
                         Inproceedings inproceedings = new Inproceedings(title, url, ee, startPage, endPage, cdrom, note, number, month, author, bookTitle, publisher, editor, 0);
-                        connection.saveInproceedings(inproceedings, user.getLogin());
+                        connection.saveInproceedings(inproceedings, user.getLogin(), subjects);
                     } else {
                         if (typePublication.equals("book")) {
                             Book book = new Book(title, url, ee, volume, cdrom, month, bookTitle, publisher, editor, author, isbn, 0);
-                            connection.saveBook(book, user.getLogin());
+                            connection.saveBook(book, user.getLogin(), subjects);
                          } else {
                             if (typePublication.equals("incollection")) {
                                 Incollection incollection = new Incollection(title, url, ee, startPage, endPage, cdrom, chapter, editor, author, publisher, bookTitle, isbn, 0);
-                                connection.saveIncollection(incollection, user.getLogin());
+                                connection.saveIncollection(incollection, user.getLogin(), subjects);
                             } else {
                                 if (typePublication.equals("www")) {
                                     Www www = new Www(title, url, ee, note, editor, author, publisher, bookTitle, 0);
-                                    connection.saveWww(www, user.getLogin());
+                                    connection.saveWww(www, user.getLogin(), subjects);
                                 } else {
                                     if (typePublication.equals("article")) {
                                         Article article = new Article(title, url, ee, journal, volume, note, number, month, cdrom, startPage, endPage, author, bookTitle, publisher, editor, 0);
-                                        connection.saveArticle(article, user.getLogin());
+                                        connection.saveArticle(article, user.getLogin(), subjects);
                                     } else { //Proceedings
                                         Proceedings proceedings = new Proceedings(title, url, ee, journal, volume, number, note, month, address, editor, author, publisher, bookTitle, isbn, 0);
-                                        connection.saveProceedings(proceedings, user.getLogin());
+                                        connection.saveProceedings(proceedings, user.getLogin(), subjects);
                                     }
                                 }
                             }
@@ -268,12 +261,11 @@ public class PublicationMaintenance extends HttpServlet {
             }
             request.getSession().setAttribute("type", "success");
             request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was saved successfully!</p><p>- Click on the box to close it.</p>");
-
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving <p>publication.</p><p>- Click on the box to close it.</p>");
         }
-        rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
+        rd = request.getRequestDispatcher("/AjaxPublicationMaintenance.jsp");
     }
 
     private void updatePublication(HttpServletRequest request, HttpServletResponse response) {
@@ -345,13 +337,11 @@ public class PublicationMaintenance extends HttpServlet {
             }
             request.getSession().setAttribute("type", "success");
             request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was updated successfully!</p><p>- Click on the box to close it.</p>");
-
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> updating <strong>publication</strong>.</p><p>- Click on the box to close it.</p>");
         }
-        rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
-      
+        rd = request.getRequestDispatcher("/AjaxPublicationMaintenance.jsp");
     }
 
     private void deletePublication(HttpServletRequest request, HttpServletResponse response) {
@@ -373,7 +363,7 @@ public class PublicationMaintenance extends HttpServlet {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> deleting <strong>publication</strong>.</p><p>- Click on the box to close it.</p>");
         }
-        rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
+        rd = request.getRequestDispatcher("/AjaxPublicationMaintenance.jsp");
     }
 
 
@@ -385,8 +375,6 @@ public class PublicationMaintenance extends HttpServlet {
         Publication pub = null;
         
         try {
-            System.out.println("Pegar publicacao: " + sCod);
-
             pub = connection.getPublication(codPublication);
             switch (mode) {
                 //Consulta de posts
@@ -402,20 +390,8 @@ public class PublicationMaintenance extends HttpServlet {
                     break;
 
             }
-
-            if(pub != null){
-                System.out.println("blzura blzuran");
-            }else{
-                 System.out.println("pepino");
-            }
-            
-            System.out.println("antes posts " + codPublication);
             ArrayList<Post> result = connection.getPosts(codPublication);
-            System.out.println("depos post");
             pub.setPosts(result);
-
-            System.out.println(pub.getCod() + " - " + pub.getTitle());
-
             request.setAttribute("publication", pub);
 
             rd = request.getRequestDispatcher("/AjaxSearchForum.jsp");
@@ -450,7 +426,7 @@ public class PublicationMaintenance extends HttpServlet {
             request.setAttribute("type", "critical");
             request.setAttribute("message", "<p>- <strong>Error</strong> saving new " + nameOption + ".</p><p>- Click on the box to close it.</p>");
         }
-        rd = request.getRequestDispatcher("/popupSelectBox.jsp?nameOption=" + nameOption);
+        rd = request.getRequestDispatcher("Filter?action=popupInsert&redirect=yes&mode=" + nameOption);
     }
 }
         

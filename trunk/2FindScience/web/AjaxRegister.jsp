@@ -64,10 +64,11 @@
                                                 Boolean color = false;
 
                                                 for (int i = 0; i < subjects.size(); i++) {
+                                                    Subject subject = (Subject) subjects.elementAt(i);
                                                     if (color) {
-                                                        out.println("<option style=\"background-color: #dddddd\">" + subjects.elementAt(i).toString() + "</option>");
+                                                        out.println("<option style=\"background-color: #dddddd\">" + subject.getName() + "</option>");
                                                     } else {
-                                                        out.println("<option>" + subjects.elementAt(i).toString() + "</option>");
+                                                        out.println("<option>" + subject.getName() + "</option>");
                                                     }
                                                     color = !color;
                                                 }
