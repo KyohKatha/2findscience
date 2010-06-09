@@ -69,6 +69,8 @@ public class MaintenanceUserData extends HttpServlet {
                 this.show(request, response);
             } else if (action.equals("save")) {
                 this.save(request, response);
+            } else if (action.equals("requestUpgrade")){
+                this.requestUpgrade(request, response, user);
             } else if (action.equals("allowUpgrade")) {
                 this.updateUpgrade(request, response, ALLOW);
             } else if (action.equals("denyUpgrade")) {
@@ -350,12 +352,31 @@ public class MaintenanceUserData extends HttpServlet {
             request.getSession().setAttribute("selectedUser", u);
 
         } finally {
-            rd = request.getRequestDispatcher("Filter?action=RequestUpgrade");
+            rd = request.getRequestDispatcher("/AjaxUserMaintenanceData.jsp");
         }
 
     }
 
-    private void requestUpgrade(String login, String pwd){
-        
-    }
+     private void requestUpgrade(HttpServletRequest request, HttpServletResponse response, User user)
+            throws ServletException, IOException, PublicationDAOException {
+
+
+         try {
+            boolean status = connection.requestUpgrade(user.getLogin(), request.getParameter("password"));
+            if(status){
+                request.getSession().setAttribute("type", "success");
+                request.getSession().setAttribute("message", "<p>- <strong>Request</strong> send successfully </p><p>- Click on the box to close it.</p>");
+                 rd = request.getRequestDispatcher("/AjaxHomeUserCommon.jsp");
+            } else {
+                request.getSession().setAttribute("type", "critical");
+                request.getSession().setAttribute("message", "<p>- <strong>Password</strong> incorrect </p><p>- Click on the box to close it.</p>");
+                 rd = request.getRequestDispatcher("/AjaxUpgrade.jsp");
+            }
+        } catch (PublicationDAOException e) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database </p><p>- Click on the box to close it.</p>");
+            rd = request.getRequestDispatcher("/AjaxUpgrade.jsp");
+
+        } 
+     }
 }

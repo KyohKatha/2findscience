@@ -22,7 +22,7 @@
     </head>
     <body>
         <div id="content" class="content">
-            <p class="title">Events</p>
+            <p class="title">Event Maintenance</p>
             <div id="fastsearch">
                 <table align="center">
                     <tr>

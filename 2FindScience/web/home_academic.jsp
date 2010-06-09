@@ -83,11 +83,10 @@
         </div>
 
         <div id="search">
-            <form action="#">
-                <input type="text" name="search" size="47" maxlength="50" />
+            <form action="#" method="post"  onkeyup="javascript:callServlet('Search?action=doSearch&parametro=' + this.parametro.value + '&filtro=both','AjaxContent')">
+                <input type="text" id="parametro" name="search" size="47" maxlength="50" />
             </form>
-        </div>
-        <div id="wrapper">
+        </div>      <div id="wrapper">
             <div id="welcome">
                 Welcome,  <strong><%out.print(user.getName());%></strong>
             </div>

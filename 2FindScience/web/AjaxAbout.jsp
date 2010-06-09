@@ -30,7 +30,16 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        2Find Science is a project...
+                        <p class="text">
+                            2Find Science é um site que possibilita inserção, remoção
+                            e alteração de publicações, além de oferecer um mecanismo 
+                            de busca eficiente para pesquisar títulos de journal e códigos 
+                            isbn.
+                        </p>
+                        <p class="text">
+                            Para usuários cadastrados, é possível escrever pequenos
+                            comentários 
+                        </p>
                     </td>
                 </tr>
                 <tr>
@@ -40,7 +49,12 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        2Find Science is a project...
+                        <p class="text">
+                            2Find Science foi idealizado para que fosse possível
+                            gerenciar informações  de publicações a partir de uma
+                            webpage, facilitando o acesso ao conhecimento científico
+                            gerado no meio acadêmico.
+                        </p>
                     </td>
                 </tr>
                 <tr>
@@ -50,7 +64,12 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        2Find Science is a project...
+                        <p class="text">
+                            2Find Science é um projeto criado dentro da Universidade
+                            Federal de São Carlos (UFSCar) - Campus Sorocaba, para a
+                            disciplina 'Desenvolvimento para Web', pertencente ao curso
+                            de Bacharelado em Ciência da Computação.
+                        </p>
                     </td>
                 </tr>
                 <tr>

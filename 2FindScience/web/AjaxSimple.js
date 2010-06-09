@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+
 var xmlhttp
 
 function loadContent(url, div)
@@ -71,6 +72,27 @@ function showMessage(type, message) {
     }
 }
 
+function validateFormRequest2(){
+    alert("AAAAAAAAAAAAAAAAAAAAAAAAAA");
+    var formUpgrade = document.getElementById("formUpgrade");
+    var message = "";
+    alert(formUpgrade.password.value);
+    if(formUpgrade.password.value == ""){
+        message += "<p>- Inform a valid <strong>passoword</strong></p>";
+    }
+    if(message != ""){
+        message += "<p>- Click on the box to close it.</p>";
+        showMessage('critical', message);
+        return false;
+    }
+    var url = "MaintenanceUserData?action=requestUpgrade&password=" + formUpgrade.password.value;
+    alert(url);
+    callServlet(url, "AjaxContent");
+    return true;
+
+}
+
+
 function validateFormUser(acao){
     form = document.getElementById("formUser");
     var message = "";
@@ -138,14 +160,16 @@ function validateFormUser(acao){
     if(acao == "Register"){
         url = "MaintenanceUserData?action=saveRegister&login=" + trim(login) + "&password=" + trim(password) +
         "&name=" + trim(name) + "&email=" + trim(email) + "&page=" + trim(page) + "&subjects=" +  trim(subjectsParameter);
+        callServlet(url, "AjaxContent");
     }else if(acao == "save"){
         url = "MaintenanceUserData?action=save&login=" + trim(form.login.value) + "&name=" + trim(form.name.value) + "&email=" + trim(form.email.value) + "&page=" + trim(form.page.value) + "&profile=" + trim(form.profile.value);
+        callServlet(url, "user_data");
     }else{
         url = "MaintenanceUserData?action=updateProfile&profile=" + trim(form.profile.value) + "&login=" + trim(login) + "&password=" + trim(password) +
         "&name=" + trim(name) + "&email=" + trim(email) + "&page=" + trim(page) + "&subjects=" +  trim(subjectsParameter);
+        callServlet(url, "AjaxContent");
     }
     
-    callServlet(url, "AjaxContent");
     return true;
 }
 
@@ -545,23 +569,52 @@ function validateFormContato(){
     return true;
 }
 
-function validateFormBusca(){
-    form = document.getElementById("formBusca");
+function validateFormBusca(tipo, e){
+    var filtro;
+    var formSearch;
+    var param;
+    var url;
+    var message;
 
-    var message = "";
-    if (form.parametro.value == ""){
-        message += "<p>- <strong>Search parameter</strong> is required!</p>";
-        message += "<p>- Click on the box to close it.</p>";
-        showMessage('critical', message);
-        form.parametro.focus();
-        return false;
-    }
+    if (tipo == "normal"){
+        formSearch = document.getElementById("formBusca");
+        param = formSearch.parametro.value;
+        filtro = formSearch.filtro.value;
 
-    var url = "Search?action=doSearch&parametro="+form.parametro.value+"&filtro=" + form.filtro.value;
+        message = "";
+        if (param == ""){
+            message += "<p>- <strong>Search parameter</strong> is required!</p>";
+            message += "<p>- Click on the box to close it.</p>";
+            showMessage('critical', message);
+            formSearch.parametro.focus();
+            return false;
+        }
 
-    callServlet(url, "AjaxContent");
-    return true;
+        url = "Search?action=doSearch&parametro="+param+"&filtro=" + filtro;
+        alert(url);
+        callServlet(url, 'AjaxContent');
+        return true;
 
+    } else {
+        if (e.keyCode == 13) {
+            param = document.getElementById("parametro").value;
+            filtro = "both";
+
+            message = "";
+            if (param == ""){
+                message += "<p>- <strong>Search parameter</strong> is required!</p>";
+                message += "<p>- Click on the box to close it.</p>";
+                showMessage('critical', message);
+                document.getElementById("parametro").focus();
+                return false;
+            }
+
+            url = "Search?action=doSearch&parametro="+param+"&filtro=" + filtro;
+            alert(url);
+            callServlet(url, 'AjaxContent');
+            return true;
+
+        }
 }
 
 function validateFormEvent(mode){
@@ -587,10 +640,10 @@ function validateFormEvent(mode){
     var url;
     if(mode == "update"){
         var cod = document.getElementById("codBookTitle").value;
-         url = "EventMaintenance?action=save&cod=" + cod + "&name=" + name + "&city=" + local +
+        url = "EventMaintenance?action=save&cod=" + cod + "&name=" + name + "&city=" + local +
         "&startDate=" + startDate + "&endDate=" + endDate;
     }else{
-       url = "EventMaintenance?action=save&cod=0&name=" + name + "&city=" + local +
+        url = "EventMaintenance?action=save&cod=0&name=" + name + "&city=" + local +
         "&startDate=" + startDate + "&endDate=" + endDate;
     }
 
@@ -743,16 +796,9 @@ function callEventInsert(index){
         eDate = document.getElementById("endDataHidden").value;
     }
 
-    var period = new Array();
-    period[0] = sDate;
-    period[1] = eDate;
-
-    document.getElementById('startDate').value = period[0];
-    document.getElementById('endDate').value = period[1];
-
     window.addEvent('domready', function() {
         var startDate = new CalendarEightysix('startDate', {
-            'disallowUserInput': true,
+            allowEmpty : true,
             'alignX': 'left',
             'alignY': 'bottom',
             'offsetX': -4 ,
@@ -760,20 +806,22 @@ function callEventInsert(index){
             'inputOutputFormat' : 'Y/m/d'
         });
         var endDate = new CalendarEightysix('endDate', {
-            'disallowUserInput': true,
+            'allowEmpty' : true,
             'alignX': 'left',
             'alignY': 'bottom',
             'offsetX': -4,
             'theme': 'vista'
         });
-       startDate.addEvent('change', function(date) {
+        startDate.addEvent('change', function(date) {
             date = date.clone().increment();
             endDate.options.minDate = date;
-           if(endDate.getDate().diff(date) >= 1) endDate.setDate(date);
+            if(endDate.getDate().diff(date) >= 1) endDate.setDate(date);
             else endDate.render();
         })
     });
 
+    document.getElementById('startDate').value = sDate;
+    document.getElementById('endDate').value = eDate;
 
 }
 
@@ -854,5 +902,7 @@ function setPopUp(mode){
         if (document.getElementById("loading") != null )
             document.getElementById("loading").innerHTML="";
     }
+}
+
 
 }

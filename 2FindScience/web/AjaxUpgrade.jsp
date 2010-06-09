@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : upgrade
     Created on : 27/04/2010, 06:12:41
     Author     : Gustavo Henrique
@@ -70,7 +70,7 @@
                 %>
                 times per account.</p>
 
-            <form id="formUpgrade" action="">
+            <form id="formUpgrade" action="#" method="post" onsubmit="return validateFormRequest2()">
                 <table align="center" cellspacing="15px">
                     <tr>
                         <%
@@ -87,7 +87,7 @@
                                     %>
                                         <td>(*)Your password</td>
                                         <td><input type="password" id="password"></td>
-                                        <td><input type="button" class="button" value="Upgrade" onclick="upgradeConfirm()"></td>
+                                        <td><input type="submit" class="button" value="Upgrade"></td>
                                     <%
                                 }
                             }

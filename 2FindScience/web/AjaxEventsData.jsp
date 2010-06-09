@@ -47,19 +47,23 @@
                 <% if (edit.equals("insert")) {%>
                 <tr>
                     <td>Name (*)</td>
-                    <td><input type="text" id="name" name="name" value="" size="90" maxlength="255" /></td>
+                    <td class="tooltip"><input type="text" id="name" name="name" value="" size="90" maxlength="255" />
+                    <span>Insert event's name</span></td>
                 </tr>
                 <tr>
                     <td>City </td>
-                    <td><input type="text" id="city" name="city" value="" size=90" maxlength="50" /></td>
+                    <td class="tooltip"><input type="text" id="city" name="city" value="" size=90" maxlength="50" />
+                    <span>Insert event's local</span></td>
                 </tr>
                  <tr>
                     <td>Start Date </td>
-                    <td><input type="text" id="startDate" name="startDate" size="30" maxlength="30"/></td>
+                    <td class="tooltip"><input type="text" id="startDate" name="startDate" size="30" maxlength="30"/>
+                    <span>Insert event's first date</span></td>
                 </tr>
                 <tr>
                     <td>End Date </td>
-                    <td><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/></td>
+                    <td class="tooltip"><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/>
+                    <span>Insert event's last date</span></td>
                 </tr>
 
                 <%} else {
@@ -67,19 +71,23 @@
 %>
                 <tr>
                     <td>Name (*)</td>
-                    <td><input type="text" id="name" name="name" value="<%=b.getName()%>" size="90" maxlength="255" /></td> 
+                    <td class="tooltip"><input type="text" id="name" name="name" value="<%=b.getName()%>" size="90" maxlength="255" />
+                    <span>Insert event's name</span></td>
                 </tr>
                 <tr>
                     <td>City </td>
-                    <td><input type="text" id="city" name="city" value="<%=b.getLocal() %>" size="90" maxlength="50" /></td> 
+                    <td class="tooltip"><input type="text" id="city" name="city" value="<%=b.getLocal() %>" size="90" maxlength="50" />
+                    <span>Insert event's local</span></td>
                 </tr>
                 <tr>
                     <td>Start Date </td>
-                    <td><input type="text" id="startDate" name="startDate" size="30" maxlength="30"></td>
+                    <td class="tooltip"><input type="text" id="startDate" name="startDate" size="30" maxlength="30">
+                    <span>Insert event's first date</span></td>
                 </tr>
                 <tr>
                     <td>End Date </td>
-                    <td><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/></td>
+                    <td class="tooltip"><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/>
+                    <span>Insert event's last date</span></td>
                 </tr>
 
                 <input type="hidden" id="endDataHidden" value=<%=b.getEndDate()%> >
