@@ -591,7 +591,7 @@ function validateFormBusca(tipo, e){
         }
 
         url = "Search?action=doSearch&parametro="+param+"&filtro=" + filtro;
-        alert(url);
+        
         callServlet(url, 'AjaxContent');
         return true;
 
@@ -615,6 +615,7 @@ function validateFormBusca(tipo, e){
             return true;
 
         }
+    }
 }
 
 function validateFormEvent(mode){
@@ -905,4 +906,3 @@ function setPopUp(mode){
 }
 
 
-}

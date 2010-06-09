@@ -37,8 +37,11 @@
                             isbn.
                         </p>
                         <p class="text">
-                            Para usuários cadastrados, é possível escrever pequenos
-                            comentários 
+                            Ao realizar seu cadastro, é possível escrever pequenos
+                            comentários para cada publicação. Além disso, escolhendo alguns
+                            interesses durante o cadastro, a coluna de news passa a
+                            ser personalizada, mostrando apenas as últimas atualizações
+                            de publicações de interesse do usuário.
                         </p>
                     </td>
                 </tr>
@@ -79,7 +82,21 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        2Find Science is a project...
+                        <p class="text">
+                            <strong>Autores:</strong>
+                        </p>
+                        <p class="text">
+                            Aline Kaori Takechi
+                        </p>
+                        <p class="text">
+                            Gustavo Henrique Rodrigues Pinto Tomas
+                        </p>
+                        <p class="text">
+                            Katharina Carrapatoso Garcia
+                        </p>
+                        <p class="text">
+                            Welington Manoel da Silva
+                        </p>
                     </td>
                 </tr>
             </table>
