@@ -675,7 +675,6 @@ function blockTyping(valor)
         message = "<fieldset class=\"warning\" onclick=\"closeMessageBox()\">";
         message += "<legend>Warning</legend>";
         message += "<p>- Your <strong>comment</strong> has been <strong>truncated</strong> to 140 characters.</p";
-        message += "<p>- All fields with (*) are required.</p>";
         message += "<p>- Click on the box to close it.</p>";
         message += "</fieldset>";
         document.getElementById('comment').value = document.getElementById('comment').value = document.getElementById('comment').value = document.getElementById('comment').value.substr(0,quant);

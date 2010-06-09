@@ -18,7 +18,6 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <%
             User user = (User) session.getAttribute("user");
-
 %>
 
 <html>
@@ -27,7 +26,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel = "stylesheet" type = "text/css" href = "style.css" />
         <script type="text/javascript" src="AjaxSimple.js"></script>
-
     </head>
     <body>
         <div id="content" class="content">
@@ -61,6 +59,29 @@
                 %>
             </div>
 
+            <%!
+                String highlightText(String searchText, String inText) {
+                    String outText = "";
+
+                    inText = inText.toLowerCase();
+                    searchText = searchText.toLowerCase();
+                    int sText = inText.indexOf(searchText);
+                    int eText = sText + searchText.length() - 1;
+
+                    for (int i = 0; i < inText.length(); i++) {
+                        if (i == sText) {
+                                outText += "<strong>";
+                        } else if (i == eText + 1) {
+                                outText += "</strong>";
+                        }
+                        outText += inText.charAt(i);
+                    }
+                    //System.out.println(inText);
+                    //System.out.println(outText);
+                    return outText;
+                }
+            %>
+
             <form id="formBusca" action="#" method="post" onsubmit="return validateFormBusca()">
                 <%  Vector<Publication> rs = (Vector) session.getAttribute("result");%>
                 <table class="search" align="center" cellspacing="15px">
@@ -85,6 +106,8 @@
             </form>
             <%
                         if (rs.size() > 0) {
+                            String searchParam = (String) session.getAttribute("parametro");
+
                             int size = rs.size() * 69;
                             int capacity = 6;
 
@@ -118,7 +141,7 @@
                                                     messageSearch = "Results <strong>" + (numResultsPage + 1) + "</strong> to <strong>" + (numResultsPage + capacity) + "</strong>";
                                                 }
 
-                                                messageSearch += " of about <strong>" + rs.size() + "</strong> for: <strong>\"" + (String) session.getAttribute("parametro") + "\"</strong>";
+                                                messageSearch += " of about <strong>" + rs.size() + "</strong> for: <strong>\"" + searchParam + "\"</strong>";
                     %>
                     <td colspan="3">
                         <%= messageSearch%>
@@ -158,15 +181,15 @@
                         <%
                                                             if (isbn != null && journal != null) {
                         %>
-                        <p><%= isbn%> <i> <%= journal%> </i></p>
+                        <p><% out.print(highlightText(searchParam, isbn)); %> <i> <% out.print(highlightText(searchParam, journal)); %> </i></p>
                         <%
                                                                         } else if (isbn != null) {
                         %>
-                        <p> <%= isbn%> </p>
+                        <p> <% out.print(highlightText(searchParam, isbn)); %> </p>
                         <%
                                                                         } else {
                         %>
-                        <p><i> <%= journal%> </i></p>
+                        <p><% out.print(highlightText(searchParam, journal)); %></p>
                         <%
                                                                         }
                         %>
