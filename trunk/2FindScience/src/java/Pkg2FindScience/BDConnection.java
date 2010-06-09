@@ -364,20 +364,26 @@ public class BDConnection {
 
     public Vector searchPublication(String filtro, String param) throws PublicationDAOException {
         Vector<Publication> publications = new Vector();
-        //PreparedStatement st = null;
         Publication publication;
 
         try {
             String sQuery = "";
             CallableStatement st = null;
+            Statement stm3 = null;
+            ResultSet rs = null;
+
             if (filtro.equals("isbn")) {
                 st = con.prepareCall("{call sp_search_isbn (?)}");
+                st.setString(1, param);
+                rs = st.executeQuery();
             } else if (filtro.equals("journal")) {
                 st = con.prepareCall("{call sp_search_journal (?)}");
+                st.setString(1, param);
+                rs = st.executeQuery();
+            } else if (filtro.equals("both")) {
+                stm3 = con.createStatement();
+                rs = stm3.executeQuery("select * from fc_search_isbn_journal2('" + param + "') ORDER BY numPubs DESC;");
             }
-
-            st.setString(1, param);
-            ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
                 String title = rs.getString("title");
@@ -387,6 +393,8 @@ public class BDConnection {
                     p = rs.getString("isbn");
                 } else if (filtro.equals("journal")) {
                     p = rs.getString("journal");
+                } else if (filtro.equals("both")) {
+                    p = rs.getString("param");
                 }
                 publication = new Publication();
                 publication.setTitle(title);
@@ -396,50 +404,22 @@ public class BDConnection {
                     publication.setIsbn(p);
                 } else if (filtro.equals("journal")) {
                     publication.setJournal(p);
+                } else if (filtro.equals("both")) {
+                    boolean t = rs.getBoolean("type");
+                    if (t) {
+                        publication.setIsbn(p);
+                    } else {
+                        publication.setJournal(p);
+                    }
                 }
                 publications.addElement(publication);
             }
-            Statement stm2 = con.createStatement();
-//            for (int i = 0; i < publications.size(); i++) {
-//                double cod = publications.get(i).getCod();
-//                String table = "";
-//                if (filtro.equals("isbn")) {
-//                    table = "view_isbn_author";
-//                } else if (filtro.equals("journal")) {
-//                    table = "view_journal_author";
-//                }
-//                sQuery = "select nameAuthor from " + table + " where codPublication = " + cod + " order by nameAuthor;";
-//                stm2.execute(sQuery);
-//                rs = stm2.getResultSet();
-//
-//                while (rs.next()) {
-//                    Author a = new Author();
-//                    a.setName(rs.getString("nameAuthor"));
-//                    System.out.println(a.getName());
-//                    publications.get(i).addAuthor(a);
-//                }
-//            }
-//            for (int i = 0; i < publications.size(); i++) {
-//                String p = "";
-//                if (filtro.equals("isbn")) {
-//                    p = publications.get(i).getIsbn();
-//                    sQuery = "select journal from view_search_journal_isbn where isbn = '" + p + "' order by journal;";
-//                } else if (filtro.equals("journal")) {
-//                    p = publications.get(i).getJournal();
-//                    sQuery = "select isbn from view_search_journal_isbn where journal = '" + p + "' order by isbn;";
-//                }
-//                stm2.execute(sQuery);
-//                rs = stm2.getResultSet();
-//
-//                while (rs.next()) {
-//                    if (filtro.equals("isbn")) {
-//                        publications.get(i).setJournal(rs.getString("journal"));
-//                    } else if (filtro.equals("journal")) {
-//                        publications.get(i).setIsbn(rs.getString("isbn"));
-//                    }
-//                }
-//            }
-            st.close();
+
+            if (st != null)
+                st.close();
+
+            if (stm3 != null)
+                stm3.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2147,17 +2127,33 @@ public class BDConnection {
     }
 
     public Publication getPublication(double cod) throws PublicationDAOException {
-        Publication p = new Publication();
+        Publication p = null;
         String sQuery = "";
+        ResultSet rs;
 
         try {
+
+            p = new Publication();
+            p.setCod(cod);
+
+            CallableStatement st2 = null;
+            st2 = con.prepareCall("{call sp_get_publication_by_cod (?)}");
+            st2.setDouble(1, cod);
+            rs = st2.executeQuery();
+
+            if (rs.next()) {
+                p.setCod(cod);
+                p.setTitle(rs.getString("title"));
+                p.setUrl(rs.getString("url"));
+                p.setloginUser(rs.getString("loginUser"));
+                p.setType(rs.getString("type"));
+            }
+
             CallableStatement st = null;
             st = con.prepareCall("{call sp_get_authors_by_pub (?)}");
             st.setDouble(1, cod);
-            ResultSet rs = st.executeQuery();
-
-            p.setCod(cod);
-
+            rs = st.executeQuery();
+            
             while (rs.next()) {
                 Author a = new Author();
                 a.setName(rs.getString("name"));
@@ -2165,23 +2161,19 @@ public class BDConnection {
             }
 
             sQuery = "select * from view_search_journal where codPublication = " + cod + ";";
-            stm.execute(sQuery);
-            rs = stm.getResultSet();
+            rs = stm.executeQuery(sQuery);
 
             if (rs.next()) {
-                p.setTitle(rs.getString("title"));
                 p.setJournal(rs.getString("journal"));
             }
 
             sQuery = "select * from view_search_isbn where codPublication = " + cod + ";";
             Statement stm2 = con.createStatement();
-            stm2.execute(sQuery);
-            rs = stm.getResultSet();
+            rs = stm2.executeQuery(sQuery);
             if (rs.next()) {
-                p.setTitle(rs.getString("title"));
                 p.setIsbn(rs.getString("isbn"));
             }
-
+            
         } catch (SQLException e) {
             e.printStackTrace();
             throw new PublicationDAOException();

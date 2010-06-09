@@ -379,8 +379,11 @@ public class PublicationMaintenance extends HttpServlet {
         String sCod = (String) request.getParameter("publication");
         double codPublication = Double.parseDouble(sCod);
         Publication pub = null;
+        
         try {
-              pub = connection.getPublication(codPublication);
+            System.out.println("Pegar publicacao: " + sCod);
+
+            pub = connection.getPublication(codPublication);
             switch (mode) {
                 //Consulta de posts
                 case 0:
@@ -406,7 +409,9 @@ public class PublicationMaintenance extends HttpServlet {
             ArrayList<Post> result = connection.getPosts(codPublication);
             System.out.println("depos post");
             pub.setPosts(result);
-            
+
+            System.out.println(pub.getCod() + " - " + pub.getTitle());
+
             request.setAttribute("publication", pub);
 
             rd = request.getRequestDispatcher("/AjaxSearchForum.jsp");

@@ -38,13 +38,19 @@
                     <div id="image">
                         <img src="Imagens/sign_pub.png" alt="pub"/>
                     </div>
-                    <p><a class="title" href="http://www.google.com"><%= n.getName() %></a></p>
+                    <p>
+                        <a href="#" onclick="callServlet('PublicationMaintenance?action=managePost&publication=' + <%= n.getCod() %> + '&mode=0','AjaxContent')">
+                            <%= n.getName() %>
+                        </a>
+                    </p>
                     <p><%= n.getDate()%></p>
                     <%  } else {%>
                     <div id="image">
                         <img src="Imagens/sign_event.png" alt="eve"/>
                     </div>
-                    <p><a class="title" href="http://www.google.com"><%= n.getName()%></a></p>
+                    <p>
+                        <%= n.getName() %>
+                    </p>
                     <p><%= n.getDate()%></p>
                     <%  }
                     %>

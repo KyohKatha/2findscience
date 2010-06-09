@@ -293,7 +293,7 @@ public class MaintenanceUserData extends HttpServlet {
                 break;
 
         }
-        message += "com sucesso!</p><p>- Click on the box to close it.</p>";
+        message += "saved successfully!</p><p>- Click on the box to close it.</p>";
 
         request.getSession().setAttribute("message", message);
         //rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");

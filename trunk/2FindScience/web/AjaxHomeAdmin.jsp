@@ -76,7 +76,7 @@
                             // height 60px para 1 item
                             int size = result.size();
                             if (size > 9) {
-                                out.print("<div id=\"scroll\" style=\"height:594px; border: 1px solid #666666;\">");
+                                out.print("<div id=\"scroll\" style=\"height:594px; border: 1px solid #cccccc;\">");
                             } else {
                                 out.print("<div id=\"scroll\" style=\"height:" + 60 * size + "px; border: 1px solid #666666;\">");
                             }
@@ -89,14 +89,14 @@
                 %>
                 <tr>
                     <td>
-                        <a href=#><img src="Imagens/Upgrade.png" alt="Upgrade" align="right" onclick="updateUpgrade(document.getElementById(<%= "'" + result.get(i).getLogin() + "'"%>).value, 1)"></a>
+                        <a href=# ><img src="Imagens/Upgrade.png" alt="Upgrade" align="right" onclick="updateUpgrade(document.getElementById(<%= "'" + result.get(i).getLogin() + "'"%>).value, 1)"></a>
                     </td>
                     <td>
                         <a href=#><img src="Imagens/Refuse.png" alt="Refuse" align="right" onclick="updateUpgrade(document.getElementById(<%= "'" + result.get(i).getLogin() + "'"%>).value, 0)"></a>
                     </td>
-                    <td>
+                    <!--<td>
                         <a href=#><img src="Imagens/Profile.png" alt="Profile" align="right"></a>
-                    </td>
+                    </td>-->
                     <td colspan="2">
                         <p><strong><%= result.get(i).getName()%></strong>,</p>
                     </td>

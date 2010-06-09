@@ -32,33 +32,34 @@
     <body>
         <div id="content" class="content">
             <p class="title">Publication viewing</p>
-            <table align="justify" class="maintenance" cellspacing="5px">
-                <tr>
-                    <td colspan="3">
-                        <ul>
-                            <li class="title">
-                                <%= publication.getTitle()%>
-                                <input id="publication" type="hidden" value="<%= publication.getCod()%>" />
-                            </li>
+            <div id="scroll" style="height:170px; border: 1px solid #cccccc;">
+                <table align="left" class="maintenance" cellspacing="15px">
+                    <tr>
+                        <td colspan="3">
+                            <strong><%= publication.getTitle()%></strong>
+                            <input id="publication" type="hidden" value="<%= publication.getCod()%>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <%
                                         String isbn = publication.getIsbn();
                                         if (isbn != null) {
                             %>
-                            <li>
-                                ISBN <%= isbn%>
-                            </li>
+                            ISBN <%= isbn%>
                             <%
                                         }
                                         String journal = publication.getJournal();
                                         if (journal != null) {
                             %>
-                            <li>
-                                Journal <%= journal%>
-                            </li>
+                            Journal <%= journal%>
                             <%
                                         }
                             %>
-
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <%
                                         String sAuthors = "";
                                         ArrayList<Author> authorlist = publication.getAuthors();
@@ -76,57 +77,66 @@
                                             sAuthors = "No authors";
                                         }
                             %>
-                            <li>
-                                <i>
-                                    <%= sAuthors%>
-                                </i>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
+                            <i>
+                                <%= sAuthors%>
+                            </i>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <p class="title">Publication forum</p>
-            <div id="scroll" style="height:240px; border: 1px solid #666666;">
-                <table class="maintenance" align="left" cellspacing="1px">
-                    <%
+            <%
                                 ArrayList<Post> result = (ArrayList<Post>) publication.getPosts();
+                                int size = 100;
+
+                                if (result != null && !result.isEmpty()) {
+                                    if (result.size() > 1) {
+                                        size = 150;
+                                    }
+                                } else {
+                                    size = 50;
+                                }
+
+                                out.print("<div id=\"scroll\" style=\"height:" + size + "px; border: 1px solid #cccccc;\">");
+                                out.print("<table class=\"maintenance\" align=\"left\" cellspacing=\"1px\">");
 
                                 Format formato = new SimpleDateFormat(
                                         "yyyy'/'MM'/'dd hh':'mm");
 
                                 if (result != null && !result.isEmpty()) {
                                     for (int i = 0; i < result.size(); i++) {
+            %>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div id="item" align="justify" style="width: 660px;">
+                                                    <div id="image">
+                                                        <img src="Imagens/sign_post.png" alt="post"/>
+                                                    </div>
 
-                    %>
-                    <tr>
-                        <td colspan="3">
-                            <div id="item" align="justify" style="width: 660px;">
-                                <div id="image">
-                                    <img src="Imagens/sign_post.png" alt="post"/>
-                                </div>
+                                                    <p><%=  result.get(i).getText()%></p>
+                                                    <p><b><%=  result.get(i).getUser()%></b>, <%=  formato.format(result.get(i).getDate())%></p>
 
-                                <p><%=  result.get(i).getText()%></p>
-                                <p><b><%=  result.get(i).getUser()%></b>, <%=  formato.format(result.get(i).getDate())%></p>
+                                                </div>
+                                            </td>
+                                        </tr>
+            <%
+                                }
 
-                            </div>
-                        </td>
-                    </tr>
-                    <%                                                        }
                                 } else if (result != null) {
-                    %>
-                    <tr>
-
-                        <td colspan="3">
-                            <ul>
-                                <li>Be the first one to comment this publication !</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <%                                                }
-                    %>
-                </table>
-            </div>
-
+            %>
+                                        <tr>
+                                            <td colspan="3">
+                                                <ul>
+                                                    <p>Be the first one to comment this publication !</p>
+                                                </ul>
+                                            </td>
+                                        </tr>
+            <%
+                                }
+                                out.print("</table>");
+                                out.print("</div>");
+            %>
+                
             <%
                         if (user != null) {
             %>
@@ -134,29 +144,29 @@
 
             <div id="msg">
                 <%
-                        String message, type;
-                        message = (String) session.getAttribute("message");
-                        type = (String) session.getAttribute("type");
-                        session.removeAttribute("message");
-                        session.removeAttribute("type");
+                                            String message, type;
+                                            message = (String) session.getAttribute("message");
+                                            type = (String) session.getAttribute("type");
+                                            session.removeAttribute("message");
+                                            session.removeAttribute("type");
 
-                        if (message != null) {
-                            out.println("<fieldset class=\"" + type + "\" onclick=\"closeMessageBox()\">");
-                            String legend = "Undefined";
-                            if (type == "information") {
-                                legend = "Information";
-                            } else if (type == "critical") {
-                                legend = "Error";
-                            } else if (type == "success") {
-                                legend = "Success";
-                            } else if (type == "warning") {
-                                legend = "Warning";
-                            }
+                                            if (message != null) {
+                                                out.println("<fieldset class=\"" + type + "\" onclick=\"closeMessageBox()\">");
+                                                String legend = "Undefined";
+                                                if (type == "information") {
+                                                    legend = "Information";
+                                                } else if (type == "critical") {
+                                                    legend = "Error";
+                                                } else if (type == "success") {
+                                                    legend = "Success";
+                                                } else if (type == "warning") {
+                                                    legend = "Warning";
+                                                }
 
-                            out.println("<legend>" + legend + "</legend>");
-                            out.println(message);
-                            out.println("</fieldset>");
-                        } else {%>
+                                                out.println("<legend>" + legend + "</legend>");
+                                                out.println(message);
+                                                out.println("</fieldset>");
+                                            } else {%>
 
                 <fieldset class="information" onclick="closeMessageBox()">
                     <legend>Information</legend>
@@ -193,23 +203,23 @@
                                 <input type="button" class="button" value="Save" name="save" onclick="validateFormPost(<%= publication.getCod()%>, <%= "'" + user.getLogin() + "'"%>, document.getElementById('comment').value)"/>
                                 <input type="reset" class="button" value="Clear" name="clear" onmouseup="blockTyping('')"/>
                                 <%
-                                        switch (user.getProfile()) {
-                                            case ADMIN:
+                                                            switch (user.getProfile()) {
+                                                                case ADMIN:
                                 %>
                                 <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeAdmin.jsp', 'AjaxContent')"/>
                                 <%
-                                                break;
-                                            case COMMON:
+                                                                                break;
+                                                                            case COMMON:
                                 %>
                                 <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeUserCommon.jsp', 'AjaxContent')"/>
                                 <%
-                                                break;
-                                            case ACADEMIC:
+                                                                                break;
+                                                                            case ACADEMIC:
                                 %>
                                 <input type="button" class="button" value="Cancel" name="cancel" onclick="loadContent('HomeAcademic.jsp', 'AjaxContent')"/>
                                 <%
-                                                break;
-                                        }
+                                                                    break;
+                                                            }
                                 %>
                             </div>
                         </td>
