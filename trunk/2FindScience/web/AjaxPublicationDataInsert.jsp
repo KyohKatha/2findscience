@@ -65,6 +65,11 @@
                 </tr>
 
                 <tr>
+                    <td>Related subjects :</td>
+                    <td class="tooltip"><input type="text" id="subjects" size=90 onclick="openDGDialog('subjects', 'popupSelectBox.jsp?nameOption=Subjects', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
+                </tr>
+
+                <tr>
                     <td>Author:</td>
                     <td class="tooltip"><input type="text" id="author" size=90 onclick="openDGDialog('author', 'popupSelectBox.jsp?nameOption=Author', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
                 </tr>
