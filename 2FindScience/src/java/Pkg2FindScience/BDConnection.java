@@ -99,15 +99,13 @@ public class BDConnection {
         Subject subject;
 
         try {
-            String sQuery = "SELECT cod,subject FROM integrado.subject ORDER BY(subject);";
+            String sQuery = "SELECT subject FROM integrado.subject ORDER BY(subject);";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
             while (rs.next()) {
-                int cod = rs.getInt("cod");
                 String name = rs.getString("subject");
-                subject = new Subject(cod, name);
-                subjects.addElement(subject);
+                subjects.addElement(name);
             }
         } catch (Exception e) {
             throw new PublicationDAOException();
@@ -300,7 +298,7 @@ public class BDConnection {
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT TOP 50 name FROM integrado.author ORDER BY name;";
+            String sQuery = "SELECT TOP 150 name FROM integrado.author ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -319,7 +317,7 @@ public class BDConnection {
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT TOP 50 name FROM integrado.bookTitle ORDER BY name;";
+            String sQuery = "SELECT name FROM integrado.bookTitle ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -761,7 +759,7 @@ public class BDConnection {
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT TOP 50 name FROM integrado.editor ORDER BY name;";
+            String sQuery = "SELECT name FROM integrado.editor ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -2204,5 +2202,38 @@ public class BDConnection {
 
         return status;
 
+    }
+
+    public void insertNewAuthor(String newAuthor) throws PublicationDAOException{
+        try {
+            CallableStatement st = con.prepareCall("{call sp_insert_new_author (?)}");
+            st.setString(1, newAuthor);
+            st.execute();
+            st.close();
+        } catch (SQLException e) {
+            throw new PublicationDAOException();
+        }
+    }
+
+       public void insertNewEditor(String newEditor) throws PublicationDAOException{
+        try {
+            CallableStatement st = con.prepareCall("{call sp_insert_new_editor (?)}");
+            st.setString(1, newEditor);
+            st.execute();
+            st.close();
+        } catch (SQLException e) {
+            throw new PublicationDAOException();
+        }
+       }
+
+       public void insertNewPublisher(String newPublisher) throws PublicationDAOException{
+        try {
+            CallableStatement st = con.prepareCall("{call sp_insert_new_publisher (?)}");
+            st.setString(1, newPublisher);
+            st.execute();
+            st.close();
+        } catch (SQLException e) {
+            throw new PublicationDAOException();
+        }
     }
 }

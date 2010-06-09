@@ -76,6 +76,10 @@ public class PublicationMaintenance extends HttpServlet {
                             if (action.equals("managePost")) {
                                 int mode  = Integer.parseInt( request.getParameter("mode"));
                                 this.managePosts(request, response, mode);
+                            }else{
+                                if(action.equals("newOption")){
+                                    this.newOption(request, response);
+                                }
                             }
                         }
                     }
@@ -421,6 +425,32 @@ public class PublicationMaintenance extends HttpServlet {
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving post.</p><p>- Click on the box to close it.</p>");
             rd = request.getRequestDispatcher("/AjaxSearchResult.jsp");
         }
+    }
+
+       private void newOption(HttpServletRequest request, HttpServletResponse response) {
+        String newOption = (String) request.getParameter("newOption");
+        String nameOption = (String) request.getParameter("nameOption");
+
+        try{
+            if(nameOption.equals("Author")){
+                connection.insertNewAuthor(newOption);
+            }else{
+                if(nameOption.equals("Editor")){
+                     connection.insertNewEditor(newOption);
+                }else{
+                    if(nameOption.equals("Publisher")){
+                        connection.insertNewPublisher(newOption);
+                    }
+                }
+            }
+            request.setAttribute("type", "success");
+            request.setAttribute("message", "<p>- The <strong>new " + nameOption + "</strong> was register successfully!</p><p>- Click on the box to close it.</p>");
+        }catch(PublicationDAOException ex){
+            ex.printStackTrace();
+            request.setAttribute("type", "critical");
+            request.setAttribute("message", "<p>- <strong>Error</strong> saving new " + nameOption + ".</p><p>- Click on the box to close it.</p>");
+        }
+        rd = request.getRequestDispatcher("/popupSelectBox.jsp?nameOption=" + nameOption);
     }
 }
         

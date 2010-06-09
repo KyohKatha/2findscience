@@ -75,60 +75,67 @@
                         out.println(message);
                         out.println("</fieldset>");
                         out.println("</div>");
-                        }
-%>
+                    }
+        %>
 
-            <table align="center">
-                <tr>
-                    <td class="tooltip">
-                        <select class="list" size=5 id="listAvailable" style="max-width: 250px; min-width: 250px; ">
-                            <option style="color: #ffffff; background-color: #000000">SELECT <%=nameOption.toUpperCase()%> </option>
-                            <%
-                                                    Vector available = (Vector) session.getAttribute("available");
-                                                    Boolean color = false;
+        <table align="center">
+            <tr>
+                <td class="tooltip">
+                    <select class="list" size=5 id="listAvailable" style="max-width: 250px; min-width: 250px; ">
+                        <option style="color: #ffffff; background-color: #000000">SELECT <%=nameOption.toUpperCase()%> </option>
+                        <%
+                                    Vector available = (Vector) session.getAttribute("available");
+                                    Boolean color = false;
 
-                                                    for (int i = 0; i < available.size(); i++) {
-                                                        if (color) {%>
-                            <option style="background-color: #dddddd"> <%= available.elementAt(i).toString()%> </option>
-                            <% } else {%>
-                            <option> <%= available.elementAt(i).toString()%> </option>
-                            <% }
-                                                        color = !color;
-                                                    }
-                            %>
-                        </select>
-                        <span><%=nameOption%> available</span></td>
-                    <td>
-                        <p> <input type="button" class="button" value="Add" name="add" onclick="addOption(document.getElementById('listAvailable'),document.getElementById('listSelected'), '<%=nameOption%>')"/> </p>
-                        <p> <input type="button" class="button" value="Remove" name="remove" onclick="removeOption(document.getElementById('listSelected'),document.getElementById('listAvailable'), '<%=nameOption%>')"/> </p>
-                    </td>
-                    <td class="tooltip">
-                        <select id="listSelected" class="list" onchange="" size=5 style="min-width: 250px; max-width: 250px;">
-                            <%
-                                                    Vector selected = (Vector) session.getAttribute("selected");
-                                                    Boolean colorUser = false;
+                                        for (int i = 0; i < available.size(); i++) {
+                                            if (color) {%>
+                        <option style="background-color: #dddddd"> <%= available.elementAt(i).toString()%> </option>
+                        <% } else {%>
+                        <option> <%= available.elementAt(i).toString()%> </option>
+                        <% }
+                                        color = !color;
+                                    }
+                        %>
+                    </select>
+                    <span><%=nameOption%> available</span></td>
+                <td>
+                    <p> <input type="button" class="button" value="Add" name="add" onclick="addOption(document.getElementById('listAvailable'),document.getElementById('listSelected'), '<%=nameOption%>')"/> </p>
+                    <p> <input type="button" class="button" value="Remove" name="remove" onclick="removeOption(document.getElementById('listSelected'),document.getElementById('listAvailable'), '<%=nameOption%>')"/> </p>
+                </td>
+                <td class="tooltip">
+                    <select id="listSelected" class="list" onchange="" size=5 style="min-width: 250px; max-width: 250px;">
+                        <%
+                                    Vector selected = (Vector) session.getAttribute("selected");
+                                    Boolean colorUser = false;
 
-                                                    if (selected != null) {
-                                                        for (int j = 0; j < selected.size(); j++) {
-                                                            if (colorUser) {%>
-                            <option style="background-color: #dddddd"> <%= selected.elementAt(j).toString()%> </option>
-                            <% } else {%>
-                            <option> <%= selected.elementAt(j).toString()%> </option>
-                            <%}
-                                                            colorUser = !colorUser;
-                                                        }
-                                                    }
-                            %>
-                        </select>
-                        <span><%=nameOption%> selected</span></td>
-                </tr>
+                                    if (selected != null) {
+                                            for (int j = 0; j < selected.size(); j++) {
+                                                if (colorUser) {%>
+                        <option style="background-color: #dddddd"> <%= selected.elementAt(j).toString()%> </option>
+                        <% } else {%>
+                        <option> <%= selected.elementAt(j).toString()%> </option>
+                        <%}
+                                            colorUser = !colorUser;
+                                        }
+                                    }
+                        %>
+                    </select>
+                    <span><%=nameOption%> selected</span></td>
+            </tr>
 
-                <tr>
-                     <td> <input type="button" class="button" value="New <%=nameOption%>" onclick="javascript: document.location = 'popupNewOption.jsp?nameOption=' + '<%=nameOption%>';"/> </td>
-                     <td> <input type="button" class="button" value="Save Choice" onclick="handleOKPopUp()"/> </td>
-                     <td> <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/> </td>
-                </tr>
-            </table>
+            <tr>
+                <td colspan="2" align="center">
+                    <div id="buttonsbox">
+                        <% if(!nameOption.equals("BookTitle") && !nameOption.equals("Subjects") ){ %>
+                        <input type="button" class="button" value="New <%=nameOption%>" onclick="javascript: document.location = 'popupNewOption.jsp?nameOption=' + '<%=nameOption%>';"/>
+                        <% } %>
+                        <input type="button" class="button" value="Save Choice" onclick="handleOKPopUp()"/>
+                        <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/>
+                    </div>
+                </td>
+
+            </tr>
+        </table>
         <input type="hidden" id="nameOption" value="<%=nameOption%>">
         <input type="hidden" id="options" value="">
     </body>

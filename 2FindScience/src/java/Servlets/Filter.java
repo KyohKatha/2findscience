@@ -233,7 +233,6 @@ public class Filter extends HttpServlet {
         Vector available = null;
 
         try {
-
             if (mode.equals("author")) {
                 available = connection.getAuthors();
             } else {
@@ -245,12 +244,16 @@ public class Filter extends HttpServlet {
                     } else {
                         if (mode.equals("publisher")) {
                             available = connection.getPublisher();
+                        }else{
+                            if(mode.equals("subjects")){
+                                available = connection.getSubjects();
+                            }
                         }
                     }
                 }
             }
             request.getSession().setAttribute("available", available);
-            request.getSession().setAttribute("nameOption", mode);
+
         } catch (Exception e) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting authors </p>");

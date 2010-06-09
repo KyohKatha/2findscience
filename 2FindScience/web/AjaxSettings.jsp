@@ -39,11 +39,11 @@
                     Vector subjects = (Vector) request.getSession().getAttribute("subjectVector");
                     boolean color = false;
                     for(int i = 0; i < subjects.size(); i++){
-                        Subject s = (Subject) subjects.get(i);
+                        
                         if(color){%>
-                        <option style="background-color: #dddddd"> <%=s.getName()%> </option>
+                        <option style="background-color: #dddddd"> <%=subjects.elementAt(i).toString()%> </option>
                     <% }else{ %>
-                    <option> <%=s.getName()%> </option>
+                    <option> <%=subjects.elementAt(i).toString()%> </option>
                     <% } color = !color; } %>
                 </select>
             </div>
