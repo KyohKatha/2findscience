@@ -82,7 +82,7 @@
                 }
             %>
 
-            <form id="formBusca" action="#" method="post" onsubmit="return validateFormBusca()">
+            <form id="formBusca" action="#" method="post" onsubmit="return validateFormBusca('normal', event)">
                 <%  Vector<Publication> rs = (Vector) session.getAttribute("result");%>
                 <table class="search" align="center" cellspacing="15px">
                     <tr>

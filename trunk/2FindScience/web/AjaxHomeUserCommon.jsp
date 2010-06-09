@@ -49,7 +49,7 @@
             </div>
             
             <p class="title">Search</p>
-            <form id="formBusca" action="#" method="post" onsubmit="return validateFormBusca()">
+            <form id="formBusca" action="#" method="post" onsubmit="return validateFormBusca('normal', event)">
                 <table class="search" align="center" cellspacing="15px">
                     <tr>
                         <td align="left" colspan="2"><input class="textBox" type="text" id="parametro" name="parametro" size="80"/></td>

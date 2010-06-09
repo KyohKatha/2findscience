@@ -77,9 +77,7 @@
         </div>
 
         <div id="search">
-            <form action="#" method="post"  onkeyup="javascript:callServlet('Search?action=doSearch&parametro=' + this.parametro.value + '&filtro=both','AjaxContent')">
-                <input type="text" id="parametro" name="search" size="47" maxlength="50" />
-            </form>
+            <input type="text" id="parametro" name="search" size="47" maxlength="50" onkeypress="return validateFormBusca('rapida', event)" />
         </div>
 
         <div id="wrapper">
