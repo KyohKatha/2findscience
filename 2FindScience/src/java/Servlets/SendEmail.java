@@ -31,9 +31,20 @@ public class SendEmail extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
+            String acao = request.getParameter("acao");
+
             String host = "smtp.gmail.com";
-            String from = request.getParameter("email");
-            String to = "2findscience@gmail.com";
+            String to = "";
+            String from = "";
+
+            if(acao.equals("contato")){
+                to = "2findscience@gmail.com";
+                from = (String) request.getAttribute("email");
+            } else {
+                to = (String) request.getSession().getAttribute("email");
+                System.out.println("To:"+to);
+                from = "2findscience@gmail.com";
+            }
             String password = "bccufscar2010";
             // Get system properties
             Properties props = new Properties();
@@ -49,16 +60,20 @@ public class SendEmail extends HttpServlet {
             message.setFrom(new InternetAddress(from));
             Address toAddress = new InternetAddress(to);
             message.addRecipient(Message.RecipientType.TO, toAddress);
-
-            message.setSubject(request.getParameter("assunto"));
-
-            message.setContent("Name: " + request.getParameter("nome") + "\nE-mail: " + request.getParameter("email") + "\n"
+            if(acao.equals("contato")){
+                message.setSubject(request.getParameter("assunto"));
+                message.setContent("Name: " + request.getParameter("nome") + "\nE-mail: " + request.getParameter("email") + "\n"
                     + "Message: " + request.getParameter("comentario"), "text/plain");
+            }else{
+                message.setSubject("Upgrade Accepted!");
+                message.setContent("Your Upgrade request was accepted!", "text/plain");
+            }
+            System.out.println("Enviando o email");
 
             //Transport.send(message);
             Transport t = session.getTransport("smtps");
             try {
-                t.connect(host, to, password);
+                t.connect(host, "2findScience@gmail.com", password);
                 t.sendMessage(message, message.getAllRecipients());
             } finally {
                 t.close();
