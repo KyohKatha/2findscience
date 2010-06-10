@@ -71,7 +71,7 @@
                 <div id="login">
                     <form action="Login" method="post">
                         <p> <label>Login:</label> <input class="textBox" type="text" name="login" />
-                            <label>Senha:</label> <input class="textBox" type="password" name="password" />
+                            <label>Pass:</label> <input class="textBox" type="password" name="password" />
                             <input class="button" type="submit" value="Login" /> </p>
                     </form>
                 </div>

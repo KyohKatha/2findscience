@@ -286,14 +286,16 @@ public class MaintenanceUserData extends HttpServlet {
 
         request.getSession().setAttribute("type", "success");
         String message = "<p>- The <strong>Upgrade</strong> to user <strong>" + login + "</strong> was ";
-
+        String status = "";
         switch (mode) {
             case ALLOW:
                 message += "allowed";
+                status = "allowed";
                 break;
 
             case DENY:
                 message += "denied";
+                status = "denied";
                 break;
 
         }
@@ -307,9 +309,9 @@ public class MaintenanceUserData extends HttpServlet {
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
             rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         }
-        request.getSession().setAttribute("email", email);
-        rd = request.getRequestDispatcher("SendEmail?acao=upgrade");
+        //request.getSession().setAttribute("email", email);
         request.getSession().setAttribute("message", message);
+        rd = request.getRequestDispatcher("SendEmail?acao=upgrade&status="+status+"&email="+email);
         //rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         //rd = request.getRequestDispatcher("Filter?action=RequestUpgrade");
 

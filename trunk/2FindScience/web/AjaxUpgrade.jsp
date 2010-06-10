@@ -57,12 +57,12 @@
                 <% }%>
             </div>
 
-            <p class="text">Here you can request an upgrade for your profile. It means that
-                you can contribute to the content of this site with informations of
+            <p class="text">Here you can request an upgrade for your profile. This means that
+                you can contribute to the content of this site with information about
                 your own articles and publications.</p>
-            <p class="text">If you are an acadêmic and has published something, all
-                you have to do is type you password in the text box below, click on "Upgrade" and
-                wait for the approval of an administrator.</p>
+            <p class="text">If you are an academic and has published something, all
+                you have to do is type your password in the text box below, click on "Upgrade" and
+                wait for the approval of the administrator.</p>
             <p class="text">You will receive an e-mail informing the result of your request.
                 If you don't get your new profile, you can request the upgrade
                 again, but the maximum is
@@ -77,7 +77,7 @@
                         <%
                             if (user.getNumTrialUpgrade() >= max) {
                                 %>
-                                <td style="color: blue">You have reached the maximum limit of request !</td>
+                                <td style="color: blue">You have reached the maximum limit of requests!</td>
                                 <%
                             } else {
                                 if (user.getUpgrade() == 1) {

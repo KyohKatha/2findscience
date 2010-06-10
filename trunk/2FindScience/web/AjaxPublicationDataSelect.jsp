@@ -55,7 +55,7 @@
 
             <table class="maintenance" align="center" cellspacing="15px">
                 <tr>
-                    <td>Select type of new publication </td>
+                    <td>Select the type of the new publication </td>
                     <td> <select id="selectType" onchange="javascript:loadContent('PublicationDataInsert.jsp?typePublication=' + this[selectedIndex].value, 'AjaxPublicationData')">
                 <option value="article">Article</option>
                             <option value="book">Book</option>

@@ -2194,12 +2194,8 @@ public class BDConnection {
             st.setString(1, login);
             st.setString(2, pwd);
             st.registerOutParameter(3, Types.BOOLEAN);
-            ResultSet rs = st.executeQuery();
-
-            if (rs.next()) {
-                status = rs.getBoolean(1);
-            }
-
+            st.execute();
+            status = st.getBoolean(3);
 
         } catch (SQLException e) {
             e.printStackTrace();

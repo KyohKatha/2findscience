@@ -64,13 +64,34 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td  align="center">
+                        <td align="center">
                             <input type="submit" class="button" value="Search" name="search" />
                         </td>
                     </tr>
                 </table>
             </form>
-            
+            <p class="text">Search Tips:</p>
+            <p class="text">On the Home page you will be able to search for the
+                registered publications on the website using the search field above.
+                It is possible to search for ISBN, journal, or both at the same time.
+            </p>
+            <p class="text">It isn't necessary to type the exact ISBN or journal title.
+                The results displayed will show all the publications with journal and/or
+                ISBN that have part of the value informed on the search field.
+            </p>
+            <p class="text">The searches are ranked by different parameters.
+                The ISBN search shows the publication from the author that has more
+                publications registered first.
+            </p>
+            <p class="text">The journal search shows the publication from the journal
+                that has more publications registered first.
+            </p>
+            <p class="text">If you are browsing through the site it isn't necessary
+                to return to the main page to search for a publication. It is possible
+                to use the 'fast search' field, located on the top of the page, near you menu tab.
+                On this search however, it is only possible to search for ISBN
+                and journal at the same time.
+            </p>
         </div>
     </body>
 </html>

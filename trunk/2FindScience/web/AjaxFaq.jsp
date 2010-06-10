@@ -30,7 +30,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>There's a link on the top of the page, near the 'Home' tab.</p>
+                        <p>There's a link 'Register' on the top of the page, near the 'Home' tab.</p>
                     </td>
                 </tr>
                 <tr>
@@ -40,7 +40,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Yes. Click in the 'Profile' tab in your menu.</p>
+                        <p>Yes. Click on the 'Profile' tab in your menu.</p>
                     </td>
                 </tr>
                 <tr>
@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>Yes. Click in the 'Profile' tab in your menu.</p>
+                        <p>Yes. Click on the 'Profile' tab in your menu.</p>
                     </td>
                 </tr>
                 <tr>
@@ -66,12 +66,12 @@
                 </tr>
                 <tr>
                     <td>
-                        <strong>Meu perfil tem o banner laranja! Como eu faço para ter um 'Academic Profile'?</strong>
+                        <strong>My profile has an orange banner(Common Profile)! How can I acquire an Academic Profile?</strong>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p>Clique na aba 'Profile' em seu perfil e em seguida, clique em 'Upgrade!'.</p>
+                        <p>Click on the 'Profile' tab in your menu. Then, click on the 'Upgrade!' button, below your profile informations.</p>
                     </td>
                 </tr>
             </table>

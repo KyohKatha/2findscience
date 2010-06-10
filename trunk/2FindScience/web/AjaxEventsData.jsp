@@ -28,7 +28,7 @@
             <% if (edit == null || edit.equals("update")) {%>
             <fieldset class="warning" onclick="closeMessageBox()">
                 <legend>Warning</legend>
-                <p>-  <strong>Event</strong> loaded for <strong>edition</strong>.</p>
+                <p>-  <strong>Event</strong> loaded for <strong>editing</strong>.</p>
                 <p>- All fields with (*) are required.</p>
                 <p>- Click on the box to close it.</p>
             </fieldset>
@@ -46,7 +46,7 @@
 
                 <% if (edit.equals("insert")) {%>
                 <tr>
-                    <td>Name (*)</td>
+                    <td>(*)Name</td>
                     <td class="tooltip"><input type="text" id="name" name="name" value="" size="90" maxlength="255" />
                     <span>Insert event's name</span></td>
                 </tr>
@@ -58,19 +58,19 @@
                  <tr>
                     <td>Start Date </td>
                     <td class="tooltip"><input type="text" id="startDate" name="startDate" size="30" maxlength="30"/>
-                    <span>Insert event's first date</span></td>
+                    <span>Insert event's inicial date</span></td>
                 </tr>
                 <tr>
                     <td>End Date </td>
                     <td class="tooltip"><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/>
-                    <span>Insert event's last date</span></td>
+                    <span>Insert event's final date</span></td>
                 </tr>
 
                 <%} else {
                     Booktitle b = (Booktitle) request.getAttribute("selectedEvent");
 %>
                 <tr>
-                    <td>Name (*)</td>
+                    <td>(*)Name</td>
                     <td class="tooltip"><input type="text" id="name" name="name" value="<%=b.getName()%>" size="90" maxlength="255" />
                     <span>Insert event's name</span></td>
                 </tr>
@@ -82,12 +82,12 @@
                 <tr>
                     <td>Start Date </td>
                     <td class="tooltip"><input type="text" id="startDate" name="startDate" size="30" maxlength="30">
-                    <span>Insert event's first date</span></td>
+                    <span>Insert event's inicial date</span></td>
                 </tr>
                 <tr>
                     <td>End Date </td>
                     <td class="tooltip"><input type="text" id="endDate" name="endDate" size="30" maxlength="30"/>
-                    <span>Insert event's last date</span></td>
+                    <span>Insert event's final date</span></td>
                 </tr>
 
                 <input type="hidden" id="endDataHidden" value=<%=b.getEndDate()%> >

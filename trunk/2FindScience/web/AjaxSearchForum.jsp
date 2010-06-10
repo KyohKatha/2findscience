@@ -180,21 +180,21 @@
             <form id="formPost" action="#">
                 <table class="maintenance" align="center" cellspacing="15px">
                     <tr>
-                        <td>(*) Login </td>
+                        <td>(*)Login: </td>
                         <td class="tooltip">
                             <label id="nome"><b><%= user.getLogin()%></b></label>
                             <span>This is your login</span>
                         </td>
                     </tr>
                     <tr>
-                        <td>(*)Comment </td>
+                        <td>(*)Comment: </td>
                         <td><div id="count" style="font-size: 11px;"><strong>140</strong> characters are missing</div></td>
                     </tr>
                     <tr>
                         <td></td>
                         <td class="tooltip">
                             <textarea id="comment" name="comment" cols="80" rows="3" onkeyup="blockTyping(this.value)"></textarea>
-                            <span>Insert here your comment</span>
+                            <span>Insert your comment here</span>
                         </td>
                     </tr>
                     <tr>
