@@ -7,6 +7,7 @@ package Servlets;
 
 import Pkg2FindScience.BDConnection;
 import Pkg2FindScience.PublicationDAOException;
+import Pkg2FindScience.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Vector;
@@ -23,6 +24,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class NewsMaintenance extends HttpServlet {
 
+    final int ADMIN = 0;
+    final int ACADEMIC = 1;
+    final int COMMON = 2;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -33,15 +37,20 @@ public class NewsMaintenance extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
 
         BDConnection connection = null;
         RequestDispatcher rd = null;
         Vector newsVector = null;
+        User user = (User) request.getSession().getAttribute("user");
 
         try {
             connection = BDConnection.getInstance();
-            newsVector = connection.getNews();
+
+            if(user == null || user.getProfile() == ADMIN){
+                newsVector = connection.getNews();
+            }else{
+                newsVector = connection.getNewsUser(user.getLogin());
+            }
             request.getSession().setAttribute("newsVector", newsVector);
             rd = request.getRequestDispatcher("/AjaxNews.jsp");
         } catch (PublicationDAOException e){
