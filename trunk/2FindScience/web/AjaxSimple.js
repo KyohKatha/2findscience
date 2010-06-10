@@ -593,7 +593,7 @@ function validateFormContato(){
         return false;
     }
 
-    var urlContact = "SendEmail?nome="+formContact.nome.value+"&email=" + formContact.email.value+"&assunto="+formContact.assunto.value+"&comentario="+formContact.comentario.value;
+    var urlContact = "SendEmail?nome="+formContact.nome.value+"&email=" + formContact.email.value+"&assunto="+formContact.assunto.value+"&comentario="+formContact.comentario.value+"&acao=contato";
     callServlet(urlContact, "AjaxContent");
     return true;
 }

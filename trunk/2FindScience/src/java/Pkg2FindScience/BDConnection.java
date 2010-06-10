@@ -2296,4 +2296,25 @@ public class BDConnection {
         }
         return max;
     }
+
+    public String getEmail(String login)throws PublicationDAOException {
+        String email = "";
+        ResultSet rs = null;
+        try {
+            String sql = "SELECT email FROM integrado.userData where login = '" + login +"'";
+            rs = stm.executeQuery(sql);
+
+            if(rs.next()){
+                email = rs.getString("email");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new PublicationDAOException();
+        }
+        return email;
+    }
+
 }
+
+
