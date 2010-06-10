@@ -58,6 +58,11 @@
                             publications through a website, so that the access to
                             scientific information would be easier.
                         </p>
+                        <p class="text">
+                            Os dados iniciais foram extraídos da base de dados DBLP,
+                            que mantém metadados de mais de um milhão de publicações
+                            cadastradas.
+                        </p>
                     </td>
                 </tr>
                 <tr>

@@ -15,7 +15,7 @@
 
 <html>
     <head>
-        <title>Find2Science - Maintenance Publication</title>
+        <title>Find2Science - Publication Maintenance</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel = "stylesheet" type = "text/css" href = "style.css" />
         <script type="text/javascript" src="AjaxSimple.js"></script>
