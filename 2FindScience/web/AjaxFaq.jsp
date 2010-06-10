@@ -22,56 +22,75 @@
     <body>
         <div id="content" class="content">
             <p class="title">Frequently Asked Questions</p>
-            <table class="maintenance"  cellspacing="15px" >
+            <table class="maintenance" align="center" cellspacing="15px">
                 <tr>
                     <td>
-                        <strong>How can I register?</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>There's a link 'Register' on the top of the page, near the 'Home' tab.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>Can I change my password?</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Yes. Click on the 'Profile' tab in your menu.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>Can I change my password?</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Yes. Click on the 'Profile' tab in your menu.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>How can I insert publications?</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Firstly you have to have an Academic Profile, which have a green banner.</p>
-                        <p>If your profile is correct, you can check the 'Publications' tab on your menu.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>My profile has an orange banner(Common Profile)! How can I acquire an Academic Profile?</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Click on the 'Profile' tab in your menu. Then, click on the 'Upgrade!' button, below your profile informations.</p>
+                        <div id="accordion">
+                            <h3><a href="#">How can I register?</a></h3>
+                            <div>
+                                <p>There's a link on the top of the page, near the 'Home' tab.</p>
+                            </div>
+                            <h3><a href="#">Can I change my password?</a></h3>
+                            <div>
+                                <p>Yes. Click in the 'Profile' tab in your menu.</p>
+                            </div>
+                            <h3><a href="#">How can I insert publications?</a></h3>
+                            <div>
+                                <p>Firstly you have to have an Academic Profile, which have a green banner.</p>
+                                <p>If your profile is correct, you can check the 'Publications' tab on your menu.</p>
+                            </div>
+                            <h3><a href="#">Como posso entrar em contato com o administrador?</a></h3>
+                            <div>
+                                <p>Você pode preencher e enviar o formulário presente na tab 'Contact' no seu menu.</p>
+                            </div>
+                            <h3><a href="#">My profile has an orange banner(Common Profile)! How can I acquire an Academic Profile?</a></h3>
+                            <div>
+                                <p>Click on the 'Profile' tab in your menu. Then, click on the 'Upgrade!' button, below your profile informations.</p>
+                                <p>Você deverá informar corretamente sua senha para que sua requisição seja
+                                    enviada com sucesso. Leia atentamente as instruções presentes nesta página.</p>
+                                <p>Dica: o upgrade de perfil depende da aceitação do administrador, portanto
+                                    procure manter seu perfil atualizado!</p>
+                            </div>
+                            <h3><a href="#">Para que servem os interesses?</a></h3>
+                            <div>
+                                <p>Os interesses informados em seu perfil afetam diretamente o conteúdo
+                                    exibido pela coluna 'news' para cada usuário. Isto significa que, se
+                                    um usuário possui interesse em apenas uma área, como por exemplo 'banco de dados',
+                                    apenas as atualizações de publicações da área 'banco de dados' irão
+                                    aparecer na coluna 'news'.</p>
+                                <p>Portanto, ao inserir uma publicação, procure também inserir
+                                    os interesses que melhor a identificam!</p>
+                            </div>
+                            <h3><a href="#">O que significam os desenhos da coluna 'news'?</a></h3>
+                            <div>
+                                <p>O símbolo com três pessoas <img src="Imagens/sign_event.png" alt="eve"/>
+                                    identifica a inserção de um novo evento.</p>
+                                <p>Já o símbolo com uma pessoa e uma folha <img src="Imagens/sign_pub.png" alt="pub"/>
+                                    identifica a inserção de uma nova publicação.</p>
+                            </div>
+                            <h3><a href="#">Quais os tipos de publicações que eu posso inserir?</a></h3>
+                            <div>
+                                <p>Os tipos são: Article, Book, Incollection, Inproceedings,
+                                    Master Thesis, Phd Thesis, Proceedings e Www.</p>
+                            </div>
+                            <h3><a href="#">E se eu quiser inserir um outro tipo de publicação?</a></h3>
+                            <div>
+                                <p>No momento, isto não é possível.</p>
+                            </div>
+                            <h3><a href="#">Posso inserir um novo evento?</a></h3>
+                            <div>
+                                <p>Esta funcionalidade só pode ser utilizada pelo administrador.
+                                    Porém, ao cadastrar uma publicação, é possível informar em quais dos
+                                    eventos existentes esta publicação foi apresentada.</p>
+                            </div>
+                            <h3><a href="#">Posso alterar ou apagar uma publicação cadastrada?</a></h3>
+                            <div>
+                                <p>Depende. Apenas o usuário que inseriu a publicação poderá
+                                    modificar ou apagar a mesma.</p>
+                                <p>IMPORTANTE: O administrador pode modificar ou apagar qualquer
+                                    publicação, sem aviso prévio.</p>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </table>

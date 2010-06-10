@@ -40,6 +40,10 @@
         <servlet-name>Calendar</servlet-name>
         <servlet-class>Servlets.Calendar</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Faq</servlet-name>
+        <servlet-class>Servlets.Faq</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>Calendar</servlet-name>
         <url-pattern>/Calendar</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faq</servlet-name>
+        <url-pattern>/Faq</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

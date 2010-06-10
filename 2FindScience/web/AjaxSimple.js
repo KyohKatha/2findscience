@@ -6,6 +6,15 @@
 
 var xmlhttp
 
+
+function faq(){
+    callServlet("Faq", 'AjaxContent');
+    $(document).ready(function() {
+        $("#accordion").accordion();
+      });
+}
+
+
 function loadContent(url, div)
 {
     xmlhttp=GetXmlHttpObject();

@@ -73,7 +73,7 @@
             </p>
             <p class="text">If you are browsing through the site it isn't necessary
                 to return to the main page to search for a publication. It is possible
-                to use the 'fast search' field, located on the top of the page, near you menu tab.
+                to use the 'fast search' field, located on the top of the page, near your menu tab.
                 On this search however, it is only possible to search for ISBN 
                 and journal at the same time.
             </p>

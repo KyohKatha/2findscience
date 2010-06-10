@@ -299,7 +299,7 @@ public class MaintenanceUserData extends HttpServlet {
                 break;
 
         }
-        message += "successfully!</p><p>- Click on the box to close it.</p>";
+        message += " successfully!</p><p>- Click on the box to close it.</p>";
         String email = "";
         try{
             email = connection.getEmail(login);
