@@ -7,8 +7,20 @@
 var xmlhttp
 
 
-function faq(){
-    callServlet("Faq", 'AjaxContent');
+function loadFaq(){
+    HttpMethod = "POST";
+    var req = null;
+    req = getXMLHTTPRequest();
+
+    if (req){
+        req.open(HttpMethod,"AjaxFaq.jsp",false);
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        req.setRequestHeader('Connection', 'close');
+        req.send(null);
+        document.getElementById("AjaxContent").innerHTML = req.responseText;
+
+    }
+
     $(document).ready(function() {
         $("#accordion").accordion();
       });
