@@ -50,6 +50,12 @@
                     <td class="tooltip"><input type="text" id="name" name="name" value="" size="90" maxlength="255" />
                     <span>Insert event's name</span></td>
                 </tr>
+
+                <tr>
+                    <td>Related subjects :</td>
+                    <td class="tooltip"><input type="text" id="Subjects" size=90 onclick="openDGDialog('Subjects', 'popupSelectBox.jsp?nameOption=Subjects', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
+                </tr>
+
                 <tr>
                     <td>City </td>
                     <td class="tooltip"><input type="text" id="city" name="city" value="" size=90" maxlength="50" />

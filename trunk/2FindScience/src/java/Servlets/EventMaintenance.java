@@ -97,7 +97,7 @@ public class EventMaintenance extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         int index = Integer.parseInt(request.getParameter("index"));
         Vector events = (Vector) request.getSession().getAttribute("eventVector");
 
@@ -127,10 +127,11 @@ public class EventMaintenance extends HttpServlet {
         b.setEndDate(request.getParameter("endDate"));
         b.setLocal(request.getParameter("city"));
         String message = "";
+        String subjects = request.getParameter("subjects");
 
         try{
             if (b.getCod() == 0){
-                connection.saveEvent(b);
+                connection.saveEvent(b, subjects);
                 message = "saved";
             }else{
                 connection.updateEvent(b);

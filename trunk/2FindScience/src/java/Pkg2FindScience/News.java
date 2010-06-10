@@ -15,6 +15,13 @@ public class News {
     private String date;
     private String name;
 
+    public News(double cod, int type, String date, String name){
+        this.cod = cod;
+        this.type = type;
+        this.date = date;
+        this.name = name;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }

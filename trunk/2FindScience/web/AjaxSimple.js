@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -28,9 +28,9 @@ function loadContent(url, div)
                 document.getElementById("loading").style.visibility = 'hidden';
         }
     }
-   
+
     xmlhttp.open("GET",url,true);
-    
+
     xmlhttp.send(null);
 }
 
@@ -96,7 +96,7 @@ function validateFormUser(acao){
     var message = "";
     var login = trim(form.login.value);
     var name = trim(form.name.value);
-    
+
     if(acao != "save"){
         var password = trim(form.password.value);
         var passwordConfirmation = trim(form.passwordConfirmation.value);
@@ -136,7 +136,7 @@ function validateFormUser(acao){
         }
     }
 
-    
+
     if(page != "http://" && page != ""){
         if(page.match( /http:\/\/[a-z|A-Z|0-9]{1,50}.[a-z]{3}/) == null ){
             message += ("<p>- <strong>Personal Page</strong> is incorrect format!</p>");
@@ -168,7 +168,7 @@ function validateFormUser(acao){
         "&name=" + trim(name) + "&email=" + trim(email) + "&page=" + trim(page) + "&subjects=" +  trim(subjectsParameter);
         callServlet(url, "AjaxContent");
     }
-    
+
     return true;
 }
 
@@ -315,7 +315,7 @@ function validateFormPublication(action){
     var messagePublication = "";
     var formPublication = document.getElementById("formPublication");
 
-    // expressÃµes regulares
+    // expressÃƒÂµes regulares
     var expRegNumber=/[0-9]{1,8}/;
 
     var title = trim(formPublication.title.value);
@@ -530,7 +530,7 @@ function validateFormPublication(action){
 
     callServlet(url, "AjaxContent");
     return true;
-  
+
 }
 
 function deletePublication(){
@@ -563,12 +563,12 @@ function saveIndexSubject(index, ve){
                                 "<input type=\"button\" class=\"button\" value=\"Delete\" name=\"delete\" onclick=\"deleteSubject()\"/>" +
                                 "<input type=\"reset\" class=\"button\" value=\"Clear\" name=\"clear\"/>" +
                                 "<input type=\"button\" class=\"button\" value=\"Cancel\" name=\"cancel\" onclick=\"loadContent('HomeAdmin.jsp', 'AjaxContent')\"/>";
-         
+
 }
 function validateFormContato(){
     formContact = document.getElementById("formContato");
     var message = "";
-    
+
     if(formContact.email.value == ""){
         message += ("<p>- <strong>Email</strong> is required!</p>");
         formContact.email.focus();
@@ -620,7 +620,7 @@ function validateFormBusca(tipo, e){
         }
 
         url = "Search?action=doSearch&parametro="+param+"&filtro=" + filtro;
-        
+
         callServlet(url, 'AjaxContent');
         return true;
 
@@ -673,8 +673,10 @@ function validateFormEvent(mode){
         url = "EventMaintenance?action=save&cod=" + cod + "&name=" + name + "&city=" + local +
         "&startDate=" + startDate + "&endDate=" + endDate;
     }else{
+        var subjects = trim(document.getElementById("Subjects").value);
+        subjects = subjects.toString().replace(" ", "+");
         url = "EventMaintenance?action=save&cod=0&name=" + name + "&city=" + local +
-        "&startDate=" + startDate + "&endDate=" + endDate;
+        "&startDate=" + startDate + "&endDate=" + endDate + "&subjects=" + subjects;
     }
 
     callServlet(url, "AjaxContent");
@@ -935,5 +937,3 @@ function setPopUp(mode){
             document.getElementById("loading").innerHTML="";
     }
 }
-
-

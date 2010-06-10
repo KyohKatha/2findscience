@@ -96,9 +96,9 @@ public class BDConnection {
     public Vector getSubjects() throws PublicationDAOException {
         Vector subjects = new Vector();
         ResultSet rs = null;
-       
+
         try {
-            String sQuery = "SELECT subject FROM integrado.subject ORDER BY(subject);";
+            String sQuery = "SELECT Top 100 subject FROM integrado.subject ORDER BY(subject);";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -379,7 +379,7 @@ public class BDConnection {
                 rs = st.executeQuery();
             } else if (filtro.equals("both")) {
                 stm3 = con.createStatement();
-                rs = stm3.executeQuery("select * from fc_search_isbn_journal2('" + param + "') ORDER BY numPubs DESC;");
+                rs = stm3.executeQuery("select * from fc_search_isbn_journal('" + param + "') ORDER BY numPubs DESC;");
             }
 
             while (rs.next()) {
@@ -470,13 +470,13 @@ public class BDConnection {
         }
     }
 
-    public void saveEvent(Booktitle b) throws PublicationDAOException {
+    public void saveEvent(Booktitle b, String subjects) throws PublicationDAOException {
 
         try {
             CallableStatement st = con.prepareCall("{call sp_insert_event(?, ?, ?, ?)}");
 
             st.setString(1, b.getName());
-            // inserir null em vez de string vazia
+
             if (!b.getStartDate().equals("")) {
                 DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
                 java.sql.Date startDate = new java.sql.Date(fmt.parse(b.getStartDate()).getTime());
@@ -496,11 +496,32 @@ public class BDConnection {
             } else {
                 st.setString(4, null);
             }
-
             st.execute();
-
             st.close();
 
+            if (subjects != null && !subjects.equals("")) {
+                String sQuery = "SELECT cod FROM integrado.booktitle WHERE name='" + b.getName() + "';";
+                ResultSet resultCod = stm.executeQuery(sQuery);
+
+                if (resultCod.next()) {
+                    int codEvent = resultCod.getInt("cod");
+           
+                    String[] vectorSubjects = subjects.split(";");
+                    ResultSet result = null;
+
+                    for (int i = 0; i < vectorSubjects.length; i++) {
+                        sQuery = "SELECT cod FROM integrado.subject WHERE subject= '" + vectorSubjects[i] + "';";
+                        stm.execute(sQuery);
+                        result = stm.getResultSet();
+
+                        if (result.next()) {
+                            int cod = result.getInt("cod");
+                            sQuery = "INSERT INTO integrado.booktitleSubject VALUES(" + codEvent + "," + cod + ");";
+                            stm.execute(sQuery);
+                        }
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
@@ -509,66 +530,48 @@ public class BDConnection {
 
     public Vector getNews() throws PublicationDAOException {
         Vector news = new Vector();
-        ResultSet rs = null;
-        ResultSet rsPub = null;
-        ResultSet rsEv = null;
-        double id_pub;
-        int id_ev, i = 0;
-        int qtde = 50;
-        String data;
-        News n;
-
-        String sql = "SELECT ID_PUB, ID_EV, DATA FROM integrado.news ORDER BY DATA DESC";
+        ResultSet result = null;
 
         try {
-            stm.execute(sql);
-            rs = stm.getResultSet();
+             result = stm.executeQuery("SELECT * FROM fc_getnews() ORDER BY insertion DESC;");
 
-            while (i < qtde && rs.next()) {
-                id_pub = rs.getDouble("ID_PUB");
-                id_ev = rs.getInt("ID_EV");
-                data = rs.getString("DATA");
+             while(result.next()){
+                 double cod = result.getDouble("cod");
+                 String name = result.getString("name");
+                 int type = result.getInt("type");
+                 String date = result.getString("insertion");
 
-                if (id_pub == 0) {
-                    //booktitle
-                    String sqlEv = "SELECT name FROM integrado.bookTitle WHERE cod =" + id_ev;
-                    stmTeste.execute(sqlEv);
-                    rsEv = stmTeste.getResultSet();
-
-                    while (rsEv.next()) {
-                        n = new News();
-                        n.setCod(id_ev);
-                        n.setName(rsEv.getString("name"));
-                        n.setType(1);
-                        n.setDate(data);
-                        news.addElement(n);
-                        i++;
-                    }
-
-                } else {
-                    //publications
-                    String sqlPub = "SELECT title FROM integrado.publication WHERE cod =" + id_pub;
-                    stmTeste.execute(sqlPub);
-                    rsPub = stmTeste.getResultSet();
-
-                    while (rsPub.next()) {
-                        n = new News();
-                        n.setCod(id_pub);
-                        n.setName(rsPub.getString("title"));
-                        n.setType(0);
-                        n.setDate(data);
-                        news.addElement(n);
-                        i++;
-                    }
-                }
-
-            }
-
+                 News n = new News(cod, type, date, name);
+                 news.add(n);
+             }
         } catch (Exception e) {
             throw new PublicationDAOException();
         }
         return news;
     }
+
+    public Vector getNewsUser(String login) throws PublicationDAOException{
+        Vector news = new Vector();
+        ResultSet result = null;
+
+        try {
+             result = stm.executeQuery("SELECT * from fc_getnewsUser('" + login + "') ORDER BY insertion DESC;");
+
+             while(result.next()){
+                 double cod = result.getDouble("cod");
+                 String name = result.getString("name");
+                 int type = result.getInt("type");
+                 String date = result.getString("insertion");
+
+                 News n = new News(cod, type, date, name);
+                 news.add(n);
+             }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return news;
+    }
+
 
     public void updateUpgrade(String login, boolean upgrade) throws PublicationDAOException {
         String statement = "UPDATE integrado.userData SET upgrade = 0 ";
@@ -2247,10 +2250,10 @@ public class BDConnection {
         }
     }
 
-    private void saveSubjectPublication(double codPublication, String subjects) throws PublicationDAOException{
+    private void saveSubjectPublication(double codPublication, String subjects) throws PublicationDAOException {
         String sQuery = null;
         ResultSet result = null;
-        
+
         try {
             if (subjects != null && !subjects.equals("")) {
                 String[] vectorSubjects = subjects.split(";");
@@ -2262,10 +2265,8 @@ public class BDConnection {
 
                     if (result.next()) {
                         int cod = result.getInt("cod");
-                        sQuery = "INSERT INTO integrado.publicationSubject VALUES(" + codPublication  + "," + cod + ");";
-                        System.out.println("Query " + sQuery);
+                        sQuery = "INSERT INTO integrado.publicationSubject VALUES(" + codPublication + "," + cod + ");";
                         stm.execute(sQuery);
-                        System.out.println("INSERIU");
                     }
                 }
             }
@@ -2275,14 +2276,14 @@ public class BDConnection {
         }
     }
 
-        public int getMaxUpgrade() throws PublicationDAOException {
+    public int getMaxUpgrade() throws PublicationDAOException {
         int max = 0;
         ResultSet rs = null;
         try {
             String sql = "SELECT * FROM integrado.settings";
             rs = stm.executeQuery(sql);
 
-            if(rs.next()){
+            if (rs.next()) {
                 max = rs.getInt("upgrade");
             }
 
@@ -2293,14 +2294,14 @@ public class BDConnection {
         return max;
     }
 
-    public String getEmail(String login)throws PublicationDAOException {
+    public String getEmail(String login) throws PublicationDAOException {
         String email = "";
         ResultSet rs = null;
         try {
-            String sql = "SELECT email FROM integrado.userData where login = '" + login +"'";
+            String sql = "SELECT email FROM integrado.userData where login = '" + login + "'";
             rs = stm.executeQuery(sql);
 
-            if(rs.next()){
+            if (rs.next()) {
                 email = rs.getString("email");
             }
 
@@ -2310,7 +2311,4 @@ public class BDConnection {
         }
         return email;
     }
-
 }
-
-
