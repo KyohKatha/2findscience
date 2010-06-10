@@ -54,7 +54,7 @@
                     </tr>
 
                     <tr>
-                        <td>Interests available: </td>
+                        <td>Subjects available: </td>
                         <td class="tooltip">
                             <div id="userlist" >
                                 <select class="list" size=5 id="listAvailableSubjects" >
@@ -86,7 +86,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Your interests</td>
+                        <td>Your subjects</td>
                         <td>
                             <div id="userlist">
                                 <select id="listSelectedSubjects" class="list" onchange="" size=5>

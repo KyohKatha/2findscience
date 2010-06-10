@@ -141,7 +141,7 @@
                                                     messageSearch = "Results <strong>" + (numResultsPage + 1) + "</strong> to <strong>" + (numResultsPage + capacity) + "</strong>";
                                                 }
 
-                                                messageSearch += " of about <strong>" + rs.size() + "</strong> for: <strong>\"" + searchParam + "\"</strong>";
+                                                messageSearch += " of <strong>" + rs.size() + "</strong> for: <strong>\"" + searchParam + "\"</strong>";
                     %>
                     <td colspan="3">
                         <%= messageSearch%>
@@ -217,10 +217,10 @@
                 <%
                                                 //out.println("numResultados:" + numResultsPage);
                                                 if (count > capacity) {
-                                                    out.println("<input class=\"button\" type=\"button\" value=\"Anterior\" onclick=\"callServlet('Search?action=doRefresh&modo=previous&numResultsPage=" + (numResultsPage) + "&parametro=" + session.getAttribute("parametro") + "', 'AjaxContent');\"/>");
+                                                    out.println("<input class=\"button\" type=\"button\" value=\"Previous\" onclick=\"callServlet('Search?action=doRefresh&modo=previous&numResultsPage=" + (numResultsPage) + "&parametro=" + session.getAttribute("parametro") + "', 'AjaxContent');\"/>");
                                                 }
                                                 if (rs.size() >= count + 1) {
-                                                    out.println("<input class=\"button\" type=\"button\" value=\"Proxima\" onclick=\"callServlet('Search?action=doRefresh&modo=next&numResultsPage=" + (numResultsPage + capacity) + "&parametro=" + session.getAttribute("parametro") + "', 'AjaxContent');\"/>");
+                                                    out.println("<input class=\"button\" type=\"button\" value=\"Next\" onclick=\"callServlet('Search?action=doRefresh&modo=next&numResultsPage=" + (numResultsPage + capacity) + "&parametro=" + session.getAttribute("parametro") + "', 'AjaxContent');\"/>");
                                                 }
                 %>
             </div>

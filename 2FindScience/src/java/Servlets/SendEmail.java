@@ -29,20 +29,17 @@ public class SendEmail extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-
+        String acao = request.getParameter("acao");
         try {
-            String acao = request.getParameter("acao");
-
             String host = "smtp.gmail.com";
             String to = "";
             String from = "";
 
-            if(acao.equals("contato")){
+            if (acao.equals("contato")) {
                 to = "2findscience@gmail.com";
-                from = (String) request.getAttribute("email");
+                from = (String) request.getParameter("email");
             } else {
-                to = (String) request.getSession().getAttribute("email");
-                System.out.println("To:"+to);
+                to = (String) request.getParameter("email");
                 from = "2findscience@gmail.com";
             }
             String password = "bccufscar2010";
@@ -60,13 +57,19 @@ public class SendEmail extends HttpServlet {
             message.setFrom(new InternetAddress(from));
             Address toAddress = new InternetAddress(to);
             message.addRecipient(Message.RecipientType.TO, toAddress);
-            if(acao.equals("contato")){
+            if (acao.equals("contato")) {
                 message.setSubject(request.getParameter("assunto"));
                 message.setContent("Name: " + request.getParameter("nome") + "\nE-mail: " + request.getParameter("email") + "\n"
-                    + "Message: " + request.getParameter("comentario"), "text/plain");
-            }else{
-                message.setSubject("Upgrade Accepted!");
-                message.setContent("Your Upgrade request was accepted!", "text/plain");
+                        + "Message: " + request.getParameter("comentario"), "text/plain");
+            } else {
+                String status = (String) request.getParameter("status");
+                if (status.equals("allowed")) {
+                    message.setSubject("Upgrade Accepted!");
+                    message.setContent("Your Upgrade request was accepted!", "text/plain");
+                } else {
+                    message.setSubject("Upgrade Denied!");
+                    message.setContent("Your Upgrade request was denied!", "text/plain");
+                }
             }
             System.out.println("Enviando o email");
 
@@ -78,8 +81,10 @@ public class SendEmail extends HttpServlet {
             } finally {
                 t.close();
             }
-            request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- The <strong>Message</strong> was sent successfull!</p><p>- Click on the box to close it.</p>");
+            if (acao.equals("contato")) {
+                request.getSession().setAttribute("type", "success");
+                request.getSession().setAttribute("message", "<p>- The <strong>Message</strong> was sent successfull!</p><p>- Click on the box to close it.</p>");
+            }
 
             RequestDispatcher rd = null;
             User user = (User) request.getSession().getAttribute("user");
@@ -87,6 +92,9 @@ public class SendEmail extends HttpServlet {
                 rd = request.getRequestDispatcher("/AjaxHome.jsp");
             } else {
                 switch (user.getProfile()) {
+                    case 0:
+                        rd = request.getRequestDispatcher("Filter?action=RequestUpgrade");
+                        break;
                     case 1:
                         rd = request.getRequestDispatcher("/AjaxHomeAcademic.jsp");
                         break;
@@ -104,7 +112,11 @@ public class SendEmail extends HttpServlet {
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> sendind the message!</p><p>- Click on the box to close it.</p>");
             e.printStackTrace();
             RequestDispatcher rd = null;
-            rd = request.getRequestDispatcher("/AjaxContact.jsp");
+            if (acao.equals("contato")) {
+                rd = request.getRequestDispatcher("/AjaxContact.jsp");
+            } else {
+                rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
+            }
             rd.forward(request, response);
         } finally {
             out.close();

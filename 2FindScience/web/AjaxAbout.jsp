@@ -31,17 +31,17 @@
                 <tr>
                     <td colspan="2">
                         <p class="text">
-                            2Find Science é um site que possibilita inserção, remoção
-                            e alteração de publicações, além de oferecer um mecanismo 
-                            de busca eficiente para pesquisar títulos de journal e códigos 
-                            isbn.
+                            2Find Science is a website that enables you to insert, remove
+                            and alter scientific publications metadata. It also offers an
+                            efficient search mechanism to find publications through their
+                            ISBN codes and/or journal titles.
                         </p>
                         <p class="text">
-                            Ao realizar seu cadastro, é possível escrever pequenos
-                            comentários para cada publicação. Além disso, escolhendo alguns
-                            interesses durante o cadastro, a coluna de news passa a
-                            ser personalizada, mostrando apenas as últimas atualizações
-                            de publicações de interesse do usuário.
+                            When you register on the site it is possible to leave
+                            comments about each publication you search. Also, by picking
+                            some subjects of your interest during the register phase,
+                            you will be able to see the latest publications or events
+                            related to your interests on the News column.
                         </p>
                     </td>
                 </tr>
@@ -53,10 +53,10 @@
                 <tr>
                     <td colspan="2">
                         <p class="text">
-                            2Find Science foi idealizado para que fosse possível
-                            gerenciar informações  de publicações a partir de uma
-                            webpage, facilitando o acesso ao conhecimento científico
-                            gerado no meio acadêmico.
+                            2Find Science was idealized in a way so it would be
+                            possible to manage a large amount of informations about
+                            publications through a website, so that the access to
+                            scientific information would be easier.
                         </p>
                     </td>
                 </tr>
@@ -68,10 +68,10 @@
                 <tr>
                     <td colspan="2">
                         <p class="text">
-                            2Find Science é um projeto criado dentro da Universidade
-                            Federal de São Carlos (UFSCar) - Campus Sorocaba, para a
-                            disciplina 'Desenvolvimento para Web', pertencente ao curso
-                            de Bacharelado em Ciência da Computação.
+                            2Find Science was developed in the Universidade
+                            Federal de São Carlos (UFSCar) - Campus Sorocaba, as a
+                            project for the disciplines 'Web Development', 'Software Engeneering 2'
+                            and 'Database Laboratory' of the Bachelor of Computer Science course.
                         </p>
                     </td>
                 </tr>
@@ -83,13 +83,13 @@
                 <tr>
                     <td colspan="2">
                         <p class="text">
-                            <strong>Autores:</strong>
+                            <strong>Developers:</strong>
                         </p>
                         <p class="text">
-                            Aline Kaori Takechi<br>
-                            Gustavo Henrique Rodrigues Pinto Tomas<br>
-                            Katharina Carrapatoso Garcia<br>
-                            Welington Manoel da Silva<br>
+                            Aline Kaori Takechi - @ - aline.kaori.t@gmail.com<br>
+                            Gustavo Henrique Rodrigues Pinto Tomas - @ - seilagu@hotmail.com<br>
+                            Katharina Carrapatoso Garcia - @KyohKatha - katharinacg@gmail.com<br>
+                            Welington Manoel da Silva - @ - welingtonms@hotmail.com<br>
                         </p>
                     </td>
                 </tr>

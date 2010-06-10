@@ -31,7 +31,7 @@
     </head>
     <body>
         <div id="content" class="content">
-            <p class="title">Update your data</p>
+            <p class="title">Update your information</p>
 
             <div id="msg">
                 <fieldset class="information" onclick="closeMessageBox()">
@@ -69,7 +69,7 @@
                             <%}%>
                     </tr>
                     <tr>
-                        <td>Personal page (Ex.: Lattes) </td>
+                        <td>Personal page (Ex.: Lattes): </td>
                         <% if (user.getPage() != null) {%>
                         <td class="tooltip"><input type="text" name="page" size="30" maxlength="50" value="<%= user.getPage()%>"/><span>Update your email</span></td>
                             <%} else {%>
@@ -78,7 +78,7 @@
 
                     </tr>
                     <tr>
-                        <td>Interests available: </td>
+                        <td>Subjects available: </td>
                         <td class="tooltip">
                             <div id="userlist" >
                                 <select class="list" size=5 id="listAvailableSubjectsProfile" >
@@ -100,7 +100,7 @@
                                     %>
                                 </select>
                             </div>
-                            <span>Select your interests</span></td>
+                            <span>Select the subjects of your interest</span></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -110,7 +110,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Your interests</td>
+                        <td>Your subjects</td>
                         <td class="tooltip">
                             <div id="userlist">
                                 <select id="listSelectedSubjectsProfile" class="list" onchange="" size=5>
@@ -131,7 +131,7 @@
                                     %>
                                 </select>
                             </div>
-                            <span>Your interests</span></td>
+                            <span>Your subjects</span></td>
                     </tr>
                 </table>
 

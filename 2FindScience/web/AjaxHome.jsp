@@ -55,25 +55,28 @@
                     </tr>
                 </table>
             </form>
-            <p class="text">Dicas de Busca:</p>
-            <p class="text">Na página inicial, você poderá buscar pelas publicações
-                cadastradas no site a partir do campo de pesquisa acima. É possível
-                realizar buscar por isbn, journal ou pelos dois ao mesmo tempo.</p>
-            <p class="text">Não é necessário digitar o valor exato do isbn ou o nome
-                inteiro do journal. Os resultados exibidos serão todas as publicações
-                com journal e/ou isbn que possuem o valor informado em alguma parte de
-                seu valor original.</p>
-            <p class="text">Ao realizar uma busca por isbn, o resultado desta busca
-                é ordenado pela relevância da publicação, ou seja, os primeiros
-                resultados exibidos serão os que pertencem a autores com os maiores
-                números de publicações cadastradas.</p>
-            <p class="text">Realizando a busca por journal, os resultados também serão
-                ordenados pela sua relevância, o que significa que os journals
-                com mais publicações cadastradas serão os primeiros a serem exibidos.</p>
-            <p class="text">Se você estiver navegando pelo site, não é preciso retornar
-                para a página inicial para realizar uma busca. É possível utilizar o
-                campo de 'busca rápida', que se encontra perto do menu do site.
-                Nesta busca, só é possível buscar por isbn e journal ao mesmo tempo.</p>
+            <p class="text">Search Tips:</p>
+            <p class="text">On the Home page you will be able to search for the
+                registered publications on the website using the search field above.
+                It is possible to search for ISBN, journal, or both at the same time.
+            </p>
+            <p class="text">It isn't necessary to type the exact ISBN or journal title.
+                The results displayed will show all the publications with journal and/or
+                ISBN that have part of the value informed on the search field.
+            </p>
+            <p class="text">The searches are ranked by different parameters.
+                The ISBN search shows the publication from the author that has more
+                publications registered first.
+            </p>
+            <p class="text">The journal search shows the publication from the journal
+                that has more publications registered first.
+            </p>
+            <p class="text">If you are browsing through the site it isn't necessary
+                to return to the main page to search for a publication. It is possible
+                to use the 'fast search' field, located on the top of the page, near you menu tab.
+                On this search however, it is only possible to search for ISBN 
+                and journal at the same time.
+            </p>
         </div>
     </body>
 </html>

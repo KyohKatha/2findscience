@@ -86,9 +86,9 @@
             <form id="formInsertTheme" action="#" method="post" onsubmit="return validateFormInsertTheme()">
                 <table align="center" class="maintenance" cellspacing="15px">
                     <tr>
-                        <td>(*) Insert New</td>
+                        <td>(*)Insert New</td>
                         <td  class="tooltip"><input type="text" id="newTheme" name="newTheme" size="80"/>
-                            <span>Insert a new theme for the publications</span>
+                            <span>Insert a new subject for the publications</span>
                         </td>
                         
                     </tr>
@@ -108,10 +108,10 @@
             <form id="formInsertUpgrade" action="#" onsubmit="return validateFormInsertUpgrade()">
                 <table align="center" class="maintenance" cellspacing="15px">
                     <tr>
-                        <td>Current maximum amount of upgrade request permitted per user</td>
+                        <td>Current maximum number of upgrade requests permitted per user: </td>
                         <td>
                             <% 
-                                        out.println("<strong>" + request.getSession().getAttribute("upgrade")+ "</strong> upgrade requests.");
+                                        out.println("<strong>" + request.getSession().getAttribute("upgrade")+ "</strong>");
                             %>
                         </td>
                         <td>
@@ -121,7 +121,7 @@
                         <td>New value</td>
                         <td class="tooltip">
                             <input type="text" id="newMaxUpgrade" name="newMaxUpgrade"/>
-                            <span>Insert a new value for upgrade requisitions.</span>
+                            <span>Insert a new maximum number of upgrade requests.</span>
                         </td>
                     </tr>
                     <tr>
