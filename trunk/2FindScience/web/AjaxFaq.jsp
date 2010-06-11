@@ -17,9 +17,7 @@
     <body>
         <div id="content" class="content">
             <p class="title">Frequently Asked Questions</p>
-            <table class="maintenance" align="center" cellspacing="15px">
-                <tr>
-                    <td>
+            <div id="scroll" style="text-align:justify;font-family: arial,verdana,'lucida grande',tahoma,sans-serif;font-size: 10px; height:680px; border: none;">
                         <div id="accordion">
                             <h3><a href="#">How can I register?</a></h3>
                             <div>
@@ -34,63 +32,58 @@
                                 <p>Firstly you have to have an Academic Profile, which have a green banner.</p>
                                 <p>If your profile is correct, you can check the 'Publications' tab on your menu.</p>
                             </div>
-                            <h3><a href="#">Como posso entrar em contato com o administrador?</a></h3>
+                            <h3><a href="#">How can I contact the administrator?</a></h3>
                             <div>
-                                <p>Você pode preencher e enviar o formulário presente na tab 'Contact' no seu menu.</p>
+                                <p>You can fill the contact form. Just click on the 'Contact' tab on your menu. </p>
                             </div>
                             <h3><a href="#">My profile has an orange banner(Common Profile)! How can I acquire an Academic Profile?</a></h3>
                             <div>
                                 <p>Click on the 'Profile' tab in your menu. Then, click on the 'Upgrade!' button, below your profile informations.</p>
-                                <p>Você deverá informar corretamente sua senha para que sua requisição seja
-                                    enviada com sucesso. Leia atentamente as instruções presentes nesta página.</p>
-                                <p>Dica: o upgrade de perfil depende da aceitação do administrador, portanto
-                                    procure manter seu perfil atualizado!</p>
+                                <p>You should inform your password correctly so that your request can be 
+                                    sent to the administrator correctly. Read the instructions on that page carefully.
+                                </p>
+                                <p>Tip: The profile upgrade depends on the administrator,
+                                    so try to maintain your profile updated!
+                                </p>
                             </div>
-                            <h3><a href="#">Para que servem os interesses?</a></h3>
+                            <h3><a href="#">Why do I have subjects?</a></h3>
                             <div>
-                                <p>Os interesses informados em seu perfil afetam diretamente o conteúdo
-                                    exibido pela coluna 'news' para cada usuário. Isto significa que, se
-                                    um usuário possui interesse em apenas uma área, como por exemplo 'banco de dados',
-                                    apenas as atualizações de publicações da área 'banco de dados' irão
-                                    aparecer na coluna 'news'.</p>
-                                <p>Portanto, ao inserir uma publicação, procure também inserir
-                                    os interesses que melhor a identificam!</p>
+                                <p>The subjects informed in your profile affect directly the content present on the
+                                    'news' tab. That means that if you only have the subject 'Database' in your profile, you will only
+                                    see the latest publications and events related to that subject.
+                                </p>
+                                <p>So whenever you insert a publication try to relate it to the subjects that best fits it!</p>
                             </div>
-                            <h3><a href="#">O que significam os desenhos da coluna 'news'?</a></h3>
+                            <h3><a href="#">What does the icons in the news column mean?</a></h3>
                             <div>
-                                <p>O símbolo com três pessoas <img src="Imagens/sign_event.png" alt="eve"/>
-                                    identifica a inserção de um novo evento.</p>
-                                <p>Já o símbolo com uma pessoa e uma folha <img src="Imagens/sign_pub.png" alt="pub"/>
-                                    identifica a inserção de uma nova publicação.</p>
+                                <p>The symbol with three people <img src="Imagens/sign_event.png" alt="eve"/>
+                                    represents the insertion of a new event.</p>
+                                <p>The icon with one person and a sheet <img src="Imagens/sign_pub.png" alt="pub"/>
+                                    represents the insertion of a new publication.</p>
                             </div>
-                            <h3><a href="#">Quais os tipos de publicações que eu posso inserir?</a></h3>
+                            <h3><a href="#">What types of publication can I insert?</a></h3>
                             <div>
-                                <p>Os tipos são: Article, Book, Incollection, Inproceedings,
-                                    Master Thesis, Phd Thesis, Proceedings e Www.</p>
+                                <p>The types are: Article, Book, Incollection, Inproceedings,
+                                    Master Thesis, Phd Thesis, Proceedings and Www.</p>
                             </div>
-                            <h3><a href="#">E se eu quiser inserir um outro tipo de publicação?</a></h3>
+                            <h3><a href="#">What if I want to insert a new type of publication?</a></h3>
                             <div>
-                                <p>No momento, isto não é possível.</p>
+                                <p>At the moment that is not possible.</p>
                             </div>
-                            <h3><a href="#">Posso inserir um novo evento?</a></h3>
+                            <h3><a href="#">Can I insert a new event?</a></h3>
                             <div>
-                                <p>Esta funcionalidade só pode ser utilizada pelo administrador.
-                                    Porém, ao cadastrar uma publicação, é possível informar em quais dos
-                                    eventos existentes esta publicação foi apresentada.</p>
+                                <p>That can only be achieved by the administrator of the website.
+                                    But when you insert a new publication, you can inform in what events that publication
+                                    was present.</p>
                             </div>
-                            <h3><a href="#">Posso alterar ou apagar uma publicação cadastrada?</a></h3>
+                            <h3><a href="#">Can I alter/delete an inserted publication?</a></h3>
                             <div>
-                                <p>Depende. Apenas o usuário que inseriu a publicação poderá
-                                    modificar ou apagar a mesma.</p>
-                                <p>IMPORTANTE: O administrador pode modificar ou apagar qualquer
-                                    publicação, sem aviso prévio.</p>
+                                <p>It depends. Only the user that inserted the publication can alter/delete it.
+                                </p>
+                                <p>IMPORTANT: The administrator can alter/delete any publication.</p>
                             </div>
                         </div>
-                    </td>
-                </tr>
-            </table>
+                    </div>
         </div>
     </body>
 </html>
-
-

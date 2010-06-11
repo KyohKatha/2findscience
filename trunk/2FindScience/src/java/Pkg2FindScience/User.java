@@ -14,6 +14,7 @@ public class User {
     private int profile;
     private int upgrade;
     private int numTrialUpgrade;
+    private boolean haveSubjects;
 
     public User() {
         this.login = null;
@@ -101,6 +102,14 @@ public class User {
 
     public int getNumTrialUpgrade() {
         return this.numTrialUpgrade;
+    }
+
+    public boolean getHaveSubjects() {
+        return haveSubjects;
+    }
+
+    public void setHaveSubjects(boolean haveSubjects) {
+        this.haveSubjects = haveSubjects;
     }
 
 }

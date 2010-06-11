@@ -56,8 +56,6 @@
                     <td> Name new <%=nameOption%>: </td>
                     <td> <input type="text" maxlength="255"> </td>
                 </tr>
-
-                
                 <tr>
                     <td> <input type="button" class="button" value="Save" onclick="handleOKPopUp()"/> </td>
                     <td> <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/> </td>

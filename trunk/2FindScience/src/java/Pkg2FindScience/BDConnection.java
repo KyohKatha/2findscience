@@ -83,8 +83,15 @@ public class BDConnection {
                 user.setUpgrade(upgrade);
                 user.setNumTrialUpgrade(numTrialUpgrade);
                 user.setPage(page);
+
+                CallableStatement st = con.prepareCall("{call sp_check_subjects (?,?)}");
+                st.setString("login", login);
+                st.registerOutParameter(2, Types.BOOLEAN);
+                st.execute();
+                boolean status = st.getBoolean(2);
+                st.close();
+                user.setHaveSubjects(status);
             } else {
-                System.out.print("Nenhum usuário");
                 throw new PublicationDAOException();
             }
         } catch (Exception e) {
