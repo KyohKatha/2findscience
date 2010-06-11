@@ -9,7 +9,6 @@ import Pkg2FindScience.BDConnection;
 import Pkg2FindScience.PublicationDAOException;
 import Pkg2FindScience.User;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Vector;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,7 +45,7 @@ public class NewsMaintenance extends HttpServlet {
         try {
             connection = BDConnection.getInstance();
 
-            if(user == null || user.getProfile() == ADMIN){
+            if(user == null || user.getProfile() == ADMIN || !user.getHaveSubjects()){
                 newsVector = connection.getNews();
             }else{
                 newsVector = connection.getNewsUser(user.getLogin());
