@@ -303,17 +303,14 @@ public class MaintenanceUserData extends HttpServlet {
         String email = "";
         try{
             email = connection.getEmail(login);
-            System.out.println("Email: "+email);
         }  catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
             rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
         }
-        //request.getSession().setAttribute("email", email);
+
         request.getSession().setAttribute("message", message);
         rd = request.getRequestDispatcher("SendEmail?acao=upgrade&status="+status+"&email="+email);
-        //rd = request.getRequestDispatcher("/AjaxHomeAdmin.jsp");
-        //rd = request.getRequestDispatcher("Filter?action=RequestUpgrade");
 
     }
 

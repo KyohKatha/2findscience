@@ -35,8 +35,6 @@ public class Settings extends HttpServlet {
         RequestDispatcher rd = null;
         String mode = (String) request.getParameter("mode");
 
-        System.out.println("MODEE " + mode);
-
         try {
             if (mode.equals("upgrade")) {
                 String newMaxUpgrade = request.getParameter("newMaxUpgrade");

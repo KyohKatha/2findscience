@@ -56,15 +56,16 @@
             <table class="maintenance" align="center" cellspacing="15px">
                 <tr>
                     <td>Select the type of the new publication </td>
-                    <td> <select id="selectType" onchange="javascript:loadContent('PublicationDataInsert.jsp?typePublication=' + this[selectedIndex].value, 'AjaxPublicationData')">
-                <option value="article">Article</option>
-                            <option value="book">Book</option>
-                            <option value="incollection">Incollection</option>
-                            <option value="inproceedings">Inproceedings</option>
-                            <option value="mastersthesis">Master Thesis</option>
-                            <option value="phdthesis">Phd Thesis</option>
-                            <option value="proceedings">Proceedings</option>
-                            <option value="www">Www</option>
+                    <td> <select id="selectType" style="background:black;color:white;text-transform:uppercase" title="Select the type of the new publication" onchange="selectTypePublication(this[selectedIndex].value)">
+                            <option value="#" >Select the type</option>
+                            <option value="article" style="background:white;color:black;text-transform:none">Article</option>
+                            <option value="book" style="background:white;color:black;text-transform:none">Book</option>
+                            <option value="incollection" style="background:white;color:black;text-transform:none">Incollection</option>
+                            <option value="inproceedings" style="background:white;color:black;text-transform:none">Inproceedings</option>
+                            <option value="mastersthesis" style="background:white;color:black;text-transform:none">Master Thesis</option>
+                            <option value="phdthesis" style="background:white;color:black;text-transform:none">Phd Thesis</option>
+                            <option value="proceedings" style="background:white;color:black;text-transform:none">Proceedings</option>
+                            <option value="www" style="background:white;color:black;text-transform:none">Www</option>
                         </select>
                     </td>
                 </tr>

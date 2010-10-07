@@ -76,6 +76,10 @@ public class PublicationMaintenance extends HttpServlet {
                             if (action.equals("managePost")) {
                                 int mode  = Integer.parseInt( request.getParameter("mode"));
                                 this.managePosts(request, response, mode);
+                            }else{
+                                if(action.equals("saveNewOption")){
+                                    this.newOption(request, response);
+                                }
                             }
                         }
                     }
@@ -263,7 +267,7 @@ public class PublicationMaintenance extends HttpServlet {
             request.getSession().setAttribute("message", "<p>- The <strong>Publication</strong> was saved successfully!</p><p>- Click on the box to close it.</p>");
         } catch (PublicationDAOException e) {
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving <p>publication.</p><p>- Click on the box to close it.</p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> saving <strong>publication.</strong><p>- Click on the box to close it.</p>");
         }
         rd = request.getRequestDispatcher("/AjaxPublicationMaintenance.jsp");
     }

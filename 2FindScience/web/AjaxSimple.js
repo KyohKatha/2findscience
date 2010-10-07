@@ -1,4 +1,4 @@
-s/*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -151,7 +151,7 @@ function validateFormUser(acao){
         }
     }
     if (email != ""){
-        if( email.match( /[a-z|A-Z|0-9|._]{2,8}@[a-z|A-Z|0-9]{2,20}\.[a-z]{3}([\.]{1}[a-z]{2})*/ ) == null ){
+        if( email.match( /^[a-zA-Z0-9_\.-]{2,}@([A-Za-z0-9_-]{2,}\.)+[A-Za-z]{2,4}$ */  ) == null ){
             message += ("<p>- <strong>Email</strong> is in incorrect format!</p>");
             form.email.focus();
         }
@@ -208,7 +208,7 @@ function callServlet(url,div){
         document.getElementById("loading").innerHTML="<div style=\"position: relative;left: 48px;top: 76px;font-family: tahoma,sans-serif;\">Loading. Please wait...</div>";
         document.getElementById("loading").style.visibility = 'visible';
     }
-
+   
     HttpMethod = "POST";
     var req = null;
     req = getXMLHTTPRequest();
@@ -882,8 +882,7 @@ function callEventInsert(index){
 
 var Nav4 = ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
 
-var dialogWin = new Object()
-
+var dialogWin = new Object();
 var optionPopUp;
 
 function openDGDialog(mode, url, width, height, returnFunc, args) {
@@ -891,10 +890,12 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
         document.getElementById("loading").innerHTML="<div style=\"position: relative;left: 48px;top: 76px;font-family: tahoma,sans-serif;\">Loading. Please wait...</div>";
         document.getElementById("loading").style.visibility = 'visible';
     }
-
-    setPopUp(mode);
+    dialogWin = new Object();
+   // setPopUp(mode);
     optionPopUp = mode;
+
     if (!dialogWin.win || (dialogWin.win && dialogWin.win.closed)) {
+
         dialogWin.returnFunc = returnFunc;
         dialogWin.returnedValue = "";
         dialogWin.args = args;
@@ -903,14 +904,15 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
         dialogWin.height = height;
         dialogWin.name = (new Date()).getSeconds().toString()
         var attr;
+        
         if (Nav4) {
             dialogWin.left = window.screenX +
-            ((window.outerWidth - dialogWin.width) / 2)
+            ((window.outerWidth - dialogWin.width) / 2);
             dialogWin.top = window.screenY +
-            ((window.outerHeight - dialogWin.height) / 2)
+            ((window.outerHeight - dialogWin.height) / 2);
              attr = "screenX=" + dialogWin.left +
             ",screenY=" + dialogWin.top + ",resizable=no,width=" +
-            dialogWin.width + ",height=" + dialogWin.height
+            dialogWin.width + ",height=" + dialogWin.height;
         } else {
             dialogWin.left = (screen.width - dialogWin.width) / 2;
             dialogWin.top = (screen.height - dialogWin.height) / 2;
@@ -924,6 +926,7 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
     } else {
         dialogWin.win.focus();
     }
+
     if (document.getElementById("loading") != null )
         document.getElementById("loading").style.visibility = 'hidden';
 }
@@ -947,6 +950,7 @@ function setPopUp(mode){
     HttpMethod = "POST";
     var req = null;
     var urlPopUp = "Filter?action=popupInsert&redirect=no&mode=" + mode;
+
     req = getXMLHTTPRequest();
     if (req){
         req.open(HttpMethod,urlPopUp,false);
@@ -956,5 +960,21 @@ function setPopUp(mode){
         req.responseText;
         if (document.getElementById("loading") != null )
             document.getElementById("loading").innerHTML="";
+    }
+
+}
+
+function saveNewOption(){
+    var newOption = trim(document.getElementById("newOption").value);
+    var nameOption = trim(document.getElementById("nameOption").value);
+    var url = "PublicationMaintenance?action=saveNewOption&newOption=" + newOption + "&nameOption=" + nameOption;
+    callServlet(url, "contentPop");
+}
+
+function selectTypePublication(typeNewPublication){
+    if(typeNewPublication != '#'){
+        loadContent('PublicationDataInsert.jsp?typePublication=' + typeNewPublication, 'AjaxPublicationData');
+    }else{
+        document.getElementById('AjaxPublicationData').innerHTML = '';
     }
 }

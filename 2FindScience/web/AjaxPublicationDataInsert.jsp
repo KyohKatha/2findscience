@@ -66,12 +66,13 @@
 
                 <tr>
                     <td>Related subjects :</td>
-                    <td class="tooltip"><input type="text" id="Subjects" size=90 onclick="openDGDialog('Subjects', 'popupSelectBox.jsp?nameOption=Subjects', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
+                    <td class="tooltip"><input type="text" id="Subjects" size=90 onclick="openDGDialog('Subjects', 'popupSelectBoxHeader.jsp?nameOption=Subjects', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
                 </tr>
 
                 <tr>
                     <td>Author:</td>
-                    <td class="tooltip"><input type="text" id="Author" size=90 onclick="openDGDialog('Author', 'popupSelectBox.jsp?nameOption=Author', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
+              <!--      <td class="tooltip"><input type="text" id="Author" size=90 onclick="openDGDialog('Author', 'popupSelectBox.jsp?nameOption=Author', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td> -->
+                    <td class="tooltip"><input type="text" id="Author" size=90 onclick="openDGDialog('Author', 'popupSelectBoxHeader.jsp?nameOption=Author', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert author</span></td>
                 </tr>
 
                 <tr>
@@ -119,17 +120,17 @@
                 <% } else {/*Certamente eh um document */%>
                 <tr>
                     <td>BookTitle: </td>
-                    <td class="tooltip"><input type="text" id="BookTitle" size=90 onclick="openDGDialog('BookTitle', 'popupSelectBox.jsp?nameOption=BookTitle', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert booktitle</span></td>
+                    <td class="tooltip"><input type="text" id="BookTitle" size=90 onclick="openDGDialog('BookTitle', 'popupSelectBoxHeader.jsp?nameOption=BookTitle', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert booktitle</span></td>
                 </tr>
 
                 <tr>
                     <td>Editor: </td>
-                    <td class="tooltip"><input type="text" id="Editor" size=90 onclick="openDGDialog('Editor', 'popupSelectBox.jsp?nameOption=Editor', 950, 200, setPrefs);" readonly="false"> <span>Click here to insert editor</span></td>
+                    <td class="tooltip"><input type="text" id="Editor" size=90 onclick="openDGDialog('Editor', 'popupSelectBoxHeader.jsp?nameOption=Editor', 950, 200, setPrefs);" readonly="false"> <span>Click here to insert editor</span></td>
                 </tr>
 
                 <tr>
                     <td>Publisher: </td>
-                    <td class="tooltip"><input type="text" id="Publisher" size=90 onclick="openDGDialog('Publisher', 'popupSelectBox.jsp?nameOption=Publisher', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert publisher</span></td>
+                    <td class="tooltip"><input type="text" id="Publisher" size=90 onclick="openDGDialog('Publisher', 'popupSelectBoxHeader.jsp?nameOption=Publisher', 950, 200, setPrefs);" readonly="false" > <span>Click here to insert publisher</span></td>
                 </tr>
 
                 <tr>

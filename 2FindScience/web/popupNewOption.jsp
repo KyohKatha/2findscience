@@ -22,6 +22,7 @@
     </head>
 
     <body>
+        <div id="contentPop" class="content">
         <%
                     String message, type;
                     message = (String) request.getAttribute("message");
@@ -54,15 +55,15 @@
             <table align="center">
                 <tr>
                     <td> Name new <%=nameOption%>: </td>
-                    <td> <input type="text" maxlength="255"> </td>
+                    <td> <input type="text" maxlength="255" id="newOption" name="newOption"> </td>
                 </tr>
                 <tr>
-                    <td> <input type="button" class="button" value="Save" onclick="handleOKPopUp()"/> </td>
-                    <td> <input type="button" class="button" value="Cancel" onclick="handleCancelPopUp()"/> </td>
+                    <td> <input type="button" class="button" value="Save" onclick="saveNewOption()"/> </td>
+                    <td> <input type="button" class="button" value="Cancel" onclick="javascript: document.location = 'popupSelectBox.jsp?nameOption=' + '<%=nameOption%>';"/> </td>
                 </tr>
             </table>
             <input type="hidden" id="nameOption" value="<%=nameOption%>">
         </form>
-
+        </div>
     </body>
 </html>

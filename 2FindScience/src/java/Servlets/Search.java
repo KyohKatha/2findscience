@@ -68,8 +68,6 @@ public class Search extends HttpServlet {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Error</strong> connecting database.</p><p>- Click on the box to close it.</p>");
             request.getSession().setAttribute("result", new Vector());
-            System.out.println("Erro no BD: " + e.getMessage());
-
             request.getSession().setAttribute("parametro", param);
             request.getSession().setAttribute("modo", modo);
             request.getSession().setAttribute("numResultsPage", n);

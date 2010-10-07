@@ -222,6 +222,12 @@ table.maintenance td a{
     /*text-transform: lowercase;*/
 }
 
+table.popup td a{
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
 table.maintenance td.admin:hover{
     background: #F0D5D5;
 }

@@ -76,9 +76,7 @@
                         }
                         outText += inText.charAt(i);
                     }
-                    //System.out.println(inText);
-                    //System.out.println(outText);
-                    return outText;
+                     return outText;
                 }
             %>
 

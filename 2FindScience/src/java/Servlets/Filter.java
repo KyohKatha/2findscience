@@ -59,10 +59,11 @@ public class Filter extends HttpServlet {
         try {
             if (action.equals("PublicationMaintenance")) {
                 this.publicationMaintenance(request, response, user, parameter);
+            }else if(action.equals("PublicationUser")){
+                this.getPublicationUser(request, response, user);
             } else {
                 if (action.equals("popupInsert")) {
                         String redirectParameter = (String) request.getParameter("redirect");
-                        System.out.println("REDIRECIONARRR: " + redirectParameter);
                         this.popUpSelectBox(request, response);
                         if(redirectParameter.equals("yes")){
                             redirect = true;
@@ -236,25 +237,24 @@ public class Filter extends HttpServlet {
             throws ServletException, IOException {
 
         String mode = (String) request.getParameter("mode");
+        String letter = (String) request.getParameter("letter");
         Vector available = null;
-
-        System.out.println("MODDDEEEE   " + mode);
 
         try {
             if (mode.equals("Author")) {
-                available = connection.getAuthors();
+                available = connection.getAuthors(letter);
             } else {
                 if (mode.equals("BookTitle")) {
-                    available = connection.getBookTitle();
+                    available = connection.getBookTitle(letter);
                 } else {
                     if (mode.equals("Editor")) {
-                        available = connection.getEditor();
+                        available = connection.getEditor(letter);
                     } else {
                         if (mode.equals("Publisher")) {
-                            available = connection.getPublisher();
+                            available = connection.getPublisher(letter);
                         }else{
                             if(mode.equals("Subjects")){
-                                available = connection.getSubjects();
+                                available = connection.getSubjects(letter);
                             }
                         }
                     }
@@ -269,36 +269,17 @@ public class Filter extends HttpServlet {
         rd = request.getRequestDispatcher("/popupSelectBox.jsp?nameOption=" + mode);
     }
 
-
-     /*
-       private void popUpSelectBox(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String mode = (String) request.getParameter("mode");
-        Vector available = null;
-
-        try {
-            if (mode.equals("author")) {
-                available = connection.getAuthors();
-            } else {
-                if (mode.equals("booktitle")) {
-                    available = connection.getBookTitle();
-                } else {
-                    if (mode.equals("editor")) {
-                        available = connection.getEditor();
-                    } else {
-                        if (mode.equals("publisher")) {
-                            available = connection.getPublisher();
-                        }
-                    }
-                }
-            }
-            request.getSession().setAttribute("available", available);
-            request.getSession().setAttribute("nameOption", mode);
-        } catch (Exception e) {
+    private void getPublicationUser(HttpServletRequest request, HttpServletResponse response, User user) {
+        Vector<Publication> publicationsUser = null;
+        try{
+            publicationsUser = connection.getPublicationUser(user.getLogin());
+            request.getSession().setAttribute("publications", publicationsUser);
+            rd = request.getRequestDispatcher("/AjaxPublicationMaintenance.jsp");
+        }catch(PublicationDAOException e){
             request.getSession().setAttribute("type", "critical");
-            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting authors </p>");
+            request.getSession().setAttribute("message", "<p>- <strong>Error</strong> getting our publications </p>");
+            rd = request.getRequestDispatcher("/AjaxHome.jsp");
         }
     }
-*/
+
 }
