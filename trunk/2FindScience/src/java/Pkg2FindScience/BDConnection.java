@@ -12,30 +12,39 @@ public class BDConnection {
     private static BDConnection instance = null;
     private Connection con;
     private Statement stm;
-    private Statement stmTeste;
-
+    
     public BDConnection() throws PublicationDAOException {
         try {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("317624");
-            ds.setPassword("#gustavo123");
+            ds.setPassword("91196742");
             ds.setDatabaseName("317624");
             ds.setServerName("192.168.12.4");
             con = ds.getConnection();
             stm = con.createStatement();
-            stmTeste = con.createStatement();
+            
         } catch (Exception e) {
             try {
                 SQLServerDataSource ds = new SQLServerDataSource();
                 ds.setUser("317624");
-                ds.setPassword("#gustavo123");
+                ds.setPassword("91196742");
                 ds.setDatabaseName("317624");
-                ds.setServerName("189.109.33.220");
+                ds.setServerName("200.133.238.3");
                 con = ds.getConnection();
                 stm = con.createStatement();
-                stmTeste = con.createStatement();
+                
             } catch (Exception j) {
-                throw new PublicationDAOException();
+                try {
+                SQLServerDataSource ds = new SQLServerDataSource();
+                ds.setUser("317624");
+                ds.setPassword("91196742");
+                ds.setDatabaseName("317624");
+                ds.setServerName("shelton.sor.ufscar.br");
+                con = ds.getConnection();
+                stm = con.createStatement();
+                }catch(Exception h){
+                    throw new PublicationDAOException();
+                }
             }
         }
     }
@@ -100,7 +109,26 @@ public class BDConnection {
         return user;
     }
 
-    public Vector getSubjects() throws PublicationDAOException {
+    public Vector getSubjects(String letter) throws PublicationDAOException {
+        Vector subjects = new Vector();
+        ResultSet rs = null;
+
+        try {
+            String sQuery = "SELECT Top 100 subject FROM integrado.subject WHERE subject LIKE '" + letter + "%' ORDER BY(subject);";
+            stm.execute(sQuery);
+            rs = stm.getResultSet();
+
+            while (rs.next()) {
+                String name = rs.getString("subject");
+                subjects.addElement(name);
+            }
+        } catch (Exception e) {
+            throw new PublicationDAOException();
+        }
+        return subjects;
+    }
+
+        public Vector getSubjects() throws PublicationDAOException {
         Vector subjects = new Vector();
         ResultSet rs = null;
 
@@ -299,12 +327,12 @@ public class BDConnection {
         return publications;
     }
 
-    public Vector getAuthors() throws PublicationDAOException {
+    public Vector getAuthors(String letter) throws PublicationDAOException {
         Vector authors = new Vector();
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT TOP 500 name FROM integrado.author ORDER BY name;";
+            String sQuery = "SELECT name FROM integrado.author WHERE name LIKE '" + letter + "%' ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -318,12 +346,12 @@ public class BDConnection {
         return authors;
     }
 
-    public Vector getBookTitle() throws PublicationDAOException {
+    public Vector getBookTitle(String letter) throws PublicationDAOException {
         Vector bookTitle = new Vector();
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT name FROM integrado.bookTitle ORDER BY name;";
+            String sQuery = "SELECT name FROM integrado.bookTitle WHERE name LIKE '" + letter + "%' ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -371,7 +399,6 @@ public class BDConnection {
         Publication publication;
 
         try {
-            String sQuery = "";
             CallableStatement st = null;
             Statement stm3 = null;
             ResultSet rs = null;
@@ -402,7 +429,6 @@ public class BDConnection {
                 }
                 publication = new Publication();
                 publication.setTitle(title);
-                //publication.setType(type);
                 publication.setCod(cod);
                 if (filtro.equals("isbn")) {
                     publication.setIsbn(p);
@@ -588,9 +614,8 @@ public class BDConnection {
             }
 
             statement += "WHERE login = '" + login + "';";
-            System.out.println("Sss: " + statement);
             stm.execute(statement);
-            //Enviar email para o usuÃ¡rio
+
         } catch (Exception e) {
             throw new PublicationDAOException();
         }
@@ -600,9 +625,7 @@ public class BDConnection {
         String statement = "INSERT INTO integrado.post (codPublication, userLogin, text) VALUES (" + codPublication + ", '" + userLogin + "', '" + text + "');";
 
         try {
-            System.out.println("Sss: " + statement);
             stm.execute(statement);
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new PublicationDAOException();
@@ -673,8 +696,6 @@ public class BDConnection {
             stm2.execute(query);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            //throw new PublicationDAOException();
             return false;
         }
     }
@@ -685,7 +706,6 @@ public class BDConnection {
             CallableStatement st = con.prepareCall("{call sp_update_event(?, ?, ?, ?, ?)}");
 
             st.setString(1, b.getName());
-            // inserir null em vez de string vazia
             if (!b.getStartDate().equals("")) {
                 DateFormat fmt = new SimpleDateFormat("yyyy/MM/dd");
                 java.sql.Date startDate = new java.sql.Date(fmt.parse(b.getStartDate()).getTime());
@@ -705,11 +725,9 @@ public class BDConnection {
             } else {
                 st.setString(4, null);
             }
-            System.out.println(b.getCod());
+
             st.setInt(5, b.getCod());
-
             st.execute();
-
             st.close();
 
         } catch (Exception e) {
@@ -739,9 +757,7 @@ public class BDConnection {
                 s.setProfile(rs.getInt("profile"));
                 s.setUpgrade(rs.getInt("upgrade"));
                 users.addElement(s);
-
             }
-
             return users;
 
         } catch (Exception e) {
@@ -761,13 +777,12 @@ public class BDConnection {
         }
     }
 
-    /***************GUSTAVO****************/
-    public Vector getEditor() throws PublicationDAOException {
+    public Vector getEditor(String letter) throws PublicationDAOException {
         Vector editor = new Vector();
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT name FROM integrado.editor ORDER BY name;";
+            String sQuery = "SELECT name FROM integrado.editor WHERE name LIKE '" + letter + "%' ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -781,12 +796,12 @@ public class BDConnection {
         return editor;
     }
 
-    public Vector getPublisher() throws PublicationDAOException {
+    public Vector getPublisher(String letter) throws PublicationDAOException {
         Vector publisher = new Vector();
         ResultSet rs = null;
 
         try {
-            String sQuery = "SELECT name FROM integrado.publisher ORDER BY name;";
+            String sQuery = "SELECT name FROM integrado.publisher WHERE name LIKE '" + letter + "%' ORDER BY name;";
             stm.execute(sQuery);
             rs = stm.getResultSet();
 
@@ -2317,5 +2332,35 @@ public class BDConnection {
             throw new PublicationDAOException();
         }
         return email;
+    }
+
+    public Vector<Publication> getPublicationUser(String login) throws PublicationDAOException {
+        Vector<Publication> publicationsUser = new Vector<Publication>();
+        ResultSet rs = null;
+        
+        try{
+            String sql = "SELECT * FROM integrado.publication WHERE loginUser = '" + login + "'";
+            rs = stm.executeQuery(sql);
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String insertion = rs.getString("insertion");
+                double cod = rs.getDouble("cod");
+                String type = rs.getString("type");
+                String url = rs.getString("url");
+
+                Publication pub = new Publication();
+                pub.setTitle(title);
+                pub.setCod(cod);
+                pub.setInsertion(insertion);
+                pub.setType(type);
+                pub.setUrl(url);
+
+                publicationsUser.add(pub);
+            }
+        }catch(Exception e){
+            throw  new PublicationDAOException();
+        }
+            return publicationsUser;
     }
 }

@@ -9,6 +9,8 @@
 %>
 
 <%@page import="Pkg2FindScience.User" %>
+<%@page import="Pkg2FindScience.Publication" %>
+<%@page import="java.util.Vector" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -24,32 +26,32 @@
 
         <div id="content" class="content">
             <%
-                    String message, type;
-                    message = (String) session.getAttribute("message");
-                    type = (String) session.getAttribute("type");
-                    session.removeAttribute("message");
-                    session.removeAttribute("type");
+                        String message, type;
+                        message = (String) session.getAttribute("message");
+                        type = (String) session.getAttribute("type");
+                        session.removeAttribute("message");
+                        session.removeAttribute("type");
 
-                    if (message != null) {
-                        out.println("<div id=\"msg\">");
-                        out.println("<fieldset class=\"" + type + "\" onclick=\"closeMessageBox()\">");
-                        String legend = "Undefined";
-                        if (type == "information") {
-                            legend = "Information";
-                        } else if (type == "critical") {
-                            legend = "Error";
-                        } else if (type == "success") {
-                            legend = "Success";
-                        } else if (type == "warning") {
-                            legend = "Warning";
+                        if (message != null) {
+                            out.println("<div id=\"msg\">");
+                            out.println("<fieldset class=\"" + type + "\" onclick=\"closeMessageBox()\">");
+                            String legend = "Undefined";
+                            if (type == "information") {
+                                legend = "Information";
+                            } else if (type == "critical") {
+                                legend = "Error";
+                            } else if (type == "success") {
+                                legend = "Success";
+                            } else if (type == "warning") {
+                                legend = "Warning";
+                            }
+
+                            out.println("<legend>" + legend + "</legend>");
+                            out.println(message);
+                            out.println("</fieldset>");
+                            out.println("</div>");
                         }
-
-                        out.println("<legend>" + legend + "</legend>");
-                        out.println(message);
-                        out.println("</fieldset>");
-                        out.println("</div>");
-                    }
-        %>
+            %>
             <p class="title">Maintenance Publication</p>
 
             <div id="fastsearch">
@@ -65,9 +67,28 @@
 
             <div id="userlist">
                 <select class="list" onchange="javascript:callServletPublication(selectedIndex)" size=10>
-                    <% if(user.getProfile() != 0){ %>
+                    <% if (user.getProfile() != 0) {%>
                     <option style="color: #ffffff; background-color: #000000">INSERT A NEW PUBLICATION...</option>
-                    <% } %>
+                    <% }%>
+
+                    <%
+                                Vector<Publication> publicationsUser = (Vector<Publication>) session.getAttribute("publications");
+
+                                Boolean color = false;
+
+                                if (publicationsUser != null) {
+
+                                    for (int i = 0; i < publicationsUser.size(); i++) {
+                                        Publication publication = (Publication) publicationsUser.get(i);
+                                                    if (color) {%>
+                    <option style="background-color: #dddddd"> <%=publication.getTitle()%> </option>
+                    <%} else {%>
+                    <option> <%=publication.getTitle()%> </option>
+                    <%}
+                                        color = !color;
+                                    }
+                                }
+                    %>
                 </select>
             </div>
 

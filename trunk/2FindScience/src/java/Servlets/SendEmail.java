@@ -71,7 +71,6 @@ public class SendEmail extends HttpServlet {
                     message.setContent("Your Upgrade request was denied!", "text/plain");
                 }
             }
-            System.out.println("Enviando o email");
 
             //Transport.send(message);
             Transport t = session.getTransport("smtps");
