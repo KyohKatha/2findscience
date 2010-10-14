@@ -35,7 +35,7 @@ public class Search extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         Vector result = new Vector();
-        int n = 0;
+        int currPage = 1, initPage = 1;
         String modo = "";
         String param = request.getParameter("parametro");
         String filtro = "";
@@ -50,15 +50,20 @@ public class Search extends HttpServlet {
                 BDConnection con = BDConnection.getInstance();
                 result = con.searchPublication(filtro, param);
                 request.getSession().setAttribute("result", result);
+                currPage = 1;
+                initPage = 1;
 
             } else {
                 modo = (String) request.getParameter("modo");
-                n = Integer.parseInt(request.getParameter("numResultsPage"));
+                initPage = Integer.parseInt(request.getParameter("initpage"));
+                currPage = Integer.parseInt(request.getParameter("currpage"));
             }
-
+            
             request.getSession().setAttribute("parametro", param);
             request.getSession().setAttribute("modo", modo);
-            request.getSession().setAttribute("numResultsPage", n);
+            request.getSession().setAttribute("initpage", initPage);
+            request.getSession().setAttribute("currpage", currPage);
+            
             RequestDispatcher rd = null;
             rd = request.getRequestDispatcher("/AjaxSearchResult.jsp");
             rd.forward(request, response);
@@ -70,7 +75,8 @@ public class Search extends HttpServlet {
             request.getSession().setAttribute("result", new Vector());
             request.getSession().setAttribute("parametro", param);
             request.getSession().setAttribute("modo", modo);
-            request.getSession().setAttribute("numResultsPage", n);
+            request.getSession().setAttribute("initpage", initPage);
+            request.getSession().setAttribute("currpage", currPage);
             RequestDispatcher rd = null;
 
             if (user == null) {

@@ -70,18 +70,17 @@
 
                     for (int i = 0; i < inText.length(); i++) {
                         if (i == sText) {
-                                outText += "<strong>";
+                            outText += "<strong>";
                         } else if (i == eText + 1) {
-                                outText += "</strong>";
+                            outText += "</strong>";
                         }
                         outText += inText.charAt(i);
                     }
-                     return outText;
+                    return outText;
                 }
             %>
 
             <form id="formBusca" action="#" method="post" onsubmit="return validateFormBusca('normal', event)">
-                <%  Vector<Publication> rs = (Vector) session.getAttribute("result");%>
                 <table class="search" align="center" cellspacing="15px">
                     <tr>
                         <td align="left" colspan="2"><input class="textBox" type="text" id="parametro" name="parametro" size="80"/></td>
@@ -102,131 +101,111 @@
                     </tr>
                 </table>
             </form>
+
             <%
+                        Vector<Publication> rs = (Vector) session.getAttribute("result");
+
                         if (rs.size() > 0) {
-                            String searchParam = (String) session.getAttribute("parametro");
-
-                            int size = rs.size() * 69;
-                            int capacity = 6;
-
-                            String modo = (String) session.getAttribute("modo");
-                            int numResultsPage = Integer.parseInt(session.getAttribute("numResultsPage").toString());
-                            int count = 0;
-                            int valor_comparacao;
-                            if (modo.equals("next")) {
-                                valor_comparacao = numResultsPage + capacity;
-                                count = numResultsPage;
-                            } else {
-                                valor_comparacao = numResultsPage;
-                                count = numResultsPage - capacity;
-                                numResultsPage -= capacity;
-                            }
-
-                            if (size > 552) {
-                                size = 552;
-                            }
-
-                            out.print("<div id=\"scroll\" style=\"height: auto\">");
             %>
+            <div id="scroll" style="height: auto">
+                <table class="maintenance" align="left" cellspacing="1px">
 
-            <table class="maintenance" align="left" cellspacing="1px">
-                <tr>
                     <%
-                                                String messageSearch = "";
-                                                if (rs.size() - numResultsPage < capacity) {
-                                                    messageSearch = "Results <strong>" + (numResultsPage + 1) + "</strong> to <strong>" + (numResultsPage + rs.size() - numResultsPage) + "</strong>";
-                                                } else {
-                                                    messageSearch = "Results <strong>" + (numResultsPage + 1) + "</strong> to <strong>" + (numResultsPage + capacity) + "</strong>";
-                                                }
+                                                String searchParam = (String) session.getAttribute("parametro");
+                                                int resultsPerPage = 6;
+                                                int initialPage = Integer.parseInt(session.getAttribute("initpage").toString());
+                                                int currentPage = Integer.parseInt(session.getAttribute("currpage").toString());
 
-                                                messageSearch += " of <strong>" + rs.size() + "</strong> for: <strong>\"" + searchParam + "\"</strong>";
+                                                for (int i = (currentPage - 1) * resultsPerPage; i < currentPage * resultsPerPage && i < rs.size(); i++) {
+                                                    String isbn = rs.get(i).getIsbn();
+                                                    String title = rs.get(i).getTitle();
+                                                    String journal = rs.get(i).getJournal();
                     %>
-                    <td colspan="3">
-                        <%= messageSearch%>
-                    </td>
-                </tr>
-                <%
-                                            request.getSession().setAttribute("publication", rs);
-                                            while (count < valor_comparacao) {
-                                                String isbn = rs.get(count).getIsbn();
-                                                String title = rs.get(count).getTitle();
-                                                String journal = rs.get(count).getJournal();
-                                                count++;
-                %>
-                <tr>
+                    <tr>
+                        <%
+                                                                            if (user == null) {
+                                                                                out.println("<td class=\"guest\" colspan=\"3\">");
+                                                                            } else {
+                                                                                switch (user.getProfile()) {
+                                                                                    case 0:
+                                                                                        out.println("<td class=\"admin\" colspan=\"3\">");
+                                                                                        break;
+                                                                                    case 1:
+                                                                                        out.println("<td class=\"academic\" colspan=\"3\">");
+                                                                                        break;
+                                                                                    case 2:
+                                                                                        out.println("<td class=\"common\" colspan=\"3\">");
+                                                                                        break;
+                                                                                    default:
+                                                                                        out.println("<td colspan=\"3\">");
+                                                                                        break;
+                                                                                }
+                                                                            }
+                        %>
+                    <div id="item" align="justify" style="width: 679px;">
+                        <a href="#" onclick="callServlet('PublicationMaintenance?action=managePost&publication=' + <%=rs.get(i).getCod()%> + '&mode=0','AjaxContent')">
+                            <%
+                                                                                if (isbn != null && journal != null) {
+                            %>
+                            <p><% out.print(highlightText(searchParam, isbn));%> <i> <% out.print(highlightText(searchParam, journal));%> </i></p>
+                            <%
+                                                                                                            } else if (isbn != null) {
+                            %>
+                            <p> <% out.print(highlightText(searchParam, isbn));%> </p>
+                            <%
+                                                                                                            } else {
+                            %>
+                            <p><% out.print(highlightText(searchParam, journal));%></p>
+                            <%
+                                                                                                            }
+                            %>
+                        </a>
+                        <p>
+                            <%= title%>
+                        </p>
+                    </div>
                     <%
-                                                        if (user == null) {
-                                                            out.println("<td class=\"guest\" colspan=\"3\">");
-                                                        } else {
-                                                            switch (user.getProfile()) {
-                                                                case 0:
-                                                                    out.println("<td class=\"admin\" colspan=\"3\">");
-                                                                    break;
-                                                                case 1:
-                                                                    out.println("<td class=\"academic\" colspan=\"3\">");
-                                                                    break;
-                                                                case 2:
-                                                                    out.println("<td class=\"common\" colspan=\"3\">");
-                                                                    break;
-                                                                default:
-                                                                    out.println("<td colspan=\"3\">");
-                                                                    break;
-                                                            }
-                                                        }
+                                                                        out.print("</td>");
                     %>
-                <div id="item" align="justify" style="width: 679px;">
-                    <a href="#" onclick="callServlet('PublicationMaintenance?action=managePost&publication=' + <%=rs.get(count - 1).getCod()%> + '&mode=0','AjaxContent')">
-                        <%
-                                                            if (isbn != null && journal != null) {
-                        %>
-                        <p><% out.print(highlightText(searchParam, isbn)); %> <i> <% out.print(highlightText(searchParam, journal)); %> </i></p>
-                        <%
-                                                                        } else if (isbn != null) {
-                        %>
-                        <p> <% out.print(highlightText(searchParam, isbn)); %> </p>
-                        <%
-                                                                        } else {
-                        %>
-                        <p><% out.print(highlightText(searchParam, journal)); %></p>
-                        <%
-                                                                        }
-                        %>
-                    </a>
-                    <p>
-                        <%= title%>
-                    </p>
-                </div>
-                <%
-                                                    out.print("</td>");
-                %>
-                </tr>
-                <%
-                                                if (rs.size() < count + 1) {
-                                                    break;
+                    </tr>
+                    <%
                                                 }
-                                            }
-                %>
-            </table>
-            <%
-                                        out.print("</div>");
-                                        if (rs.size() > numResultsPage) {
-            %>
-            <div id="buttonsbox">
-                <%
-                                                //out.println("numResultados:" + numResultsPage);
-                                                if (count > capacity) {
-                                                    out.println("<input class=\"button\" type=\"button\" value=\"Previous\" onclick=\"callServlet('Search?action=doRefresh&modo=previous&numResultsPage=" + (numResultsPage) + "&parametro=" + session.getAttribute("parametro") + "', 'AjaxContent');\"/>");
-                                                }
-                                                if (rs.size() >= count + 1) {
-                                                    out.println("<input class=\"button\" type=\"button\" value=\"Next\" onclick=\"callServlet('Search?action=doRefresh&modo=next&numResultsPage=" + (numResultsPage + capacity) + "&parametro=" + session.getAttribute("parametro") + "', 'AjaxContent');\"/>");
-                                                }
-                %>
+                    %>
+                </table>
+                <table id="paginacao" class="paginacao" align="center">
+                    <tr>
+                        <%
+                                                    int capac = 20;
+                                                    int maxPagina = (rs.size() / capac) + 1;
+                                                    int cont = 0;
+
+                                                    if (initialPage > 1) {
+                                                        out.println("<td class=\"nav\" onclick=\"gerenciarPaginacao(\'<\'," + maxPagina + "," + capac + "," + "'" + searchParam + "'" + ")\"><</td>");
+                                                    }
+
+                                                    for (int i = initialPage; i < initialPage + capac; i++) {
+                                                        cont++;
+                        %>
+                        <td class="pagina" id="<%= "pag" + cont%>" onclick="callServlet('Search?action=doRefresh&initpage=' + <%= initialPage%> + '&currpage=' + <%= i%> + '&parametro=' + <%= "'" + searchParam + "'"%>, 'AjaxContent');">
+                            <%
+                                                                                    out.print(i);
+                            %>
+                        </td>
+                        <%
+                                                    }
+                                                    if (cont <= maxPagina) {
+                                                        out.println("<td class=\"nav\" onclick=\"gerenciarPaginacao(\'>\'," + maxPagina + "," + capac + "," + "'" + searchParam + "'" + ")\">></td>");
+                                                    }
+                        %>
+                    </tr>
+                </table>
             </div>
+
             <%
-                            }
-                        } else {
-                            out.println("<p>No results were found for: <strong>\"" + (String) session.getAttribute("parametro") + "\"</strong>");
-                        }
+                                    } else {
+            %>
+            <p>No results were found for: <strong><%= (String) session.getAttribute("parametro")%></strong></p>
+            <%                        }
             %>
         </div>
     </body>
