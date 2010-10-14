@@ -78,14 +78,15 @@
             </div>
 
             <div id="search">
-                <input type="text" id="parametro" name="search" size="47" maxlength="50" onkeypress="return validateFormBusca('rapida', event)" />
+                <input type="text" id="parametro" name="search" size="40" maxlength="50" onkeypress="return validateFormBusca('rapida', event)" />
+                <img alt="l" src="Imagens/loginho.png" style="position: relative; top: 4px">
             </div>
         </div>
 
         <div id="wrapper">
             <div id="news" class="news">
                 <p class="title">News</p>
-                <marquee id="AjaxNewsContent" height="85%" direction="up" onmouseover="this.stop()" onmouseout="this.start()">
+                <marquee id="AjaxNewsContent" scrolldelay="200" height="85%" direction="up" onmouseover="this.stop()" onmouseout="this.start()">
                 </marquee>
             </div>
 
