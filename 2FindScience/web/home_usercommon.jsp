@@ -77,7 +77,8 @@
         </div>
 
         <div id="search">
-            <input type="text" id="parametro" name="search" size="47" maxlength="50" onkeypress="return validateFormBusca('rapida', event)" />
+            <input type="text" id="parametro" name="search" size="40" maxlength="50" onkeypress="return validateFormBusca('rapida', event)" />
+            <img alt="l" src="Imagens/loginho.png" style="position: relative; top: 4px">
         </div>
 
         <div id="wrapper">
