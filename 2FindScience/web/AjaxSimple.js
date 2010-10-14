@@ -627,6 +627,7 @@ function validateFormBusca(tipo, e){
     var message;
 
     if (tipo == "normal"){
+
         formSearch = document.getElementById("formBusca");
         param = formSearch.parametro.value;
         filtro = formSearch.filtro.value;
@@ -660,7 +661,6 @@ function validateFormBusca(tipo, e){
             }
 
             url = "Search?action=doSearch&parametro="+param+"&filtro=" + filtro;
-
             callServlet(url, 'AjaxContent');
             return true;
 
@@ -894,6 +894,7 @@ function openDGDialog(mode, url, width, height, returnFunc, args) {
    // setPopUp(mode);
     optionPopUp = mode;
 
+
     if (!dialogWin.win || (dialogWin.win && dialogWin.win.closed)) {
 
         dialogWin.returnFunc = returnFunc;
@@ -977,4 +978,70 @@ function selectTypePublication(typeNewPublication){
     }else{
         document.getElementById('AjaxPublicationData').innerHTML = '';
     }
+}
+
+/*
+ * Funcao responsavel por gerenciar a paginacao
+ */
+function gerenciarPaginacao(modo, max, capacidade, parametro) {
+    var i = 0;
+    var cont = 1;
+    var flag = true;
+    var divPrimeiraPag = document.getElementById('pag1');
+    var primeiraPag = 1;
+
+    if (divPrimeiraPag != null) {
+        primeiraPag = parseInt(divPrimeiraPag.innerHTML, 10);
+    }
+
+    var sPaginas = "<tbody>";
+
+    sPaginas += '<tr>';
+
+
+    switch (modo) {
+        case '>':
+            cont = 1;
+            flag = true;
+
+            sPaginas += '<td class=\"nav\" onclick=\"gerenciarPaginacao(\'<\',' + max + ',' +  capacidade + ',\'' + parametro + '\'' + ')\"><</td>';
+
+            for (i = primeiraPag + capacidade - 1; flag; i++ ) {
+                sPaginas += '<td class=\"pagina\" id=\"pag' + cont + '\" onclick=\"callServlet(\'Search?action=doRefresh&initpage=' + (primeiraPag + capacidade - 1) + '&currpage=' + i + '&parametro=' + parametro + '\', \'AjaxContent\');\">' + i + '</td>';
+
+                cont++;
+                if (cont > capacidade || i == max) {
+                    flag = false;
+                }
+            }
+
+            if (i <= max) {
+                sPaginas += '<td class="nav" onclick="gerenciarPaginacao(\'>\',' + max + ',' +  capacidade + ',\'' + parametro + '\'' + ')">></td>';
+            }
+            break;
+
+        case '<':
+            cont = 1;
+            flag = true;
+
+            if (primeiraPag > capacidade) {
+                sPaginas += '<td class=\"nav\" onclick=\"gerenciarPaginacao(\'<\',' + max + ',' +  capacidade + ',\'' + parametro + '\'' + ')\"><</td>';
+            }
+
+            for (i = primeiraPag - capacidade + 1; flag; i++ ) {
+                sPaginas += '<td class=\"pagina\" id=\"pag' + cont + '\" onclick=\"callServlet(\'Search?action=doRefresh&initpage=' + (primeiraPag - capacidade + 1) + '&currpage=' + i + '&parametro=' + parametro + '\', \'AjaxContent\');\">' + i + '</td>';
+
+                cont++;
+                if (cont > capacidade || i == max) {
+                    flag = false;
+                }
+            }
+            sPaginas += '<td class="nav" onclick="gerenciarPaginacao(\'>\',' + max + ',' +  capacidade + ',\'' + parametro + '\'' + ')">></td>';
+            break;
+    }
+
+    sPaginas += '</tr>';
+    sPaginas += '</tbody>';
+
+    document.getElementById('paginacao').innerHTML = sPaginas;
 }

@@ -97,5 +97,6 @@
             <input type="hidden" id="nameOption" value="<%=nameOption%>">
             <input type="hidden" id="options" value="">
         
+        </div>
     </body>
 </html>
